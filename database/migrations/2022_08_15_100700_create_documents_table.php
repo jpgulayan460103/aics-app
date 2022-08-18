@@ -13,11 +13,12 @@ class CreateDocumentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('aics_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('document_type')->nullable();
             $table->string('file_directory')->nullable();
-            $table->morphs('clientable');
+            $table->string('uuid')->nullable();
+            $table->unsignedBigInteger('aics_requrement_id')->nullable();
+            $table->unsignedBigInteger('aics_assistance_id')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('aics_documents');
     }
 }

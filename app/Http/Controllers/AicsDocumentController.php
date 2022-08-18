@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Document;
+use App\Models\AicsDocument;
 use Illuminate\Http\Request;
 
-class DocumentController extends Controller
+class AicsDocumentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class DocumentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Document  $document
+     * @param  \App\Models\AicsDocument  $Aicsdocument
      * @return \Illuminate\Http\Response
      */
-    public function show(Document $document)
+    public function show(AicsDocument $Aicsdocument)
     {
         //
     }
@@ -52,10 +52,10 @@ class DocumentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Document  $document
+     * @param  \App\Models\AicsDocument  $Aicsdocument
      * @return \Illuminate\Http\Response
      */
-    public function edit(Document $document)
+    public function edit(AicsDocument $Aicsdocument)
     {
         //
     }
@@ -64,10 +64,10 @@ class DocumentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Document  $document
+     * @param  \App\Models\AicsDocument  $Aicsdocument
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Document $document)
+    public function update(Request $request, AicsDocument $Aicsdocument)
     {
         //
     }
@@ -75,10 +75,10 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Document  $document
+     * @param  \App\Models\AicsDocument  $Aicsdocument
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Document $document)
+    public function destroy(AicsDocument $Aicsdocument)
     {
         //
     }

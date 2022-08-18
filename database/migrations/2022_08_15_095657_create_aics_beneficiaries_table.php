@@ -21,12 +21,14 @@ class CreateAicsBeneficiariesTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('ext_name')->nullable();
             $table->string('street_number')->nullable();
+            $table->unsignedBigInteger('psgc_id')->nullable();
             $table->string('mobile_number')->nullable();
             $table->date('birth_date')->nullable();
             $table->integer('age')->nullable();
             $table->string('gender')->nullable();
             $table->string('occupation')->nullable();
             $table->float('monthly_salary', 15, 2)->nullable();
+            $table->string('rel_client')->nullable();
             $table->timestamps();
         });
     }

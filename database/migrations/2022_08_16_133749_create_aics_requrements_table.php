@@ -15,8 +15,9 @@ class CreateAicsRequrementsTable extends Migration
     {
         Schema::create('aics_requrements', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->unsignedBigInteger('aics_type_id')->nullable();
+            $table->boolean('is_required')->nullable();
             $table->timestamps();
         });
     }

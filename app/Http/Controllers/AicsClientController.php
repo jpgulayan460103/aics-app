@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
+
 
 class AicsClientController extends Controller
 {
@@ -35,7 +37,8 @@ class AicsClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
     }
 
     /**
@@ -44,9 +47,10 @@ class AicsClientController extends Controller
      * @param  \App\Models\AicsClient  $aicsClient
      * @return \Illuminate\Http\Response
      */
-    public function show(AicsClient $aicsClient)
+    public function show(AicsClient $aicsClient, $id)
     {
-        //
+        $aics_client = $aicsClient->findOrFail($id);
+        return $aics_client;
     }
 
     /**
@@ -67,9 +71,10 @@ class AicsClientController extends Controller
      * @param  \App\Models\AicsClient  $aicsClient
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AicsClient $aicsClient)
+    public function update(Request $request, $id)
     {
-        //
+        $aics_client = AicsClient::findOrFail($id)->update($request->all());
+        return $aics_client;
     }
 
     /**

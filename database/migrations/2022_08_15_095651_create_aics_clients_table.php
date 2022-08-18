@@ -23,7 +23,6 @@ class CreateAicsClientsTable extends Migration
             $table->unsignedBigInteger('psgc_id')->nullable();
             $table->string('mobile_number')->nullable();
             $table->date('birth_date')->nullable();
-            $table->string('rel_beneficary')->nullable();
             $table->timestamps();
         });
     }

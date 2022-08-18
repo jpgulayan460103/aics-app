@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('uuid');
             $table->rememberToken();
             $table->timestamps();
+            $table->unsignedBigInteger('aics_client_id')->nullable();
         });
     }
 

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class AicsType extends Model
 {
     use HasFactory;
+
+    public function requirements()
+    {
+        return $this->hasMany(AicsRequrement::class);
+    }
 }

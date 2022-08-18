@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,17 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->uuid = (string) Str::uuid();
+        });
+        self::updating(function($model) {
+
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,4 +53,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function aics_client()
+    {
+        return $this->belongsTo(AicsClient::class);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }
