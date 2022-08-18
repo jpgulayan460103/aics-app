@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AicsClientController;
 use App\Http\Controllers\AicsBeneficiaryController;
-use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\AicsDocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '/aics'], function () {
-    Route::resource('clients/{client}/documents', DocumentController::class);
+    Route::resource('clients/{client}/documents', AicsDocumentController::class);
     Route::resource('clients/{client}/beneficiaries', AicsBeneficiaryController::class);
     Route::resource('clients', AicsClientController::class);
     Route::resource('assistance', AicsAssistanceController::class);

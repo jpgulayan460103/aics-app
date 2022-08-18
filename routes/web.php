@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\AicsBeneficiaryController;
 use App\Http\Controllers\AicsClientController;
-use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\AicsDocumentController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,8 +21,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => '/aics'], function () {
-    Route::resource('clients/{client}/documents', DocumentController::class);
-    Route::resource('clients/{client}/beneficiaries', AicsBeneficiaryController::class);
-    Route::resource('clients', AicsClientController::class);
-});
+// Route::group(['prefix' => '/aics'], function () {
+//     Route::resource('clients/{client}/documents', AicsDocumentController::class);
+//     Route::resource('clients/{client}/beneficiaries', AicsBeneficiaryController::class);
+//     Route::resource('clients', AicsClientController::class);
+// });
+
+// Route::post('login', 'Auth\LoginController@login');
+Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
