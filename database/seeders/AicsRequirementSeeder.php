@@ -41,7 +41,7 @@ class AicsRequirementSeeder extends Seeder
 
     public function json()
     {
-        $reader = Reader::createFromPath(public_path('/files/assistance_requirement.csv'), 'r');
+        $reader = Reader::createFromPath(public_path('/dataseeders/assistance_requirement.csv'), 'r');
         $results = $reader->getRecords();
         $data = array();
         foreach ($results as $key => $row) {

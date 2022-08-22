@@ -36,7 +36,7 @@ class AicsTypeSeeder extends Seeder
 
     public function json()
     {
-        $reader = Reader::createFromPath(public_path('/files/assistance_types.csv'), 'r');
+        $reader = Reader::createFromPath(public_path('/dataseeders/assistance_types.csv'), 'r');
         $results = $reader->getRecords();
         $data = array();
         foreach ($results as $key => $row) {

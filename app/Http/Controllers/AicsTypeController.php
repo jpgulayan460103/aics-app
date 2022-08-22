@@ -14,7 +14,7 @@ class AicsTypeController extends Controller
      */
     public function index()
     {
-        //
+        return AicsType::with('requirements')->all();
     }
 
     /**
@@ -44,9 +44,9 @@ class AicsTypeController extends Controller
      * @param  \App\Models\AicsType  $aicsType
      * @return \Illuminate\Http\Response
      */
-    public function show(AicsType $aicsType)
+    public function show(AicsType $aicsType, $id)
     {
-        //
+        return AicsType::with('requirements')->findOrFail($id);
     }
 
     /**
