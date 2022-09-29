@@ -14,7 +14,7 @@ class AicsTypeController extends Controller
      */
     public function index()
     {
-        return AicsType::with('requirements')->all();
+        return AicsType::with('requirements')->get();
     }
 
     /**

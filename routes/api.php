@@ -23,9 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '/aics'], function () {
-    Route::resource('assistances', AicsAssistanceController::class);
-    Route::get('assistance-types', [AicsTypeController::class, 'index']);
-    Route::get('assistance-types/{assistance-type}', [AicsTypeController::class, 'show']);
-    Route::get('beneficiaries', [AicsBeneficiaryController::class, 'index']);
-    Route::get('clients', [AicsClientController::class, 'index']);
+    Route::resource('assistances', \App\Http\Controllers\AicsAssistanceController::class);
+    Route::get('assistance-types', [\App\Http\Controllers\AicsTypeController::class, 'index'])->name("api.aics.assistance-types");
+    Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
+    Route::get('beneficiaries', [\App\Http\Controllers\AicsBeneficiaryController::class, 'index']);
+    Route::get('clients', [\App\Http\Controllers\AicsClientController::class, 'index']);
 });
+
+Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
+

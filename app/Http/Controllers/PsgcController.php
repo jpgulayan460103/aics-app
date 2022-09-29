@@ -14,7 +14,7 @@ class PsgcController extends Controller
      */
     public function index()
     {
-        //
+        return Psgc::all();
     }
 
     /**

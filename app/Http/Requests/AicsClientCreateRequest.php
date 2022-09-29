@@ -31,7 +31,7 @@ class AicsClientCreateRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:100', new ValidNameString],
             'first_name' => ['required', 'string', 'max:100', new ValidNameString],
             'middle_name' => ['required', 'string', 'max:100', new ValidNameString],
-            'ext_name' => ['required', 'string', 'max:3', new ValidNameString],
+            'ext_name' => ['nullable', 'string', 'max:3', new ValidNameString],
             'street_number' => ['required', 'string', 'max:100', new ValidString],
             'psgc_id' => ['required'],
             'mobile_number' => ['required', 'string', new ValidCellphoneNumber],
