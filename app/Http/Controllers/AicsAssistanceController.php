@@ -28,7 +28,7 @@ class AicsAssistanceController extends Controller
             $errors = [];
             $year = date("Y");
             $month = date("m");
-            
+          
             //Client Validation
             $client_request_rules = (new AicsClientCreateRequest())->rules();
             $client_validator =  Validator::make($form_data['client'], $client_request_rules);
@@ -42,7 +42,7 @@ class AicsAssistanceController extends Controller
             if ($beneficiary_validator->fails()) {
                 $errors['beneficiary'] = $beneficiary_validator->errors();
             }
-            if($errors != array()){
+            if ($errors != array()) {
                 return response(['errors' => $errors], 422);
             }
 
@@ -53,7 +53,7 @@ class AicsAssistanceController extends Controller
             if ($assistance_validator->fails()) {
                 $errors['assistance'] = $assistance_validator->errors();
             }
-            if($errors != array()){
+            if ($errors != array()) {
                 return response(['errors' => $errors], 422);
             }
 
@@ -64,7 +64,7 @@ class AicsAssistanceController extends Controller
             $aics_assistance->aics_client()->associate($client);
             $aics_assistance->aics_beneficiary()->associate($beneficiary);
             $aics_assistance->aics_beneficiary->aics_client()->associate($client);
-            
+
 
             $aics_assistance->aics_beneficiary->save();
             $aics_assistance->save();
@@ -75,19 +75,24 @@ class AicsAssistanceController extends Controller
             $count_users = User::whereBetween('created_at', [$start_year, $end_year])->whereNotNull('aics_client_id')->count();
             $user = $aics_assistance->aics_client->user()->create([
                 'name' => $client->first_name,
-                'email' => $year.str_pad($month, 2, "0", STR_PAD_LEFT).str_pad($count_users, 4, "0", STR_PAD_LEFT),
+                'email' => $year . str_pad($month, 2, "0", STR_PAD_LEFT) . str_pad($count_users, 4, "0", STR_PAD_LEFT),
                 'password' => Carbon::parse($client->birth_date)->format("mY"),
             ]);
+
+
 
             //Uploaded Documents
             $documents = [];
             $aics_type_id = request('assistance.aics_type_id');
             $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
             $files = request('assistance.documents');
-            
+
+
+
+
             foreach ($requirements as $key => $requirement) {
-                if(isset($files[$key])){
-                    $path = Storage::disk('local')->put("public/uploads/$year/$month/".$aics_assistance->uuid, $files[$key]);
+                if (isset($files[$key])) {
+                    $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$key]);
                     $url = Storage::url($path);
                     $documents[] = new AicsDocument([
                         'file_directory' => $url,

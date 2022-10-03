@@ -47,7 +47,7 @@ class AicsAssistanceCreateRequest extends FormRequest
         
         foreach ($requirements as $key => $requirement) {
             if(!isset($files[$key])){
-                // $validator->errors()->add("documents_".$key, $requirement->name." is required.");
+                $validator->errors()->add("documents_".$key, $requirement->name." is required.");
             }
         }
 

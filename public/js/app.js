@@ -5350,6 +5350,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6154,7 +6165,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         client: {},
         assistance: {
-          documents: []
+          documents: {}
         }
       },
       // form: {},
@@ -6198,29 +6209,75 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     submit: function submit() {
       var _this = this;
 
-      if (this.is_beneficiary == true) {
-        this.form.client = this.form.beneficiary;
-        this.form.beneficiary.rel_client = "Myself";
-      }
-
-      axios.post(route("assistances.store"), this.form).then(function (response) {
-        console.log(response.data);
-      })["catch"](function (error) {
-        if (error.response.status == 422) {
-          _this.validationErrors = error.response.data.errors;
+      if (this.form.assistance.aics_type_id) {
+        if (this.is_beneficiary == true) {
+          this.form.client = this.form.beneficiary;
+          this.form.beneficiary.rel_client = "Myself";
         }
-      });
+
+        var config = {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        };
+        var formData = new FormData();
+
+        _.each(this.form.client, function (value, key) {
+          formData.append("client[" + key + "]", value);
+        });
+
+        _.each(this.form.beneficiary, function (value, key) {
+          formData.append("beneficiary[" + key + "]", value);
+        });
+
+        _.each(this.form.assistance, function (value, key) {
+          if (_typeof(value) === "object") {
+            _.each(value, function (v, k) {
+              formData.append("assistance[" + key + "][" + k + "]", v);
+            });
+          } else {
+            formData.append("assistance[" + key + "]", value);
+          }
+        });
+
+        var headers = {
+          "Content-Type": "multipart/form-data;"
+        };
+        console.log(formData);
+        axios.post(route("assistances.store"), formData, headers).then(function (response) {
+          console.log(response.data);
+
+          if (response.data.aics_beneficiary_id) {
+            alert("Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly.");
+          }
+        })["catch"](function (error) {
+          if (error.response.status == 422) {
+            alert("Kumpletohin ang form. \nPlease complete the form.");
+            _this.validationErrors = error.response.data.errors;
+          }
+        });
+      } else {
+        alert("Pumili ng nais hingiin na tulong. \nPlease select assistance request.");
+      }
+    },
+    onFileChange: function onFileChange(i, e) {
+      this.form.assistance.documents[i] = e.target.files[0];
     },
     getRequirements: function getRequirements() {
       var _this2 = this;
 
-      console.log(this.form.assistance.aics_type_id);
+      this.form.assistance.documents = {};
+
+      if (this.validationErrors.assistance) {
+        this.validationErrors.assistance = {};
+      }
+
+      ;
       this.requirements = this.assistance_types.filter(function (x) {
         if (x.id === _this2.form.assistance.aics_type_id) {
           return x.requirements;
         }
       });
-      console.log(this.requirements[0].requirements);
     },
     calculateAge: function calculateAge() {
       if (!this.form.beneficiary.birth_date) {
@@ -29615,6 +29672,7 @@ var render = function () {
   return _c(
     "form",
     {
+      attrs: { enctype: "multipart/form-data" },
       on: {
         submit: function ($event) {
           $event.preventDefault()
@@ -31142,32 +31200,64 @@ var render = function () {
                 _vm._m(29),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-body" }, [
+                  _vm.validationErrors.assistance
+                    ? _c("div", { staticClass: "alert alert-danger" }, [
+                        _c(
+                          "ul",
+                          _vm._l(
+                            _vm.validationErrors.assistance,
+                            function (e, i) {
+                              return _c("li", { key: i }, [
+                                _vm._v(
+                                  "\n              " +
+                                    _vm._s(e[0]) +
+                                    "\n            "
+                                ),
+                              ])
+                            }
+                          ),
+                          0
+                        ),
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _vm.requirements[0]
                     ? _c(
                         "ul",
                         {
-                          staticClass: "ml-3",
+                          staticClass: "ml-3 list-group list-group-flush",
                           staticStyle: {
                             "list-style": "decimal",
                             display: "block",
                           },
                         },
-                        _vm._l(_vm.requirements[0].requirements, function (r) {
-                          return _c("li", { key: r.id }, [
-                            _c("p", [_vm._v(_vm._s(r.name))]),
-                            _vm._v(" "),
-                            _c("input", {
-                              attrs: { type: "file" },
-                              on: {
-                                input: function ($event) {
-                                  return _vm.form.assistance.documents.push(
-                                    $event.target.files
-                                  )
-                                },
-                              },
-                            }),
-                          ])
-                        }),
+                        _vm._l(
+                          _vm.requirements[0].requirements,
+                          function (r, i) {
+                            return _c(
+                              "li",
+                              { key: r.id, staticClass: "list-group-item" },
+                              [
+                                _c("p", [_vm._v(_vm._s(r.name))]),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "alert alert-primary" },
+                                  [
+                                    _c("input", {
+                                      attrs: { type: "file" },
+                                      on: {
+                                        input: function ($event) {
+                                          return _vm.onFileChange(i, $event)
+                                        },
+                                      },
+                                    }),
+                                  ]
+                                ),
+                              ]
+                            )
+                          }
+                        ),
                         0
                       )
                     : _vm._e(),

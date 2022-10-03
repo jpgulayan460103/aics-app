@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submit" enctype="multipart/form-data">
     <div class="container m-10" style="margin-top: 50px">
       <div class="row">
         <div class="col-md-4 text-center">
@@ -755,24 +755,33 @@
         <div class="card-title">Requirements <span></span></div>
 
         <div class="card-body">
+          <div v-if="validationErrors.assistance" class="alert alert-danger">
+            <ul>
+              <li v-for="(e, i) in validationErrors.assistance" :key="i">
+                {{ e[0] }}
+              </li>
+            </ul>
+          </div>
           <ul
             v-if="requirements[0]"
             style="list-style: decimal; display: block"
-            class="ml-3"
+            class="ml-3 list-group list-group-flush"
           >
-            <li v-for="r in requirements[0].requirements" :key="r.id">
+            <li
+              v-for="(r, i) in requirements[0].requirements"
+              :key="r.id"
+              class="list-group-item"
+            >
               <p>{{ r.name }}</p>
-
-              <input
-                type="file"
-                @input="form.assistance.documents.push($event.target.files)"
-              />
+              <div class="alert alert-primary">
+                <input type="file" @input="onFileChange(i, $event)" />
+              </div>
             </li>
           </ul>
         </div>
       </div>
 
-      <div class="text-center col-md-12" style="padding:10px 0px;">
+      <div class="text-center col-md-12" style="padding: 10px 0px">
         <button type="submit" class="btn btn-primary btn-lg">SUBMIT</button>
       </div>
     </div>
@@ -803,7 +812,7 @@ export default {
         },
         client: {},
         assistance: {
-          documents: [],
+          documents: {},
         },
       },
       // form: {},
@@ -850,30 +859,82 @@ export default {
 
   methods: {
     submit() {
-      if (this.is_beneficiary == true) {
-        this.form.client = this.form.beneficiary;
-        this.form.beneficiary.rel_client = "Myself";
-      }
+      if (this.form.assistance.aics_type_id) {
+        if (this.is_beneficiary == true) {
+          this.form.client = this.form.beneficiary;
+          this.form.beneficiary.rel_client = "Myself";
+        }
 
-      axios
-        .post(route("assistances.store"), this.form)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          if (error.response.status == 422) {
-            this.validationErrors = error.response.data.errors;
+        const config = {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        };
+
+        let formData = new FormData();
+
+        _.each(this.form.client, (value, key) => {
+          formData.append("client[" + key + "]", value);
+        });
+
+        _.each(this.form.beneficiary, (value, key) => {
+          formData.append("beneficiary[" + key + "]", value);
+        });
+
+        _.each(this.form.assistance, (value, key) => {
+          if (typeof value === "object") {
+            _.each(value, (v, k) => {
+              formData.append("assistance[" + key + "][" + k + "]", v);
+            });
+          } else {
+            formData.append("assistance[" + key + "]", value);
           }
         });
+
+        const headers = {
+          "Content-Type": "multipart/form-data;",
+        };
+
+        console.log(formData);
+
+        axios
+          .post(route("assistances.store"), formData, headers)
+          .then((response) => {
+            console.log(response.data);
+            if(response.data.aics_beneficiary_id)
+            {
+              alert("Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly.")
+            }
+
+          })
+          .catch((error) => {
+            if (error.response.status == 422) {
+              alert("Kumpletohin ang form. \nPlease complete the form.");
+              this.validationErrors = error.response.data.errors;
+            }
+          });
+      }else
+      {
+        alert("Pumili ng nais hingiin na tulong. \nPlease select assistance request.")
+      }
     },
+    onFileChange(i, e) {
+      
+      this.form.assistance.documents[i] = e.target.files[0];
+    },
+
     getRequirements() {
-      console.log(this.form.assistance.aics_type_id);
+      this.form.assistance.documents = {};
+      if(this.validationErrors.assistance)
+      {
+        this.validationErrors.assistance= {};
+      };
+
       this.requirements = this.assistance_types.filter((x) => {
         if (x.id === this.form.assistance.aics_type_id) {
           return x.requirements;
         }
       });
-      console.log(this.requirements[0].requirements);
     },
 
     calculateAge: function () {
