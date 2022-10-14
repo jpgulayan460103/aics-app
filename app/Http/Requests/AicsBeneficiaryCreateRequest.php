@@ -34,12 +34,12 @@ class AicsBeneficiaryCreateRequest extends FormRequest
             'ext_name' => ['nullable', 'string', 'max:3', new ValidNameString],
             'street_number' => ['required', 'string', 'max:100', new ValidString],
             'psgc_id' => ['required'],
-            'mobile_number' => [new ValidCellphoneNumber],
+            'mobile_number' => ['required', new ValidCellphoneNumber],
             'birth_date' => ['required', 'date' , 'before_or_equal:'.Carbon::now()->toDateString()],
             'age' => ['required', 'integer', 'min:0', 'max:120', new ValidString],
-            'gender' => ['required', 'string', 'max:5', new ValidNameString],
+            'gender' => ['required', 'string', 'max:10', new ValidNameString],
             'occupation' => ['required', 'string', 'max:100', new ValidNameString],
-            'monthly_salary' => ['required', 'numeric', 'min:0', 'max:999999'],
+            'monthly_salary' => ['required', 'string'],
             'rel_client' => ['required', 'string', 'max:100', new ValidString],
         ];
     }

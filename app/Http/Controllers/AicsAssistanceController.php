@@ -28,6 +28,12 @@ class AicsAssistanceController extends Controller
             $errors = [];
             $year = date("Y");
             $month = date("m");
+
+            $errors = [
+                "client" => [],
+                "beneficiary" => [],
+                "assistance" => [],
+            ];
           
             //Client Validation
             $client_request_rules = (new AicsClientCreateRequest())->rules();
@@ -42,9 +48,6 @@ class AicsAssistanceController extends Controller
             if ($beneficiary_validator->fails()) {
                 $errors['beneficiary'] = $beneficiary_validator->errors();
             }
-            if ($errors != array()) {
-                return response(['errors' => $errors], 422);
-            }
 
             //Assistance Validation
             $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
@@ -53,7 +56,12 @@ class AicsAssistanceController extends Controller
             if ($assistance_validator->fails()) {
                 $errors['assistance'] = $assistance_validator->errors();
             }
-            if ($errors != array()) {
+            if (
+                $errors['client'] != array() &&
+                $errors['beneficiary'] != array() &&
+                $errors['assistance'] != array()
+            ) {
+                return $errors['client'];
                 return response(['errors' => $errors], 422);
             }
 
@@ -74,9 +82,9 @@ class AicsAssistanceController extends Controller
 
             $count_users = User::whereBetween('created_at', [$start_year, $end_year])->whereNotNull('aics_client_id')->count();
             $user = $aics_assistance->aics_client->user()->create([
-                'name' => $client->first_name,
-                'email' => $year . str_pad($month, 2, "0", STR_PAD_LEFT) . str_pad($count_users, 4, "0", STR_PAD_LEFT),
-                'password' => Carbon::parse($client->birth_date)->format("mY"),
+                'name' => $client->first_name." ".$client->middle_name." ".$client->last_name." ".$client->ext_name,
+                'email' => $year . "-" . str_pad($month, 2, "0", STR_PAD_LEFT) . "-" . str_pad($count_users, 4, "0", STR_PAD_LEFT),
+                'password' => $client->mobile_number,
             ]);
 
 
@@ -102,6 +110,7 @@ class AicsAssistanceController extends Controller
             }
             $aics_assistance->aics_documents()->saveMany($documents);
             DB::commit();
+            $aics_assistance->user_account = $user;
             return $aics_assistance;
         } catch (\Throwable $th) {
             DB::rollBack();

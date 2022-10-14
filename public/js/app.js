@@ -6150,6 +6150,56 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -6171,26 +6221,50 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       // form: {},
       assistance_types: {},
       psgc: {},
-      cities: {},
-      provinces: {},
-      province_selector: {},
-      city_selector: {},
-      barangays: {},
+      regions: {},
+      client_provinces: {},
+      client_cities: {},
+      client_barangays: {},
+      client_region_selector: {},
+      client_province_selector: {},
+      client_city_selector: {},
+      beneficiary_provinces: {},
+      beneficiary_cities: {},
+      beneficiary_barangays: {},
+      beneficiary_region_selector: {},
+      beneficiary_province_selector: {},
+      beneficiary_city_selector: {},
       is_beneficiary: true,
       requirements: {},
       errors: {},
-      validationErrors: "",
+      validationErrors: {
+        client: {},
+        beneficiary: {},
+        assistance: {}
+      },
       max_date: new Date().toISOString().split("T")[0],
       //logo:  location.protocol + "//" + location.host +  "/" + process.env.MIX_BASE_NAME +"/images/DSWD-DVO-LOGO.png",
       logo: location.protocol + "//" + location.host + "/images/DSWD-DVO-LOGO.png"
     };
   },
   watch: {
-    province_selector: function province_selector(newVal, oldVal) {
-      this.cities = {}, this.cities = this.groupByKey(newVal, "city_name");
+    beneficiary_region_selector: function beneficiary_region_selector(newVal, oldVal) {
+      (this.beneficiary_provinces = {}, this.beneficiary_cities = {}, this.beneficiary_barangays = {}), this.beneficiary_provinces = this.groupByKey(newVal, "province_name");
     },
-    city_selector: function city_selector(newVal, oldVal) {
-      this.barangays = {}, this.barangays = this.groupByKey(newVal, "brgy_name");
+    beneficiary_province_selector: function beneficiary_province_selector(newVal, oldVal) {
+      (this.beneficiary_cities = {}, this.beneficiary_barangays = {}), this.beneficiary_cities = this.groupByKey(newVal, "city_name");
+    },
+    beneficiary_city_selector: function beneficiary_city_selector(newVal, oldVal) {
+      this.beneficiary_barangays = {}, this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name");
+    },
+    client_region_selector: function client_region_selector(newVal, oldVal) {
+      (this.client_provinces = {}, this.client_cities = {}, this.client_barangays = {}), this.client_provinces = this.groupByKey(newVal, "province_name");
+    },
+    client_province_selector: function client_province_selector(newVal, oldVal) {
+      (this.client_cities = {}, this.client_barangays = {}), this.client_cities = this.groupByKey(newVal, "city_name");
+    },
+    client_city_selector: function client_city_selector(newVal, oldVal) {
+      this.client_barangays = {}, this.client_barangays = this.groupByKey(newVal, "brgy_name");
     },
     is_beneficiary: function is_beneficiary(newVal, oldVal) {
       console.log(newVal);
@@ -6279,6 +6353,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         }
       });
     },
+    getBeneficiaryPsgc: function getBeneficiaryPsgc() {
+      var _this3 = this;
+
+      axios.get(route("api.psgc.show", "brgy"), {
+        params: {
+          field: "region_psgc",
+          value: this.beneficiary_region_selector[0].region_psgc
+        }
+      }).then(function (response) {
+        _this3.beneficiary_psgc = response.data;
+        _this3.beneficiary_provinces = _this3.groupByKey(_this3.beneficiary_psgc, "province_name");
+      });
+    },
+    getClientPsgc: function getClientPsgc() {
+      var _this4 = this;
+
+      axios.get(route("api.psgc.show", "brgy"), {
+        params: {
+          field: "region_psgc",
+          value: this.client_region_selector[0].region_psgc
+        }
+      }).then(function (response) {
+        _this4.client_psgc = response.data;
+        _this4.client_provinces = _this4.groupByKey(_this4.client_psgc, "province_name");
+      });
+    },
     calculateAge: function calculateAge() {
       if (!this.form.beneficiary.birth_date) {
         this.form.age = 0;
@@ -6295,17 +6395,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         if (obj[key] === undefined) return hash;
         return Object.assign(hash, _defineProperty({}, obj[key], (hash[obj[key]] || []).concat(obj)));
       }, {});
+    },
+    isEmpty: function isEmpty(value) {
+      return _.isEmpty(value);
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this5 = this;
 
     axios.get(route("api.aics.assistance-types")).then(function (response) {
-      _this3.assistance_types = response.data;
+      _this5.assistance_types = response.data;
     });
-    axios.get(route("api.psgc")).then(function (response) {
-      _this3.psgc = response.data;
-      _this3.provinces = _this3.groupByKey(_this3.psgc, "province_name");
+    axios.get(route("api.psgc.show", "region")).then(function (response) {
+      _this5.regions = _this5.groupByKey(response.data, "region_name");
     });
   }
 });
@@ -29973,36 +30075,76 @@ var render = function () {
                     _vm._m(5),
                     _c("br"),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.beneficiary.ext_name,
-                          expression: "form.beneficiary.ext_name",
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.beneficiary.ext_name,
+                            expression: "form.beneficiary.ext_name",
+                          },
+                        ],
+                        staticClass: "form-control",
+                        class: {
+                          "is-invalid":
+                            _vm.validationErrors.ext_name &&
+                            _vm.validationErrors.beneficiary.ext_name,
                         },
-                      ],
-                      staticClass: "form-control",
-                      class: {
-                        "is-invalid":
-                          _vm.validationErrors.ext_name &&
-                          _vm.validationErrors.beneficiary.ext_name,
-                      },
-                      attrs: { id: "ext_name", type: "text" },
-                      domProps: { value: _vm.form.beneficiary.ext_name },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.form.beneficiary,
-                            "ext_name",
-                            $event.target.value
-                          )
+                        attrs: { id: "ext_name", type: "text" },
+                        on: {
+                          change: function ($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function (o) {
+                                return o.selected
+                              })
+                              .map(function (o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.form.beneficiary,
+                              "ext_name",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
                         },
                       },
-                    }),
+                      [
+                        _c("option", { attrs: { value: "" } }),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "JR" } }, [
+                          _vm._v("JR"),
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "SR" } }, [
+                          _vm._v("SR"),
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "I" } }, [_vm._v("I")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "II" } }, [
+                          _vm._v("II"),
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "III" } }, [
+                          _vm._v("III"),
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "IV" } }, [
+                          _vm._v("IV"),
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "V" } }, [_vm._v("V")]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "VI" } }, [
+                          _vm._v("VI"),
+                        ]),
+                      ]
+                    ),
                     _vm._v(" "),
                     _vm.validationErrors.beneficiary &&
                     _vm.validationErrors.beneficiary.ext_name
@@ -30069,42 +30211,7 @@ var render = function () {
                   _c("div", { staticClass: "col-md-3" }, [
                     _vm._m(7),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.beneficiary.region,
-                          expression: "form.beneficiary.region",
-                        },
-                      ],
-                      staticClass: "form-control-plaintext",
-                      attrs: {
-                        id: "psgc_id",
-                        type: "text",
-                        value: "XI",
-                        readonly: "",
-                      },
-                      domProps: { value: _vm.form.beneficiary.region },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.form.beneficiary,
-                            "region",
-                            $event.target.value
-                          )
-                        },
-                      },
-                    }),
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-3" }, [
-                    _vm._m(8),
-                    _vm._v(" "),
-                    _vm.provinces
+                    _vm.regions
                       ? _c(
                           "select",
                           {
@@ -30112,8 +30219,77 @@ var render = function () {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.province_selector,
-                                expression: "province_selector",
+                                value: _vm.beneficiary_region_selector,
+                                expression: "beneficiary_region_selector",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: { id: "psgc_id", name: "" },
+                            on: {
+                              change: [
+                                function ($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function (o) {
+                                      return o.selected
+                                    })
+                                    .map(function (o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.beneficiary_region_selector = $event
+                                    .target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                },
+                                _vm.getBeneficiaryPsgc,
+                              ],
+                            },
+                          },
+                          _vm._l(_vm.regions, function (e, i) {
+                            return _c(
+                              "option",
+                              { key: i, domProps: { value: e } },
+                              [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(i) +
+                                    "\n                "
+                                ),
+                              ]
+                            )
+                          }),
+                          0
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.validationErrors.beneficiary &&
+                    _vm.validationErrors.beneficiary.psgc_id
+                      ? _c("div", { staticStyle: { color: "red" } }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.validationErrors.beneficiary.psgc_id[0]
+                              ) +
+                              "\n              "
+                          ),
+                        ])
+                      : _vm._e(),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _vm._m(8),
+                    _vm._v(" "),
+                    _vm.beneficiary_provinces
+                      ? _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.beneficiary_province_selector,
+                                expression: "beneficiary_province_selector",
                               },
                             ],
                             staticClass: "form-control",
@@ -30128,13 +30304,14 @@ var render = function () {
                                     var val = "_value" in o ? o._value : o.value
                                     return val
                                   })
-                                _vm.province_selector = $event.target.multiple
+                                _vm.beneficiary_province_selector = $event
+                                  .target.multiple
                                   ? $$selectedVal
                                   : $$selectedVal[0]
                               },
                             },
                           },
-                          _vm._l(_vm.provinces, function (e, i) {
+                          _vm._l(_vm.beneficiary_provinces, function (e, i) {
                             return _c(
                               "option",
                               { key: i, domProps: { value: e } },
@@ -30168,7 +30345,7 @@ var render = function () {
                   _c("div", { staticClass: "col-md-3" }, [
                     _vm._m(9),
                     _vm._v(" "),
-                    _vm.cities
+                    _vm.beneficiary_cities
                       ? _c(
                           "select",
                           {
@@ -30176,8 +30353,8 @@ var render = function () {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.city_selector,
-                                expression: "city_selector",
+                                value: _vm.beneficiary_city_selector,
+                                expression: "beneficiary_city_selector",
                               },
                             ],
                             staticClass: "form-control",
@@ -30192,13 +30369,14 @@ var render = function () {
                                     var val = "_value" in o ? o._value : o.value
                                     return val
                                   })
-                                _vm.city_selector = $event.target.multiple
+                                _vm.beneficiary_city_selector = $event.target
+                                  .multiple
                                   ? $$selectedVal
                                   : $$selectedVal[0]
                               },
                             },
                           },
-                          _vm._l(_vm.cities, function (e, i) {
+                          _vm._l(_vm.beneficiary_cities, function (e, i) {
                             return _c(
                               "option",
                               { key: i, domProps: { value: e } },
@@ -30232,7 +30410,7 @@ var render = function () {
                   _c("div", { staticClass: "col-md-3" }, [
                     _vm._m(10),
                     _vm._v(" "),
-                    _vm.cities
+                    _vm.beneficiary_cities
                       ? _c(
                           "select",
                           {
@@ -30266,7 +30444,7 @@ var render = function () {
                               },
                             },
                           },
-                          _vm._l(_vm.barangays, function (e, i) {
+                          _vm._l(_vm.beneficiary_barangays, function (e, i) {
                             return _c(
                               "option",
                               { key: i, domProps: { value: e[0].id } },
@@ -30312,7 +30490,11 @@ var render = function () {
                         },
                       ],
                       staticClass: "form-control",
-                      attrs: { id: "mobile_number", type: "text" },
+                      attrs: {
+                        id: "mobile_number",
+                        type: "text",
+                        placeholder: "091234567890",
+                      },
                       domProps: { value: _vm.form.beneficiary.mobile_number },
                       on: {
                         input: function ($event) {
@@ -30397,29 +30579,9 @@ var render = function () {
                     _vm._m(13),
                     _vm._v(" "),
                     _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.beneficiary.age,
-                          expression: "form.beneficiary.age",
-                        },
-                      ],
-                      staticClass: "form-control-plaintext",
+                      staticClass: "form-control",
                       attrs: { id: "age", type: "text", readonly: "" },
                       domProps: { value: _vm.form.beneficiary.age },
-                      on: {
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.form.beneficiary,
-                            "age",
-                            $event.target.value
-                          )
-                        },
-                      },
                     }),
                   ]),
                   _vm._v(" "),
@@ -30726,31 +30888,75 @@ var render = function () {
                         _vm._m(20),
                         _c("br"),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.client.ext_name,
-                              expression: "form.client.ext_name",
-                            },
-                          ],
-                          staticClass: "form-control",
-                          attrs: { id: "ext_name", type: "text" },
-                          domProps: { value: _vm.form.client.ext_name },
-                          on: {
-                            input: function ($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.form.client,
-                                "ext_name",
-                                $event.target.value
-                              )
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.client.ext_name,
+                                expression: "form.client.ext_name",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: { id: "ext_name", type: "text" },
+                            on: {
+                              change: function ($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function (o) {
+                                    return o.selected
+                                  })
+                                  .map(function (o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.form.client,
+                                  "ext_name",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              },
                             },
                           },
-                        }),
+                          [
+                            _c("option", { attrs: { value: "" } }),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "JR" } }, [
+                              _vm._v("JR"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "SR" } }, [
+                              _vm._v("SR"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "I" } }, [
+                              _vm._v("I"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "II" } }, [
+                              _vm._v("II"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "III" } }, [
+                              _vm._v("III"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "IV" } }, [
+                              _vm._v("IV"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "V" } }, [
+                              _vm._v("V"),
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "VI" } }, [
+                              _vm._v("VI"),
+                            ]),
+                          ]
+                        ),
                         _vm._v(" "),
                         _vm.validationErrors.client &&
                         _vm.validationErrors.client.ext_name
@@ -30816,37 +31022,7 @@ var render = function () {
                       _c("div", { staticClass: "col-md-3" }, [
                         _vm._m(22),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.client.region,
-                              expression: "form.client.region",
-                            },
-                          ],
-                          staticClass: "form-control-plaintext",
-                          attrs: { id: "psgc_id", type: "text", readonly: "" },
-                          domProps: { value: _vm.form.client.region },
-                          on: {
-                            input: function ($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.form.client,
-                                "region",
-                                $event.target.value
-                              )
-                            },
-                          },
-                        }),
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _vm._m(23),
-                        _vm._v(" "),
-                        _vm.provinces
+                        _vm.regions
                           ? _c(
                               "select",
                               {
@@ -30854,8 +31030,80 @@ var render = function () {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.province_selector,
-                                    expression: "province_selector",
+                                    value: _vm.client_region_selector,
+                                    expression: "client_region_selector",
+                                  },
+                                ],
+                                staticClass: "form-control",
+                                attrs: { id: "psgc_id", name: "" },
+                                on: {
+                                  change: [
+                                    function ($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call(
+                                          $event.target.options,
+                                          function (o) {
+                                            return o.selected
+                                          }
+                                        )
+                                        .map(function (o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.client_region_selector = $event.target
+                                        .multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    },
+                                    _vm.getClientPsgc,
+                                  ],
+                                },
+                              },
+                              _vm._l(_vm.regions, function (e, i) {
+                                return _c(
+                                  "option",
+                                  { key: i, domProps: { value: e } },
+                                  [
+                                    _vm._v(
+                                      "\n                  " +
+                                        _vm._s(i) +
+                                        "\n                "
+                                    ),
+                                  ]
+                                )
+                              }),
+                              0
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.validationErrors.client &&
+                        _vm.validationErrors.client.psgc_id
+                          ? _c("div", { staticStyle: { color: "red" } }, [
+                              _vm._v(
+                                "\n                " +
+                                  _vm._s(
+                                    _vm.validationErrors.client.psgc_id[0]
+                                  ) +
+                                  "\n              "
+                              ),
+                            ])
+                          : _vm._e(),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-3" }, [
+                        _vm._m(23),
+                        _vm._v(" "),
+                        _vm.client_provinces
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.client_province_selector,
+                                    expression: "client_province_selector",
                                   },
                                 ],
                                 staticClass: "form-control",
@@ -30874,14 +31122,14 @@ var render = function () {
                                           "_value" in o ? o._value : o.value
                                         return val
                                       })
-                                    _vm.province_selector = $event.target
+                                    _vm.client_province_selector = $event.target
                                       .multiple
                                       ? $$selectedVal
                                       : $$selectedVal[0]
                                   },
                                 },
                               },
-                              _vm._l(_vm.provinces, function (e, i) {
+                              _vm._l(_vm.client_provinces, function (e, i) {
                                 return _c(
                                   "option",
                                   { key: i, domProps: { value: e } },
@@ -30915,7 +31163,7 @@ var render = function () {
                       _c("div", { staticClass: "col-md-3" }, [
                         _vm._m(24),
                         _vm._v(" "),
-                        _vm.cities
+                        _vm.client_cities
                           ? _c(
                               "select",
                               {
@@ -30923,8 +31171,8 @@ var render = function () {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.city_selector,
-                                    expression: "city_selector",
+                                    value: _vm.client_city_selector,
+                                    expression: "client_city_selector",
                                   },
                                 ],
                                 staticClass: "form-control",
@@ -30943,13 +31191,14 @@ var render = function () {
                                           "_value" in o ? o._value : o.value
                                         return val
                                       })
-                                    _vm.city_selector = $event.target.multiple
+                                    _vm.client_city_selector = $event.target
+                                      .multiple
                                       ? $$selectedVal
                                       : $$selectedVal[0]
                                   },
                                 },
                               },
-                              _vm._l(_vm.cities, function (e, i) {
+                              _vm._l(_vm.client_cities, function (e, i) {
                                 return _c(
                                   "option",
                                   { key: i, domProps: { value: e } },
@@ -30983,7 +31232,7 @@ var render = function () {
                       _c("div", { staticClass: "col-md-3" }, [
                         _vm._m(25),
                         _vm._v(" "),
-                        _vm.cities
+                        _vm.beneficiary_cities
                           ? _c(
                               "select",
                               {
@@ -31021,7 +31270,7 @@ var render = function () {
                                   },
                                 },
                               },
-                              _vm._l(_vm.barangays, function (e, i) {
+                              _vm._l(_vm.client_barangays, function (e, i) {
                                 return _c(
                                   "option",
                                   { key: i, domProps: { value: e[0].id } },
@@ -31200,7 +31449,7 @@ var render = function () {
                 _vm._m(29),
                 _vm._v(" "),
                 _c("div", { staticClass: "card-body" }, [
-                  _vm.validationErrors.assistance
+                  !_vm.isEmpty(_vm.validationErrors.assistance)
                     ? _c("div", { staticClass: "alert alert-danger" }, [
                         _c(
                           "ul",
@@ -31232,7 +31481,9 @@ var render = function () {
                           },
                         },
                         _vm._l(
-                          _vm.requirements[0].requirements,
+                          _vm.requirements[0].requirements.filter(function (i) {
+                            return i.is_required == 1
+                          }),
                           function (r, i) {
                             return _c(
                               "li",
@@ -31245,7 +31496,11 @@ var render = function () {
                                   { staticClass: "alert alert-primary" },
                                   [
                                     _c("input", {
-                                      attrs: { type: "file" },
+                                      attrs: {
+                                        type: "file",
+                                        accept:
+                                          "application/pdf,image/jpeg,image/png",
+                                      },
                                       on: {
                                         input: function ($event) {
                                           return _vm.onFileChange(i, $event)
@@ -31417,7 +31672,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "mobile_number" } }, [
       _vm._v("Telepono "),
-      _c("small", [_vm._v("(Mobile Number)")]),
+      _c("small", [_vm._v("(Mobile Number Ex. 091234567890)")]),
     ])
   },
   function () {

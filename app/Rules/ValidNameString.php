@@ -28,7 +28,7 @@ class ValidNameString implements Rule
         if(trim($value) == ""){
             return true;
         }
-        return preg_match('/^[\pL\pM_ _-_-_.]+$/u', $value) > 0;
+        return preg_match('/^[\pL\pM_ _-_-]+$/u', $value) > 0;
     }
 
     /**

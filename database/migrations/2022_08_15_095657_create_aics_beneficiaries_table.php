@@ -27,7 +27,7 @@ class CreateAicsBeneficiariesTable extends Migration
             $table->integer('age')->nullable();
             $table->string('gender')->nullable();
             $table->string('occupation')->nullable();
-            $table->float('monthly_salary', 15, 2)->nullable();
+            $table->string('monthly_salary')->nullable();
             $table->string('rel_client')->nullable();
             $table->timestamps();
         });

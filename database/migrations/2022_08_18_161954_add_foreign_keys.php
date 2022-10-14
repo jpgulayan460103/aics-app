@@ -20,6 +20,10 @@ class AddForeignKeys extends Migration
         });
         Schema::table('aics_beneficiaries', function (Blueprint $table) {
             $table->foreign('aics_client_id')->references('id')->on('aics_clients')->onDelete('cascade');
+            $table->foreign('psgc_id')->references('id')->on('psgcs')->onDelete('cascade');
+        });
+        Schema::table('aics_clients', function (Blueprint $table) {
+            $table->foreign('psgc_id')->references('id')->on('psgcs')->onDelete('cascade');
         });
         Schema::table('aics_documents', function (Blueprint $table) {
             $table->foreign('aics_requrement_id')->references('id')->on('aics_requrements')->onDelete('cascade');

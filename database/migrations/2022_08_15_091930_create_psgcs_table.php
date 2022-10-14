@@ -14,7 +14,7 @@ class CreatePsgcsTable extends Migration
     public function up()
     {
         Schema::create('psgcs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('region_name')->nullable();
             $table->integer('region_psgc')->nullable();
             $table->string('province_name')->nullable();
@@ -26,6 +26,9 @@ class CreatePsgcsTable extends Migration
             $table->string('district')->nullable();
             $table->string('subdistrict')->nullable();
             $table->timestamps();
+
+            $table->index('region_psgc');
+            $table->unique('brgy_psgc');
         });
     }
 

@@ -14,7 +14,7 @@ class PsgcController extends Controller
      */
     public function index()
     {
-        return Psgc::all();
+        return Psgc::getBrgys("region_psgc", "170000000");
     }
 
     /**
@@ -44,9 +44,21 @@ class PsgcController extends Controller
      * @param  \App\Models\Psgc  $psgc
      * @return \Illuminate\Http\Response
      */
-    public function show(Psgc $psgc)
+    public function show(Request $request, $type)
     {
-        //
+        switch ($type) {
+            case 'region':
+                return Psgc::getRegions();
+                break;
+            case 'brgy':
+                $field = $request->field;
+                $value = $request->value;
+                return Psgc::getBrgys($field, $value);
+            
+            default:
+                # code...
+                break;
+        }
     }
 
     /**
