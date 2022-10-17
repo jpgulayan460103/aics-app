@@ -20,6 +20,7 @@ class CreateAicsClientsTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('ext_name')->nullable();
             $table->string('street_number')->nullable();
+            $table->string('rel_beneficiary')->nullable();
             $table->unsignedBigInteger('psgc_id')->nullable();
             $table->string('mobile_number')->nullable();
             $table->date('birth_date')->nullable();

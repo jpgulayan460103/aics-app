@@ -32,4 +32,5 @@ Route::group(['prefix' => '/aics'], function () {
 
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
+Route::get('pdf/{uuid}', [\App\Http\Controllers\AicsAssistanceController::class, 'pdf'])->name("api.pdf.gis");
 

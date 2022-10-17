@@ -23,12 +23,16 @@ class AicsBeneficiary extends Model
         'gender',
         'occupation',
         'monthly_salary',
-        'rel_client',
     ];
 
     public function aics_client()
     {
         return $this->belongsTo(AicsClient::class);
+    }
+
+    public function psgc()
+    {
+        return $this->belongsTo(Psgc::class);
     }
 
 }

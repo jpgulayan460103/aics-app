@@ -16,6 +16,7 @@ class CreatePsgcsTable extends Migration
         Schema::create('psgcs', function (Blueprint $table) {
             $table->id();
             $table->string('region_name')->nullable();
+            $table->string('region_name_short')->nullable();
             $table->integer('region_psgc')->nullable();
             $table->string('province_name')->nullable();
             $table->integer('province_psgc')->nullable();

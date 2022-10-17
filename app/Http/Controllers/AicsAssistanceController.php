@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class AicsAssistanceController extends Controller
@@ -56,12 +57,12 @@ class AicsAssistanceController extends Controller
             if ($assistance_validator->fails()) {
                 $errors['assistance'] = $assistance_validator->errors();
             }
+
             if (
                 $errors['client'] != array() &&
                 $errors['beneficiary'] != array() &&
                 $errors['assistance'] != array()
             ) {
-                return $errors['client'];
                 return response(['errors' => $errors], 422);
             }
 
@@ -116,5 +117,27 @@ class AicsAssistanceController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function show(Request $request, $uuid)
+    {
+        $aics_assistance = AicsAssistance::with(
+                'aics_client.psgc',
+                'aics_beneficiary.psgc',
+                'aics_type',
+                'aics_documents',
+            )
+            ->where('uuid', $uuid)
+            ->first();
+        
+        return $aics_assistance;
+    }
+
+    public function pdf(Request $request, $uuid)
+    {
+        $aics_assistance = $this->show($request, $uuid);
+
+        $pdf = Pdf::loadView('pdf.gis', $aics_assistance->toArray());
+        return $pdf->stream('invoice.pdf');
     }
 }

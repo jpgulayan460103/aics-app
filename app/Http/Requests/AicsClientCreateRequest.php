@@ -36,6 +36,7 @@ class AicsClientCreateRequest extends FormRequest
             'psgc_id' => ['required'],
             'mobile_number' => ['required', 'string', new ValidCellphoneNumber],
             'birth_date' => ['required', 'date' , 'before_or_equal:'.Carbon::now()->toDateString()],
+            'rel_beneficiary' => ['required', 'string', 'max:100', new ValidString],
         ];
     }
 }

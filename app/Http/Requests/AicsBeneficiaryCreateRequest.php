@@ -40,7 +40,6 @@ class AicsBeneficiaryCreateRequest extends FormRequest
             'gender' => ['required', 'string', 'max:10', new ValidNameString],
             'occupation' => ['required', 'string', 'max:100', new ValidNameString],
             'monthly_salary' => ['required', 'string'],
-            'rel_client' => ['required', 'string', 'max:100', new ValidString],
         ];
     }
 }

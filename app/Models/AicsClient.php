@@ -18,11 +18,17 @@ class AicsClient extends Model
         'psgc_id',
         'mobile_number',
         'birth_date',
+        'rel_beneficiary',
     ];
 
     public function user()
     {
         return $this->hasOne(User::class);
+    }
+
+    public function psgc()
+    {
+        return $this->belongsTo(Psgc::class);
     }
 
     public function aics_beneficiaries()

@@ -6210,10 +6210,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }),*/
       form: {
         beneficiary: {
-          rel_client: "",
           region: "XI"
         },
-        client: {},
+        client: {
+          rel_beneficiary: ""
+        },
         assistance: {
           documents: {}
         }
@@ -6271,11 +6272,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
       if (newVal === true) {
         this.form.client = this.form.beneficiary;
-        this.form.beneficiary.rel_client = "Myself";
+        this.form.client.rel_beneficiary = "Myself";
       } else {
         this.form.client = {};
-        this.form.beneficiary.rel_client = "";
-        this.form.client.rel_client = "";
+        this.form.client.rel_beneficiary = "";
       }
     }
   },
@@ -6286,7 +6286,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       if (this.form.assistance.aics_type_id) {
         if (this.is_beneficiary == true) {
           this.form.client = this.form.beneficiary;
-          this.form.beneficiary.rel_client = "Myself";
+          this.form.client.rel_beneficiary = "Myself";
         }
 
         var config = {
@@ -31401,35 +31401,35 @@ var render = function () {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.form.beneficiary.rel_client,
-                              expression: "form.beneficiary.rel_client",
+                              value: _vm.form.client.rel_beneficiary,
+                              expression: "form.client.rel_beneficiary",
                             },
                           ],
                           staticClass: "form-control",
                           attrs: { id: "relasyon", type: "text" },
-                          domProps: { value: _vm.form.beneficiary.rel_client },
+                          domProps: { value: _vm.form.client.rel_beneficiary },
                           on: {
                             input: function ($event) {
                               if ($event.target.composing) {
                                 return
                               }
                               _vm.$set(
-                                _vm.form.beneficiary,
-                                "rel_client",
+                                _vm.form.client,
+                                "rel_beneficiary",
                                 $event.target.value
                               )
                             },
                           },
                         }),
                         _vm._v(" "),
-                        _vm.validationErrors.beneficiary &&
-                        _vm.validationErrors.beneficiary.rel_client
+                        _vm.validationErrors.client &&
+                        _vm.validationErrors.client.rel_beneficiary
                           ? _c("div", { staticStyle: { color: "red" } }, [
                               _vm._v(
                                 "\n                " +
                                   _vm._s(
-                                    _vm.validationErrors.beneficiary
-                                      .rel_client[0]
+                                    _vm.validationErrors.client
+                                      .rel_beneficiary[0]
                                   ) +
                                   "\n              "
                               ),

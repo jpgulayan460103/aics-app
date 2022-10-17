@@ -779,19 +779,19 @@
                 >
                 <input
                   id="relasyon"
-                  v-model="form.beneficiary.rel_client"
+                  v-model="form.client.rel_beneficiary"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.rel_client
+                    validationErrors.client &&
+                    validationErrors.client.rel_beneficiary
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.rel_client[0] }}
+                  {{ validationErrors.client.rel_beneficiary[0] }}
                 </div>
               </div>
 
@@ -857,10 +857,11 @@ export default {
       }),*/
       form: {
         beneficiary: {
-          rel_client: "",
           region: "XI",
         },
-        client: {},
+        client: {
+          rel_beneficiary: "",
+        },
         assistance: {
           documents: {},
         },
@@ -925,12 +926,10 @@ export default {
       console.log(newVal);
       if (newVal === true) {
         this.form.client = this.form.beneficiary;
-        this.form.beneficiary.rel_client = "Myself";
+        this.form.client.rel_beneficiary = "Myself";
       } else {
         this.form.client = {};
-
-        this.form.beneficiary.rel_client = "";
-        this.form.client.rel_client = "";
+        this.form.client.rel_beneficiary = "";
       }
     },
   },
@@ -940,7 +939,7 @@ export default {
       if (this.form.assistance.aics_type_id) {
         if (this.is_beneficiary == true) {
           this.form.client = this.form.beneficiary;
-          this.form.beneficiary.rel_client = "Myself";
+          this.form.client.rel_beneficiary = "Myself";
         }
 
         const config = {
