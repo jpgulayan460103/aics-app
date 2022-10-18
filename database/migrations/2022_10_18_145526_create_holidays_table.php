@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAicsRequrementsTable extends Migration
+class CreateHolidaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAicsRequrementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('aics_requrements', function (Blueprint $table) {
+        Schema::create('holidays', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->unsignedBigInteger('aics_type_id')->nullable();
-            $table->integer('is_required')->nullable();
+            $table->string('name');
+            $table->date('holiday_date');
+            $table->boolean('is_working_day')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateAicsRequrementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aics_requrements');
+        Schema::dropIfExists('holidays');
     }
 }

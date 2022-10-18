@@ -818,7 +818,7 @@
             class="ml-3 list-group list-group-flush"
           >
             <li
-              v-for="(r, i) in requirements[0].requirements.filter(i => i.is_required == 1)"
+              v-for="(r, i) in requirements[0].requirements.filter(i => i.is_required == 1 || i.is_required == 2)"
               :key="r.id"
               class="list-group-item"
             >

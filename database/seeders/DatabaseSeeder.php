@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PsgcSeeder::class);
         $this->call(AicsTypeSeeder::class);
         $this->call(AicsRequirementSeeder::class);
+        $this->call(HolidaySeeder::class);
     }
 }

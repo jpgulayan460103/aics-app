@@ -31482,7 +31482,7 @@ var render = function () {
                         },
                         _vm._l(
                           _vm.requirements[0].requirements.filter(function (i) {
-                            return i.is_required == 1
+                            return i.is_required == 1 || i.is_required == 2
                           }),
                           function (r, i) {
                             return _c(
