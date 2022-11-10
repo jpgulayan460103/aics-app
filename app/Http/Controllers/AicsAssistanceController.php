@@ -140,4 +140,9 @@ class AicsAssistanceController extends Controller
         $pdf = Pdf::loadView('pdf.gis', $aics_assistance->toArray());
         return $pdf->stream('invoice.pdf');
     }
+
+    public function index()
+    {
+        return AicsAssistance::with("aics_client","aics_beneficiary","aics_documents","aics_type:id,name")->get();
+    }
 }
