@@ -835,6 +835,7 @@
         <button type="submit" class="btn btn-primary btn-lg">SUBMIT</button>
       </div>
     </div>
+    <calendar :disabled-dates='{ weekdays: [1,7] }'  :attributes="attrs"></calendar>
   </form>
 </template>
 
@@ -847,8 +848,18 @@
 </style>
 
 <script>
+import Calendar from 'v-calendar/lib/components/calendar.umd'
+import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+
 export default {
+  components: {
+    Calendar,
+    DatePicker
+  },
   data() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
     return {
       /*form: this.$inertia.form({
         beneficiary: {},
@@ -893,8 +904,31 @@ export default {
       max_date: new Date().toISOString().split("T")[0],
 
       //logo:  location.protocol + "//" + location.host +  "/" + process.env.MIX_BASE_NAME +"/images/DSWD-DVO-LOGO.png",
-      logo:
-        location.protocol + "//" + location.host + "/images/DSWD-DVO-LOGO.png",
+      logo: location.protocol + "//" + location.host + "/images/DSWD-DVO-LOGO.png",
+      attrs: [
+        {
+          key: 'today',
+          highlight: {
+            color: 'green',
+            fillMode: 'solid',
+          },
+          dates: new Date(year, month, 12),
+        },
+        {
+          highlight: {
+            color: 'red',
+            fillMode: 'solid',
+          },
+          dates: new Date(year, month, 13),
+        },
+        {
+          highlight: {
+            color: 'purple',
+            fillMode: 'outline',
+          },
+          dates: new Date(year, month, 14),
+        },
+      ],
     };
   },
   watch: {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AicsAppointment;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 
 class AicsAppointmentController extends Controller
@@ -81,5 +83,22 @@ class AicsAppointmentController extends Controller
     public function destroy(AicsAppointment $aicsAppointment)
     {
         //
+    }
+
+    public function available(Request $request)
+    {
+        $now = Carbon::now();
+        $min_date = $now->clone()->toDateString();
+        $max_date = $now->clone()->addWeeks(2)->toDateString();
+        $period = CarbonPeriod::create($min_date, $max_date);
+        $dates = [];
+        foreach ($period as $key => $date) {
+            $dates[$key]['date'] = $date->toDateString();
+        }
+        return [
+            "min_date" => $min_date,
+            "max_date" => $max_date,
+            "dates" => $dates,
+        ];
     }
 }
