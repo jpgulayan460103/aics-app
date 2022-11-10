@@ -11,8 +11,17 @@ window.Vue = require('vue').default;
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+
 import App from "./components/App.vue";
 import Home from "./components/Home.vue";
+import moment from 'moment';
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -53,8 +62,16 @@ Vue.component('gis-component', require('./components/GISComponent.vue').default)
     ],
 });
 
+
+
 const app = new Vue({
     el: '#app',
     components: { App },
     router,
+});
+
+Vue.filter("formatDate", function (value) {
+    if (value) {
+        return moment(String(value)).format("MM-DD-YYYY");
+    }
 });

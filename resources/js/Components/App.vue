@@ -3,12 +3,7 @@
     <div class="row">
       <!--<div class="col-md-2"></div>-->
       <div class="col-md-12">
-       
-          
-          
-            <router-view></router-view>
-          
-       
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -18,7 +13,6 @@
 export default {
   data() {
     return {
-      
       items: [
         {
           to: "/",
@@ -28,12 +22,8 @@ export default {
       ],
     };
   },
-  methods: {
-   
-  },
-  mounted() {
-   
-  },
+  methods: {},
+  mounted() {},
 };
 </script>
 
