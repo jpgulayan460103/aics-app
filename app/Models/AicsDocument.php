@@ -26,4 +26,10 @@ class AicsDocument extends Model
 
         });
     }
+
+    public function requirement()
+    {
+       return $this->belongsTo(AicsRequrement::class,"aics_requrement_id");
+    }
+    
 }

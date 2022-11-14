@@ -35,7 +35,7 @@ class AicsAssistanceController extends Controller
                 "beneficiary" => [],
                 "assistance" => [],
             ];
-          
+
             //Client Validation
             $client_request_rules = (new AicsClientCreateRequest())->rules();
             $client_validator =  Validator::make($form_data['client'], $client_request_rules);
@@ -83,7 +83,7 @@ class AicsAssistanceController extends Controller
 
             $count_users = User::whereBetween('created_at', [$start_year, $end_year])->whereNotNull('aics_client_id')->count();
             $user = $aics_assistance->aics_client->user()->create([
-                'name' => $client->first_name." ".$client->middle_name." ".$client->last_name." ".$client->ext_name,
+                'name' => $client->first_name . " " . $client->middle_name . " " . $client->last_name . " " . $client->ext_name,
                 'email' => $year . "-" . str_pad($month, 2, "0", STR_PAD_LEFT) . "-" . str_pad($count_users, 4, "0", STR_PAD_LEFT),
                 'password' => $client->mobile_number,
             ]);
@@ -122,14 +122,14 @@ class AicsAssistanceController extends Controller
     public function show(Request $request, $uuid)
     {
         $aics_assistance = AicsAssistance::with(
-                'aics_client.psgc',
-                'aics_beneficiary.psgc',
-                'aics_type',
-                'aics_documents',
-            )
+            'aics_client.psgc',
+            'aics_beneficiary.psgc',
+            'aics_type',
+            'aics_documents',
+        )
             ->where('uuid', $uuid)
             ->first();
-        
+
         return $aics_assistance;
     }
 
@@ -143,6 +143,34 @@ class AicsAssistanceController extends Controller
 
     public function index()
     {
-        return AicsAssistance::with("aics_client","aics_beneficiary","aics_documents","aics_type:id,name")->get();
+        return AicsAssistance::with(
+            "aics_client.psgc",
+            "aics_beneficiary.psgc",
+            "aics_type:id,name",
+            "aics_documents",          
+            "aics_documents.requirement:id,name",
+           
+            )->get();
+    }
+
+    public function update(request $request)
+    {
+
+        try {
+            $a = AicsAssistance::where("uuid", "=", $request->uuid)->first();
+
+            if ($a) {
+                
+                $a->status = $request->status;
+                $a->status_date = Carbon::now();
+                $a->save(); 
+                return ["message" => "saved"];
+
+            } else {
+                return ["message" => "Assistance Request Not Found"];
+            }
+        } catch (\Throwable $th) {
+            return ["message" => $th];
+        }
     }
 }

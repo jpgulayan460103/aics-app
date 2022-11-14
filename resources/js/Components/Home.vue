@@ -5,7 +5,7 @@
       striped
       hover
       bordered
-      :items="req_assistance_list"
+      :items="data"
       :fields="fields"
     >
       <template #cell(created_at)="data">
@@ -13,13 +13,14 @@
       </template>
 
       <template #cell(client)="data">
-        {{ data.item.aics_client.last_name }},
+        {{ data.item.aics_client.last_name }}
+        {{ data.item.aics_client.ext_name }},
         {{ data.item.aics_client.first_name }}
         {{ data.item.aics_client.middle_name }}
       </template>
 
       <template #cell(beneficiary)="data">
-        {{ data.item.aics_beneficiary.last_name }},
+        {{ data.item.aics_beneficiary.last_name }}
         {{ data.item.aics_beneficiary.first_name }}
         {{ data.item.aics_beneficiary.middle_name }}
       </template>
@@ -28,28 +29,10 @@
         {{ data.item.aics_type.name }}
       </template>
 
-      <template #cell(show_details)="data">
-        <b-button @click="ViewDetails(data.item)" class="btn btn-primary">
-          {{ data.item.detailsShowing ? "Hide" : "Show" }} Details
+      <template #cell(actions)="data">
+        <b-button @click="ViewDetails(data.item)" v-b-modal.modal-1>
+          Show Details
         </b-button>
-
-        <!--
-            
-            
-            <b-button  @click="data.toggleDetails" class="btn btn-primary">
-          {{ data.detailsShowing ? 'Hide' : 'Show'}} Details
-        </b-button>
-        
-        <button class="btn btn-primary" @click="ViewDetails(data.item)">
-          Info
-        </button>-->
-
-        <button class="btn btn-success" @click="Approve(data.item)">
-          Serve
-        </button>
-        <button class="btn btn-danger" @click="Reject(data.item)">
-          Reject
-        </button>
       </template>
 
       <template #row-details="row">
@@ -67,31 +50,70 @@
       </template>
     </b-table>
 
-    <div class="card" v-if="details">
-      <div class="row">
-        <pre>
-            {{details}}
-        </pre>
-        <div class="col-md-9">
-          <iframe
-            :src="gis_pdf"
-            frameborder="0"
-            style="min-height: 500px; width: 100%"
-          ></iframe>
-        </div>
-        <div class="col-md-3">
-          <span v-for="(docs, i) in details.aics_documents" :key="i">
-            <b-img
+    <b-modal id="modal-1" title="Details" size="xl" centered scrollable>
+      <div class="row" v-if="details">
+        <span v-if="details.aics_type">
+          {{ details.aics_type.name }}
+        </span>
+
+        <div class="col-md-12">
+          <b-list-group>
+            <b-list-group-item
+              >GIS
+
+              <iframe
+                :src="gis_pdf"
+                frameborder="0"
+                style="min-height: 500px; width: 100%"
+              ></iframe>
+            </b-list-group-item>
+
+            <b-list-group-item
+              v-for="(docs, i) in details.aics_documents"
+              :key="i"
+              ><p>{{ docs.requirement.name }}</p>
+
+              <iframe
+                :src="docs.file_directory"
+                frameborder="0"
+                style="min-height: 500px; width: 100%"
+              ></iframe>
+
+              <!--<b-img
               thumbnail
               fluid
               :src="docs.file_directory"
               alt=""
               class="img-fluid"
-            />
-          </span>
+            />-->
+            </b-list-group-item>
+          </b-list-group>
         </div>
       </div>
-    </div>
+
+      <template #modal-footer="{ close  }">
+        <div class="w-100">
+          <p class="float-left">Modal Footer Content</p>
+
+          <button
+            class="btn btn-success"
+            @click="UpdateStatus(details, 'Served')"
+          >
+            Serve
+          </button>
+          <button
+            class="btn btn-danger"
+            @click="UpdateStatus(details, 'Rejected')"
+          >
+            Reject
+          </button>
+
+          <b-button variant="primary" class="float-right" @click="close()">
+            Close
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -108,18 +130,11 @@ export default {
         { key: "beneficiary", label: "Beneficiary" },
         { key: "assistance", label: "Assistance Requested" },
         { key: "status", label: "Status" },
-        { key: "show_details", label: "Actions" },
+        { key: "actions", label: "Actions" },
       ],
     };
   },
-  computed: {
-    req_assistance_list() {
-      return this.data.filter((e, i) => {
-        e._showDetails  = false;
-        return e;
-      });
-    },
-  },
+  computed: {},
   methods: {
     getGIS() {
       axios
@@ -130,8 +145,8 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+
     ViewDetails(e) {
-      e._showDetails = !e._showDetails;
       this.gis_pdf = "api/pdf/" + e.uuid;
       this.details = e;
     },
@@ -143,6 +158,19 @@ export default {
             console.log(response.data);
             this.details = response.data;
         }).error((err)=>console.log(err));*/
+    },
+    UpdateStatus(e, s) {
+      axios
+        .put("api/aics/assistances/" + e.uuid, { uuid: e.uuid, status: s })
+        .then((response) => {
+          alert(response.data.message);
+
+          if (response.data.message == "saved");
+          {
+            this.getGIS();
+          }
+        })
+        .catch((error) => console.log(error));
     },
   },
   mounted() {
