@@ -254,6 +254,7 @@
 <div id="aics-beneficiary-occupation" class="data-textbox">{{ strtoupper($aics_beneficiary['occupation']) }}</div>
 <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ strtoupper($aics_beneficiary['monthly_salary']) }}</div>
 
+@if($aics_client['rel_beneficiary'] != 'Myself')
 <div id="aics-client-last-name" class="data-textbox">{{ strtoupper($aics_client['last_name']) }}</div>
 <div id="aics-client-first-name" class="data-textbox">{{ strtoupper($aics_client['first_name']) }}</div>
 <div id="aics-client-middle-name" class="data-textbox">{{ strtoupper($aics_client['middle_name']) }}</div>
@@ -270,7 +271,7 @@
 <div id="aics-client-birth-day" class="data-textbox">{{ date("m", strtotime($aics_client['birth_date'])) }}</div>
 <div id="aics-client-birth-year" class="data-textbox">{{ date("Y", strtotime($aics_client['birth_date'])) }}</div>
 <div id="aics-client-rel-client" class="data-textbox">{{ strtoupper($aics_client['rel_beneficiary']) }}</div>
-
+@endif;
 <div>
        
 </div>

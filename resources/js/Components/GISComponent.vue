@@ -981,6 +981,7 @@ export default {
             if(response.data.aics_beneficiary_id)
             {
               alert("Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly.")
+              this.resetForm();
             }
 
           })
@@ -995,6 +996,22 @@ export default {
         alert("Pumili ng nais hingiin na tulong. \nPlease select assistance request.")
       }
     },
+    resetForm()
+    {
+     this.form = {
+        beneficiary: {
+          region: "XI",
+        },
+        client: {
+          rel_beneficiary: "",
+        },
+        assistance: {
+          documents: {},
+        },
+      }
+
+    },
+
     onFileChange(i, e) {
       
       this.form.assistance.documents[i] = e.target.files[0];

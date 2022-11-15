@@ -7,6 +7,10 @@
       bordered
       :items="data"
       :fields="fields"
+      :busy="isBusy"
+      label-sort-asc=""
+      label-sort-desc=""
+      label-sort-clear=""
     >
       <template #cell(created_at)="data">
         {{ data.item.created_at | formatDate }}
@@ -30,7 +34,7 @@
       </template>
 
       <template #cell(actions)="data">
-        <b-button @click="ViewDetails(data.item)" v-b-modal.modal-1>
+        <b-button @click="ViewDetails(data.item)" v-b-modal.modal-xl>
           Show Details
         </b-button>
       </template>
@@ -50,7 +54,7 @@
       </template>
     </b-table>
 
-    <b-modal id="modal-1" title="Details" size="xl" centered scrollable>
+    <b-modal id="modal-xl" title="Details" size="xl">
       <div class="row" v-if="details">
         <span v-if="details.aics_type">
           {{ details.aics_type.name }}
@@ -91,7 +95,7 @@
         </div>
       </div>
 
-      <template #modal-footer="{ close  }">
+      <template #modal-footer="{ close }">
         <div class="w-100">
           <p class="float-left">Modal Footer Content</p>
 
@@ -125,23 +129,26 @@ export default {
       details: [],
       gis_pdf: [],
       fields: [
-        { key: "created_at", label: "Date" },
-        { key: "client", label: "Client" },
-        { key: "beneficiary", label: "Beneficiary" },
-        { key: "assistance", label: "Assistance Requested" },
-        { key: "status", label: "Status" },
+        { key: "created_at", label: "Date", sortable: true },
+        { key: "client", label: "Client", sortable: true },
+        { key: "beneficiary", label: "Beneficiary", sortable: true },
+        { key: "assistance", label: "Assistance Requested", sortable: true },
+        { key: "status", label: "Status", sortable: true },
         { key: "actions", label: "Actions" },
       ],
+      isBusy: true,
     };
   },
   computed: {},
   methods: {
     getGIS() {
+      this.isBusy = true;
       axios
         .get("api/aics/assistances")
         .then((response) => {
           console.log(response.data);
           this.data = response.data;
+          this.isBusy = false;
         })
         .catch((error) => console.log(error));
     },
