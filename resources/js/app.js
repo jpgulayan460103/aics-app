@@ -19,6 +19,7 @@ Vue.use(IconsPlugin)
 
 import App from "./components/App.vue";
 import Home from "./components/Home.vue";
+import Assistance from "./components/Assistances.vue";
 import moment from 'moment';
 
 
@@ -57,6 +58,12 @@ Vue.component('gis-component', require('./components/GISComponent.vue').default)
             path: "/home",
             name: "home",
             component: Home,
+            props: true,
+        },
+        {
+            path: "/assistance/:uuid?",
+            name: "assistance",
+            component: Assistance,
             props: true,
         },
     ],

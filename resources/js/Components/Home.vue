@@ -33,13 +33,19 @@
         {{ data.item.aics_type.name }}
       </template>
 
+      <template #cell(status)="data">
+        <div :class="getColor(data.item.status)">
+          {{ data.item.status }}
+        </div>
+      </template>
+
       <template #cell(actions)="data">
-        <b-button @click="ViewDetails(data.item)" v-b-modal.modal-xl>
+        <b-button size="sm" @click="ViewDetails(data.item)" v-b-modal.modal-xl>
           Show Details
         </b-button>
       </template>
 
-      <template #row-details="row">
+      <!--<template #row-details="row">
         <b-card>
           <b-row class="mb-2">
             <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
@@ -51,71 +57,71 @@
 
           <b-button size="sm" @click="row.toggleDetails">Hide Details</b-button>
         </b-card>
-      </template>
+      </template>-->
     </b-table>
 
-    <b-modal id="modal-xl" title="Details" size="xl">
-      <div class="row" v-if="details">
-        <span v-if="details.aics_type">
-          {{ details.aics_type.name }}
-        </span>
+    <b-modal
+      id="modal-xl"
+      title="Details"
+      size="xl"
+      class="modal modal-xl"
+      role="document"
+      modal-class="modal-fullscreen"
+      button-size="sm"
+    >
+      <div class="container-fluid" v-if="details">
+        <div class="row">
+          <div class="col-md-8">
+            <iframe :src="src" style="min-height: 1000px ; width: 100%"></iframe>
+          </div>
 
-        <div class="col-md-12">
-          <b-list-group>
-            <b-list-group-item
-              >GIS
+          <div class="col-md-4" v-if="details.aics_type">
+            Assistance Requested: <b> {{ details.aics_type.name }}</b> <br />
+            <hr />
 
-              <iframe
-                :src="gis_pdf"
-                frameborder="0"
-                style="min-height: 500px; width: 100%"
-              ></iframe>
-            </b-list-group-item>
+            <b-button size="sm" @click="src = gis_pdf"
+              >View General Intake Sheet</b-button
+            >
 
-            <b-list-group-item
+            <br />
+            <hr />
+            Requirements:
+
+            <div
+              class="card tex-center"
               v-for="(docs, i) in details.aics_documents"
               :key="i"
-              ><p>{{ docs.requirement.name }}</p>
+              @click="src = docs.file_directory"
+              style="cursor: pointer; margin-bottom: 10px"
+            >
+              <div class="card-body">
+                <b-icon icon="paperclip" style="color: grey"></b-icon>
+                {{ docs.requirement.name }}
 
-              <iframe
-                :src="docs.file_directory"
-                frameborder="0"
-                style="min-height: 500px; width: 100%"
-              ></iframe>
-
-              <!--<b-img
-              thumbnail
-              fluid
-              :src="docs.file_directory"
-              alt=""
-              class="img-fluid"
-            />-->
-            </b-list-group-item>
-          </b-list-group>
+                file type = {{ docs.file_directory.split('.').pop()}}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <template #modal-footer="{ close }">
-        <div class="w-100">
-          <p class="float-left">Modal Footer Content</p>
+        <b-button
+          class="btn btn-success float-right"
+          @click="UpdateStatus(details, 'Served')"
+        >
+          Serve
+        </b-button>
+        <b-button
+          class="btn btn-danger float-right"
+          @click="UpdateStatus(details, 'Rejected')"
+        >
+          Reject
+        </b-button>
 
-          <button
-            class="btn btn-success"
-            @click="UpdateStatus(details, 'Served')"
-          >
-            Serve
-          </button>
-          <button
-            class="btn btn-danger"
-            @click="UpdateStatus(details, 'Rejected')"
-          >
-            Reject
-          </button>
-
-          <b-button variant="primary" class="float-right" @click="close()">
+        <!--<b-button variant="primary" class="float-right" @click="close()">
             Close
-          </b-button>
-        </div>
+          </b-button>-->
       </template>
     </b-modal>
   </div>
@@ -137,6 +143,8 @@ export default {
         { key: "actions", label: "Actions" },
       ],
       isBusy: true,
+      src: "",
+      color: "blue",
     };
   },
   computed: {},
@@ -156,6 +164,8 @@ export default {
     ViewDetails(e) {
       this.gis_pdf = "api/pdf/" + e.uuid;
       this.details = e;
+      this.src = this.gis_pdf;
+      /* window.open("api/aics/assistances/"+ e.uuid);*/
     },
     Print(e) {
       /*console.log(e.uuid);
@@ -179,6 +189,19 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    getColor(e) {
+      switch (e) {
+        case "Served":
+          this.color = "green";
+          break;
+        case "Rejected":
+          this.color = "red";
+          break;
+        default:
+          this.color = "blue";
+          break;
+      }
+    },
   },
   mounted() {
     this.getGIS();
@@ -187,4 +210,19 @@ export default {
 </script>
 
 <style>
+.modal-fullscreen .modal-dialog {
+  max-width: 100%;
+  margin: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  z-index: 100000;
+}
+.red {
+  color: red;
+}
 </style>
