@@ -72,14 +72,22 @@
       <div class="container-fluid" v-if="details">
         <div class="row">
           <div class="col-md-8">
-            <iframe :src="src" style="min-height: 1000px ; width: 100%"></iframe>
+            <div class="images" v-viewer v-if="show_img_pv">
+              <!--<img v-for="src in images" :key="src" :src="src" />-->
+              <img  :src="src" style="width: 100%; height:auto;"/>
+            </div>
+
+            <iframe v-if="!show_img_pv"
+              :src="src"
+              style="min-height: 56.25vw; width: 100%"
+            ></iframe>
           </div>
 
           <div class="col-md-4" v-if="details.aics_type">
             Assistance Requested: <b> {{ details.aics_type.name }}</b> <br />
             <hr />
 
-            <b-button size="sm" @click="src = gis_pdf"
+            <b-button size="sm" @click="ViewFile(gis_pdf)"
               >View General Intake Sheet</b-button
             >
 
@@ -91,14 +99,14 @@
               class="card tex-center"
               v-for="(docs, i) in details.aics_documents"
               :key="i"
-              @click="src = docs.file_directory"
+              @click="ViewFile(docs.file_directory)"
               style="cursor: pointer; margin-bottom: 10px"
             >
               <div class="card-body">
                 <b-icon icon="paperclip" style="color: grey"></b-icon>
                 {{ docs.requirement.name }}
 
-                file type = {{ docs.file_directory.split('.').pop()}}
+                file type = {{ docs.file_directory.split(".").pop() }}
               </div>
             </div>
           </div>
@@ -145,9 +153,14 @@ export default {
       isBusy: true,
       src: "",
       color: "blue",
+      show_img_pv: false,
     };
   },
-  computed: {},
+  computed: {
+    images() {
+      this.details.aics_documents;
+    },
+  },
   methods: {
     getGIS() {
       this.isBusy = true;
@@ -165,7 +178,26 @@ export default {
       this.gis_pdf = "api/pdf/" + e.uuid;
       this.details = e;
       this.src = this.gis_pdf;
-      /* window.open("api/aics/assistances/"+ e.uuid);*/
+      this.show_img_pv = false;
+   
+    },
+    ViewFile(e)
+    {
+
+     let ext =  e.split(".").pop();
+     let images = ['png','jpeg','jpg']
+   
+
+     if(images.includes(ext))
+     {     
+      this.src = e;
+      this.show_img_pv = true;
+     }else
+     {
+       this.show_img_pv = false;
+       this.src = e;
+     }
+
     },
     Print(e) {
       /*console.log(e.uuid);

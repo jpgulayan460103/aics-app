@@ -9,19 +9,19 @@ require('./bootstrap');
 window.Vue = require('vue').default;
 
 import VueRouter from "vue-router";
-Vue.use(VueRouter);
-
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
-
 import App from "./components/App.vue";
 import Home from "./components/Home.vue";
-import Assistance from "./components/Assistances.vue";
 import moment from 'moment';
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
 
+Vue.use(VueRouter);
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+Vue.use(VueViewer)
 
 
 /**
@@ -45,11 +45,11 @@ Vue.component('gis-component', require('./components/GISComponent.vue').default)
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
- const router = new VueRouter({
+const router = new VueRouter({
     mode: "history",
     //base: process.env.MIX_BASE_NAME,
     routes: [
-       // { path: "/404", component: NotFound },
+        // { path: "/404", component: NotFound },
         {
             path: "/",
             redirect: { name: "home" },

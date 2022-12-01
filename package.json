@@ -26,6 +26,7 @@
     "dependencies": {
         "bootstrap-icons": "^1.10.2",
         "bootstrap-vue": "^2.23.1",
+        "v-viewer": "^1.6.4",
         "vue-moment": "^4.1.0",
         "vue-router": "^3.5.3"
     }
