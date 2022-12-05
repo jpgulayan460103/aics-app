@@ -74,10 +74,11 @@
           <div class="col-md-8">
             <div class="images" v-viewer v-if="show_img_pv">
               <!--<img v-for="src in images" :key="src" :src="src" />-->
-              <img  :src="src" style="width: 100%; height:auto;"/>
+              <img :src="src" style="width: 100%; height: auto" />
             </div>
 
-            <iframe v-if="!show_img_pv"
+            <iframe
+              v-if="!show_img_pv"
               :src="src"
               style="min-height: 56.25vw; width: 100%"
             ></iframe>
@@ -105,8 +106,6 @@
               <div class="card-body">
                 <b-icon icon="paperclip" style="color: grey"></b-icon>
                 {{ docs.requirement.name }}
-
-                file type = {{ docs.file_directory.split(".").pop() }}
               </div>
             </div>
           </div>
@@ -179,25 +178,18 @@ export default {
       this.details = e;
       this.src = this.gis_pdf;
       this.show_img_pv = false;
-   
     },
-    ViewFile(e)
-    {
+    ViewFile(e) {
+      let ext = e.split(".").pop();
+      let images = ["png", "jpeg", "jpg"];
 
-     let ext =  e.split(".").pop();
-     let images = ['png','jpeg','jpg']
-   
-
-     if(images.includes(ext))
-     {     
-      this.src = e;
-      this.show_img_pv = true;
-     }else
-     {
-       this.show_img_pv = false;
-       this.src = e;
-     }
-
+      if (images.includes(ext)) {
+        this.src = e;
+        this.show_img_pv = true;
+      } else {
+        this.show_img_pv = false;
+        this.src = e;
+      }
     },
     Print(e) {
       /*console.log(e.uuid);
@@ -212,11 +204,11 @@ export default {
       axios
         .put("api/aics/assistances/" + e.uuid, { uuid: e.uuid, status: s })
         .then((response) => {
-          alert(response.data.message);
-
-          if (response.data.message == "saved");
-          {
+          if (response.data.message == "saved") {
+            alert(response.data.message + " " + s);
             this.getGIS();
+          } else {
+            alert(response.data.message);
           }
         })
         .catch((error) => console.log(error));
@@ -224,13 +216,13 @@ export default {
     getColor(e) {
       switch (e) {
         case "Served":
-          this.color = "green";
+          return "green";
           break;
         case "Rejected":
-          this.color = "red";
+          return "red";
           break;
         default:
-          this.color = "blue";
+          return "blue";
           break;
       }
     },
@@ -256,5 +248,11 @@ export default {
 }
 .red {
   color: red;
+}
+.green {
+  color: green;
+}
+.blue {
+  color: blue;
 }
 </style>

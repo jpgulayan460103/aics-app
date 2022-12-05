@@ -59,6 +59,7 @@
       <div class="card mt-2">
         <div class="card-title">
           NAIS HINGIIN NA TULONG (Assistance Requested)
+          <span class="red">*</span>
         </div>
         <div class="card-body">
           <div class="col-md-12">
@@ -79,7 +80,7 @@
       </div>
 
       <div class="card mt-2">
-        <div class="card-title">Ako ang:</div>
+        <div class="card-title">Ako ang: <span class="red">*</span></div>
         <div class="card-body">
           <div class="container-fluid">
             <div class="row">
@@ -121,7 +122,7 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="last_name">
-                  Apelyido <small>(Last name)</small>
+                  Apelyido <small>(Last name) <span class="red">*</span></small>
                 </label>
                 <input
                   id="last_name"
@@ -142,7 +143,8 @@
 
               <div class="col-md-3">
                 <label for="first_name">
-                  Unang Pangalan <small>(First name)</small></label
+                  Unang Pangalan
+                  <small>(First name) <span class="red">*</span></small></label
                 >
                 <input
                   id="first_name"
@@ -227,6 +229,7 @@
                 <label for="street_number"
                   >House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
+                  <span class="red">*</span>
                 </label>
                 <input
                   id="street_number"
@@ -248,7 +251,10 @@
             </div>
             <div class="row mt-2">
               <div class="col-md-3">
-                <label>Region <small>(Ex. NCR)</small></label>
+                <label
+                  >Region <small>(Ex. NCR)</small>
+                  <span class="red">*</span>
+                </label>
                 <select
                   id="psgc_id"
                   name=""
@@ -257,6 +263,7 @@
                   class="form-control"
                   @change="getBeneficiaryPsgc"
                 >
+                  <option value=""></option>
                   <option :value="e" v-for="(e, i) in regions" :key="i">
                     {{ i }}
                   </option>
@@ -274,7 +281,10 @@
               </div>
 
               <div class="col-md-3">
-                <label>Province/District <small>(Ex. Dis. III)</small> </label>
+                <label
+                  >Province/District <small>(Ex. Dis. III)</small>
+                  <span class="red">*</span>
+                </label>
                 <select
                   id="psgc_id"
                   name=""
@@ -282,7 +292,43 @@
                   v-if="beneficiary_provinces"
                   class="form-control"
                 >
-                  <option :value="e" v-for="(e, i) in beneficiary_provinces" :key="i">
+                  <option
+                    :value="e"
+                    v-for="(e, i) in beneficiary_provinces"
+                    :key="i"
+                  >
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="
+                    validationErrors.beneficiary &&
+                    validationErrors.beneficiary.psgc_id
+                  "
+                  style="color: red"
+                >
+                  {{ validationErrors.beneficiary.psgc_id[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label>
+                  City/Municipality <small>(Ex. Quezon City)</small>
+                  <span class="red">*</span>
+                </label>
+
+                <select
+                  name=""
+                  v-model="beneficiary_city_selector"
+                  v-if="beneficiary_cities"
+                  class="form-control"
+                >
+                  <option
+                    :value="e"
+                    v-for="(e, i) in beneficiary_cities"
+                    :key="i"
+                  >
                     {{ i }}
                   </option>
                 </select>
@@ -300,33 +346,10 @@
 
               <div class="col-md-3">
                 <label
-                  >City/Municipality <small>(Ex. Quezon City)</small></label
-                >
-
-                <select
-                  name=""
-                  v-model="beneficiary_city_selector"
-                  v-if="beneficiary_cities"
-                  class="form-control"
-                >
-                  <option :value="e" v-for="(e, i) in beneficiary_cities" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.beneficiary.psgc_id[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label>Barangay <small>(Ex. Batasan Hills)</small></label>
+                  >Barangay
+                  <small>(Ex. Batasan Hills)</small>
+                  <span class="red">*</span>
+                </label>
                 <select
                   id="psgc_id"
                   name=""
@@ -334,7 +357,11 @@
                   v-if="beneficiary_cities"
                   class="form-control"
                 >
-                  <option :value="e[0].id" v-for="(e, i) in beneficiary_barangays" :key="i">
+                  <option
+                    :value="e[0].id"
+                    v-for="(e, i) in beneficiary_barangays"
+                    :key="i"
+                  >
                     {{ i }}
                   </option>
                 </select>
@@ -354,7 +381,11 @@
             <div class="row mt-2">
               <div class="col-md-3">
                 <label for="mobile_number"
-                  >Telepono <small>(Mobile Number Ex. 091234567890)</small>
+                  >Telepono
+                  <small
+                    >(Mobile Number Ex. 091234567890)
+                    <span class="red">*</span>
+                  </small>
                 </label>
 
                 <input
@@ -378,7 +409,8 @@
 
               <div class="col-md-3">
                 <label for="birth_date"
-                  >Kapanganakan <small>(Birthdate)</small></label
+                  >Kapanganakan <small>(Birthdate)</small>
+                  <span class="red">*</span></label
                 >
                 <input
                   id="birth_date"
@@ -401,7 +433,10 @@
               </div>
 
               <div class="col-md-3">
-                <label for="age">Edad <small>(Age)</small></label>
+                <label for="age"
+                  >Edad <small>(Age)</small>
+                  <span class="red">*</span>
+                </label>
 
                 <input
                   id="age"
@@ -413,7 +448,10 @@
               </div>
 
               <div class="col-md-3">
-                <label for="gender">Kasarian <small>(gender)</small></label>
+                <label for="gender"
+                  >Kasarian <small>(gender)</small>
+                  <span class="red">*</span></label
+                >
                 <select
                   name=""
                   id=""
@@ -444,7 +482,8 @@
             <div class="row mt-2">
               <div class="col-md-3">
                 <label for="occupation"
-                  >Trabaho <small> (Occupation)</small></label
+                  >Trabaho <small> (Occupation)</small>
+                  <span class="red">*</span></label
                 >
                 <input
                   id="occupation"
@@ -465,7 +504,8 @@
               </div>
               <div class="col-md-3">
                 <label for="monthly_salary"
-                  >Buwanang Kita <small> (Monthly Salary) </small></label
+                  >Buwanang Kita <small> (Monthly Salary) </small>
+                  <span class="red">*</span></label
                 >
                 <input
                   id="monthly_salary"
@@ -500,7 +540,9 @@
               <div class="col-md-3">
                 <label for="last_name">
                   Apelyido <small>(Last name)</small>
+                  <span class="red">*</span>
                 </label>
+
                 <input
                   id="last_name"
                   v-model="form.client.last_name"
@@ -521,7 +563,8 @@
 
               <div class="col-md-3">
                 <label for="first_name">
-                  Unang Pangalan <small>(First name)</small></label
+                  Unang Pangalan <small>(First name)</small
+                  ><span class="red">*</span></label
                 >
                 <input
                   id="first_name"
@@ -599,6 +642,7 @@
                 <label for="street_number"
                   >House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
+                  <span class="red">*</span>
                 </label>
                 <input
                   id="street_number"
@@ -620,7 +664,10 @@
             </div>
             <div class="row mt-2">
               <div class="col-md-3">
-                <label for="psgc_id">Region <small>(Ex. NCR)</small></label>
+                <label for="psgc_id"
+                  >Region <small>(Ex. NCR)</small
+                  ><span class="red">*</span></label
+                >
                 <select
                   id="psgc_id"
                   name=""
@@ -630,33 +677,6 @@
                   @change="getClientPsgc"
                 >
                   <option :value="e" v-for="(e, i) in regions" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.psgc_id[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="psgc_id"
-                  >Province/District <small>(Ex. Dis. III)</small>
-                </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="client_province_selector"
-                  v-if="client_provinces"
-                  class="form-control"
-                >
-                  <option :value="e" v-for="(e, i) in client_provinces" :key="i">
                     {{ i }}
                   </option>
                 </select>
@@ -673,7 +693,39 @@
 
               <div class="col-md-3">
                 <label for="psgc_id"
-                  >City/Municipality <small>(Ex. Quezon City)</small></label
+                  >Province/District <small>(Ex. Dis. III)</small>
+                  <span class="red">*</span>
+                </label>
+                <select
+                  id="psgc_id"
+                  name=""
+                  v-model="client_province_selector"
+                  v-if="client_provinces"
+                  class="form-control"
+                >
+                  <option
+                    :value="e"
+                    v-for="(e, i) in client_provinces"
+                    :key="i"
+                  >
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="
+                    validationErrors.client && validationErrors.client.psgc_id
+                  "
+                  style="color: red"
+                >
+                  {{ validationErrors.client.psgc_id[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="psgc_id"
+                  >City/Municipality <small>(Ex. Quezon City)</small>
+                  <span class="red">*</span></label
                 >
 
                 <select
@@ -700,7 +752,8 @@
 
               <div class="col-md-3">
                 <label for="psgc_id"
-                  >Barangay <small>(Ex. Batasan Hills)</small></label
+                  >Barangay <small>(Ex. Batasan Hills)</small>
+                  <span class="red">*</span></label
                 >
 
                 <select
@@ -709,7 +762,11 @@
                   v-if="beneficiary_cities"
                   class="form-control"
                 >
-                  <option :value="e[0].id" v-for="(e, i) in client_barangays" :key="i">
+                  <option
+                    :value="e[0].id"
+                    v-for="(e, i) in client_barangays"
+                    :key="i"
+                  >
                     {{ i }}
                   </option>
                 </select>
@@ -729,6 +786,7 @@
               <div class="col-md-3">
                 <label for="mobile_number"
                   >Telepono <small>(Mobile Number)</small>
+                  <span class="red">*</span>
                 </label>
 
                 <input
@@ -751,8 +809,9 @@
 
               <div class="col-md-3">
                 <label for="birth_date"
-                  >Kapanganakan <small>(Birthdate)</small></label
-                >
+                  >Kapanganakan <small>(Birthdate)</small>
+                  <span class="red">*</span>
+                </label>
                 <input
                   id="birth_date"
                   v-model="form.client.birth_date"
@@ -775,8 +834,9 @@
               <div class="col-md-6">
                 <label for="relasyon"
                   >Relasyon sa Benepisyaryo
-                  <small> (Relationship to Beneficiary) </small></label
-                >
+                  <small> (Relationship to Beneficiary) </small>
+                  <span class="red">*</span>
+                </label>
                 <input
                   id="relasyon"
                   v-model="form.client.rel_beneficiary"
@@ -805,7 +865,10 @@
         <div class="card-title">Requirements <span></span></div>
 
         <div class="card-body">
-          <div v-if="!isEmpty(validationErrors.assistance)" class="alert alert-danger">
+          <div
+            v-if="!isEmpty(validationErrors.assistance)"
+            class="alert alert-danger"
+          >
             <ul>
               <li v-for="(e, i) in validationErrors.assistance" :key="i">
                 {{ e[0] }}
@@ -818,13 +881,24 @@
             class="ml-3 list-group list-group-flush"
           >
             <li
-              v-for="(r, i) in requirements[0].requirements.filter(i => i.is_required == 1)"
+              v-for="(r, i) in requirements[0].requirements.filter(
+                (i) => i.is_required == 1
+              )"
               :key="r.id"
               class="list-group-item"
             >
-              <p>{{ r.name }}</p>
+              <p>
+                {{ r.name }}
+                <span class="red"> {{ r.is_required ? "*" : "" }}</span>
+              </p>
+
               <div class="alert alert-primary">
-                <input type="file" @input="onFileChange(i, $event)" accept="application/pdf,image/jpeg,image/png" />
+                <input
+                  type="file"
+                  @input="onFileChange(i, $event)"
+                  accept="application/pdf,image/jpeg,image/png"
+                  :required="r.is_required"
+                />
               </div>
             </li>
           </ul>
@@ -832,7 +906,9 @@
       </div>
 
       <div class="text-center col-md-12" style="padding: 10px 0px">
-        <button type="submit" class="btn btn-primary btn-lg">SUBMIT</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block">
+          SUBMIT
+        </button>
       </div>
     </div>
   </form>
@@ -857,13 +933,13 @@ export default {
       }),*/
       form: {
         beneficiary: {
-          region: "XI",
+          region: "",
         },
         client: {
           rel_beneficiary: "",
         },
         assistance: {
-          documents: {},
+          documents: [],
         },
       },
       // form: {},
@@ -899,11 +975,15 @@ export default {
   },
   watch: {
     beneficiary_region_selector(newVal, oldVal) {
-      (this.beneficiary_provinces = {}, this.beneficiary_cities = {}, this.beneficiary_barangays = {}), (this.beneficiary_provinces = this.groupByKey(newVal, "province_name"));
+      ((this.beneficiary_provinces = {}),
+      (this.beneficiary_cities = {}),
+      (this.beneficiary_barangays = {})),
+        (this.beneficiary_provinces = this.groupByKey(newVal, "province_name"));
     },
 
     beneficiary_province_selector(newVal, oldVal) {
-      (this.beneficiary_cities = {}, this.beneficiary_barangays = {}), (this.beneficiary_cities = this.groupByKey(newVal, "city_name"));
+      ((this.beneficiary_cities = {}), (this.beneficiary_barangays = {})),
+        (this.beneficiary_cities = this.groupByKey(newVal, "city_name"));
     },
 
     beneficiary_city_selector(newVal, oldVal) {
@@ -911,11 +991,15 @@ export default {
         (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
     },
     client_region_selector(newVal, oldVal) {
-      (this.client_provinces = {}, this.client_cities = {}, this.client_barangays = {}), (this.client_provinces = this.groupByKey(newVal, "province_name"));
+      ((this.client_provinces = {}),
+      (this.client_cities = {}),
+      (this.client_barangays = {})),
+        (this.client_provinces = this.groupByKey(newVal, "province_name"));
     },
 
     client_province_selector(newVal, oldVal) {
-      (this.client_cities = {}, this.client_barangays = {}), (this.client_cities = this.groupByKey(newVal, "city_name"));
+      ((this.client_cities = {}), (this.client_barangays = {})),
+        (this.client_cities = this.groupByKey(newVal, "city_name"));
     },
 
     client_city_selector(newVal, oldVal) {
@@ -972,18 +1056,16 @@ export default {
           "Content-Type": "multipart/form-data;",
         };
 
-        console.log(formData);
-
         axios
           .post(route("assistances.store"), formData, headers)
           .then((response) => {
             console.log(response.data);
-            if(response.data.aics_beneficiary_id)
-            {
-              alert("Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly.")
+            if (response.data.aics_beneficiary_id) {
+              alert(
+                "Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly."
+              );
               this.resetForm();
             }
-
           })
           .catch((error) => {
             if (error.response.status == 422) {
@@ -991,38 +1073,35 @@ export default {
               this.validationErrors = error.response.data.errors;
             }
           });
-      }else
-      {
-        alert("Pumili ng nais hingiin na tulong. \nPlease select assistance request.")
+      } else {
+        alert(
+          "Pumili ng nais hingiin na tulong. \nPlease select assistance request."
+        );
       }
     },
-    resetForm()
-    {
-     this.form = {
+    resetForm() {
+      this.form = {
         beneficiary: {
-          region: "XI",
+          region: "",
         },
         client: {
           rel_beneficiary: "",
         },
         assistance: {
-          documents: {},
+          documents: [],
         },
-      }
-
+      };
     },
 
     onFileChange(i, e) {
-      
       this.form.assistance.documents[i] = e.target.files[0];
     },
 
     getRequirements() {
       this.form.assistance.documents = {};
-      if(this.validationErrors.assistance)
-      {
-        this.validationErrors.assistance= {};
-      };
+      if (this.validationErrors.assistance) {
+        this.validationErrors.assistance = {};
+      }
 
       this.requirements = this.assistance_types.filter((x) => {
         if (x.id === this.form.assistance.aics_type_id) {
@@ -1031,28 +1110,38 @@ export default {
       });
     },
 
-    getBeneficiaryPsgc(){
-      axios.get(route("api.psgc.show", "brgy"),{
-        params: {
-          field: "region_psgc",
-          value: this.beneficiary_region_selector[0].region_psgc
-        }
-      }).then((response) => {
-        this.beneficiary_psgc = response.data;
-        this.beneficiary_provinces = this.groupByKey(this.beneficiary_psgc, "province_name");
-      });
+    getBeneficiaryPsgc() {
+      axios
+        .get(route("api.psgc.show", "brgy"), {
+          params: {
+            field: "region_psgc",
+            value: this.beneficiary_region_selector[0].region_psgc,
+          },
+        })
+        .then((response) => {
+          this.beneficiary_psgc = response.data;
+          this.beneficiary_provinces = this.groupByKey(
+            this.beneficiary_psgc,
+            "province_name"
+          );
+        });
     },
 
-    getClientPsgc(){
-      axios.get(route("api.psgc.show", "brgy"),{
-        params: {
-          field: "region_psgc",
-          value: this.client_region_selector[0].region_psgc
-        }
-      }).then((response) => {
-        this.client_psgc = response.data;
-        this.client_provinces = this.groupByKey(this.client_psgc, "province_name");
-      });
+    getClientPsgc() {
+      axios
+        .get(route("api.psgc.show", "brgy"), {
+          params: {
+            field: "region_psgc",
+            value: this.client_region_selector[0].region_psgc,
+          },
+        })
+        .then((response) => {
+          this.client_psgc = response.data;
+          this.client_provinces = this.groupByKey(
+            this.client_psgc,
+            "province_name"
+          );
+        });
     },
 
     calculateAge: function () {
@@ -1076,15 +1165,16 @@ export default {
       }, {});
     },
 
-    isEmpty(value){
+    isEmpty(value) {
       return _.isEmpty(value);
-    }
+    },
+    validateForm() {},
   },
   mounted() {
     axios.get(route("api.aics.assistance-types")).then((response) => {
       this.assistance_types = response.data;
     });
-    axios.get(route("api.psgc.show","region")).then((response) => {
+    axios.get(route("api.psgc.show", "region")).then((response) => {
       this.regions = this.groupByKey(response.data, "region_name");
     });
   },

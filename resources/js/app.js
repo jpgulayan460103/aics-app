@@ -60,12 +60,7 @@ const router = new VueRouter({
             component: Home,
             props: true,
         },
-        {
-            path: "/assistance/:uuid?",
-            name: "assistance",
-            component: Assistance,
-            props: true,
-        },
+       
     ],
 });
 
