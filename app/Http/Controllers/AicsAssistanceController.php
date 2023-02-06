@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
+
 class AicsAssistanceController extends Controller
 {
     public function store(Request $request)

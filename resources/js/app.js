@@ -17,6 +17,8 @@ import Home from "./components/Home.vue";
 import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
+import ImportFIle from './Components/ImportFIle.vue'
+import GISComponent from "./Components/GISComponent"
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -36,7 +38,7 @@ Vue.use(VueViewer)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('gis-component', require('./components/GISComponent.vue').default);
+//Vue.component('gis-component', require('./components/GISComponent.vue').default);
 //Vue.component('app', require('./components/App.vue').default);
 
 /**
@@ -47,7 +49,7 @@ Vue.component('gis-component', require('./components/GISComponent.vue').default)
 
 const router = new VueRouter({
     mode: "history",
-    //base: process.env.MIX_BASE_NAME,
+    base: process.env.MIX_BASE_NAME,
     routes: [
         // { path: "/404", component: NotFound },
         {
@@ -60,6 +62,18 @@ const router = new VueRouter({
             component: Home,
             props: true,
         },
+        {
+            path: "/import",
+            name: "import",
+            component: ImportFIle,
+            
+        },
+        {
+            path: "/gis",
+            name: "gis",
+            component: GISComponent,
+            
+        }
        
     ],
 });

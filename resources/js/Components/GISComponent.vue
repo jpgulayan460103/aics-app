@@ -2,14 +2,14 @@
   <form @submit.prevent="submit" enctype="multipart/form-data">
     <div class="container m-10" style="margin-top: 50px">
       <div class="row">
-        <div class="col-md-4 text-center">
-          <img
+        <!-- <div class="col-md-4 text-center">
+         <img
             max-height="64"
             max-width="250px"
             src="/images/DSWD-DVO-LOGO.png"
             class="img-fluid"
           />
-        </div>
+        </div>-->
         <div class="col-md-8 text-md-end text-center">
           <h1
             style="

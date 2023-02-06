@@ -229,6 +229,7 @@ export default {
   },
   mounted() {
     this.getGIS();
+    console.log("here 2" );
   },
 };
 </script>

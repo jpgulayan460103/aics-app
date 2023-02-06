@@ -28,6 +28,8 @@ Route::group(['prefix' => '/aics'], function () {
     Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
     Route::get('beneficiaries', [\App\Http\Controllers\AicsBeneficiaryController::class, 'index']);
     Route::get('clients', [\App\Http\Controllers\AicsClientController::class, 'index']);
+    Route::post('clients', [\App\Http\Controllers\AicsClientController::class, 'client_upload'])->name("api.client.upload");
+
 });
 
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");

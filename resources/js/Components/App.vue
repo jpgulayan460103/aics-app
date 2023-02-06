@@ -1,8 +1,15 @@
 <template>
   <div class="container">
     <div class="row">
-      <!--<div class="col-md-2"></div>-->
-      <div class="col-md-12">
+      <div class="col-md-2">
+        <ul>
+          <li v-for="(link, k) in links" :key="k">
+            <router-link :to="link.to">{{ link.text }}</router-link>
+          </li>
+        </ul>
+       
+      </div>
+      <div class="col-md-10">
         <router-view></router-view>
       </div>
     </div>
@@ -13,17 +20,31 @@
 export default {
   data() {
     return {
-      items: [
+      links: [
         {
           to: "/",
-          icon: "mdi-web",
           text: "Dashboard",
         },
+        {
+          to: "/",
+          text: "Client List",
+        },
+        {
+          to: "import",
+          text: "Import",
+        },
+        {
+          to: "gis",
+          text: "GIS",
+        },
+        
       ],
     };
   },
   methods: {},
-  mounted() {},
+  mounted() {
+    console.log("app");
+  },
 };
 </script>
 

@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+   
+    if ( auth()->check()) return redirect('/home'); 
+    return view('auth.login');
 });
 
 // Route::group(['prefix' => '/aics'], function () {
@@ -32,8 +34,11 @@ Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
 Route::get('/holiday-crawler', [App\Models\HolidayCrawler::class, 'crawler'])->name('holiday-crawler');
+
+Route::get('/{any}',  [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');
+//Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*');

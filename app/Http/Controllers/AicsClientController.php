@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
 
+use App\Imports\ClientsImport;
+use App\Models\DirtyList;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AicsClientController extends Controller
 {
@@ -37,8 +41,6 @@ class AicsClientController extends Controller
      */
     public function store(Request $request)
     {
-
-
     }
 
     /**
@@ -86,5 +88,33 @@ class AicsClientController extends Controller
     public function destroy(AicsClient $aicsClient)
     {
         //
+    }
+
+    public function client_upload(Request $request)
+    {
+        
+        
+
+        $file = request("file");
+        $filename = $request->file->getClientOriginalName();
+        $year = date("Y");
+        $month = date("m");
+
+        $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month/" . $filename,  $file);
+        $url = Storage::url($path);
+
+        $dirtylist = new DirtyList([
+            'file_directory' => $url,
+            'file_name' => $filename,
+        ]);
+
+
+        $dirtylist->save();
+        //dd($dirtylist->id);
+
+        Excel::import(new ClientsImport($dirtylist->id),  $file);
+
+        return redirect('/')->with('success', 'All good!');
+
     }
 }
