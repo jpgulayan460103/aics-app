@@ -14,7 +14,7 @@ class DirtyListClientsController extends Controller
      */
     public function index()
     {
-        //
+        return DirtyListClients::all();
     }
 
     /**

@@ -18,7 +18,9 @@ import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 import ImportFIle from './Components/ImportFIle.vue'
-import GISComponent from "./Components/GISComponent"
+import DirtyList from "./Components/DirtyList"
+import GISComponent from "./Components/GISComponent.vue"
+
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -72,6 +74,12 @@ const router = new VueRouter({
             path: "/gis",
             name: "gis",
             component: GISComponent,
+            
+        },
+        {
+            path: "/dirty_list",
+            name: "dirty_list",
+            component: DirtyList,
             
         }
        

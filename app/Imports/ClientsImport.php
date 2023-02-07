@@ -36,12 +36,11 @@ class ClientsImport implements ToModel, WithStartRow, WithBatchInserts, WithChun
             'last_name'     => trim($row[2]),
             'ext_name'      => trim($row[3]),
             'birth_date'    => trim(date_format(date_create($row[4]), "Y-m-d")),
-            'barangay'      => trim($row[5]),
-            'city_muni'     => trim($row[6]),
-            'province'      => trim($row[7]),
-            'region'        => trim($row[8]),
-            'fund_source'   => trim($row[9]),
-            
+            'barangay'      => strtoupper(trim($row[5])),
+            'city_muni'     => strtoupper(trim($row[6])),
+            'province'      => strtoupper(trim($row[7])),
+            'region'        => strtoupper(trim($row[8])),
+            'fund_source'   => trim($row[9]),            
         ]);
 
         

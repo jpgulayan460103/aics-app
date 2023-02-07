@@ -92,15 +92,12 @@ class AicsClientController extends Controller
 
     public function client_upload(Request $request)
     {
-        
-        
-
         $file = request("file");
         $filename = $request->file->getClientOriginalName();
         $year = date("Y");
         $month = date("m");
 
-        $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month/" . $filename,  $file);
+        $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
         $url = Storage::url($path);
 
         $dirtylist = new DirtyList([
@@ -108,13 +105,8 @@ class AicsClientController extends Controller
             'file_name' => $filename,
         ]);
 
-
         $dirtylist->save();
-        //dd($dirtylist->id);
-
         Excel::import(new ClientsImport($dirtylist->id),  $file);
-
         return redirect('/')->with('success', 'All good!');
-
     }
 }

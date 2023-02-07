@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-2">
         <ul>
@@ -38,6 +38,10 @@ export default {
           text: "GIS",
         },
         
+        {
+          to: "dirty_list",
+          text: "Dirty List",
+        },
       ],
     };
   },
