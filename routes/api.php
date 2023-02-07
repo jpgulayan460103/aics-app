@@ -37,3 +37,7 @@ Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])
 Route::get('pdf/{uuid}', [\App\Http\Controllers\AicsAssistanceController::class, 'pdf'])->name("api.pdf.gis");
 
 Route::get('dirty_list', [\App\Http\Controllers\DirtyListClientsController::class, 'index'])->name("api.dirty_list.index");
+
+
+Route::post('payrolls', [\App\Http\Controllers\PayrollController::class,'create'])->name("api.payroll.create");
+Route::get('payrolls', [\App\Http\Controllers\PayrollController::class,'index'])->name("api.payroll.index");

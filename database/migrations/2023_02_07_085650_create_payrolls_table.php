@@ -15,9 +15,14 @@ class CreatePayrollsTable extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("SDO");
-            $table->timestamps();
+            $table->string("title");
+            $table->string("sdo");
+            $table->string("region");
+            $table->string("province");
+            $table->string("muni_city");
+            $table->string("barangay");
+            $table->date("schedule");           
+           $table->timestamps();
         });
     }
 

@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       links: [
-        {
+        /*{
           to: "/",
           text: "Dashboard",
         },
@@ -37,10 +37,18 @@ export default {
           to: "gis",
           text: "GIS",
         },
-        
+        */
+        {
+          to: "import",
+          text: "Import",
+        },
         {
           to: "dirty_list",
-          text: "Dirty List",
+          text: "Master List",
+        },
+        {
+          to: "payroll",
+          text: "Payroll",
         },
       ],
     };

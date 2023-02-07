@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PayrollController extends Controller
 {
@@ -14,7 +15,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+        return Payroll::all();
     }
 
     /**
@@ -22,9 +23,23 @@ class PayrollController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(request $request)
     {
-        //
+        try {
+            $p = New Payroll;
+            $p->fill($request->toArray());
+            $res = $p->save();
+            if($res)
+           { return ["message"=>"Saved"];}
+           else
+           {
+            return ["message"=>"Failed"];
+           }
+
+        } catch (\Throwable $th) {
+            return $th;
+        }
+        
     }
 
     /**

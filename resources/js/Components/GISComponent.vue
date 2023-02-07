@@ -1,15 +1,16 @@
 <template>
   <form @submit.prevent="submit" enctype="multipart/form-data">
-    <div class="container m-10" style="margin-top: 50px">
-      <div class="row">
-        <!-- <div class="col-md-4 text-center">
+   
+    <div class="container-fluid" >
+      <!--<div class="row">
+        <div class="col-md-4 text-center">
          <img
             max-height="64"
             max-width="250px"
             src="/images/DSWD-DVO-LOGO.png"
             class="img-fluid"
           />
-        </div>-->
+        </div>
         <div class="col-md-8 text-md-end text-center">
           <h1
             style="
@@ -25,7 +26,7 @@
             IBP Road, Batasan Pambansa Complex Constitution Hills, Quezon City
           </p>
         </div>
-      </div>
+      </div>-->
       <div class="row text-center">
         <div class="col-md-12">
           <img src="" />
@@ -924,6 +925,7 @@
 
 <script>
 export default {
+  props: ["dialog_data"],
   data() {
     return {
       /*form: this.$inertia.form({
@@ -974,6 +976,13 @@ export default {
     };
   },
   watch: {
+    dialog_data(e)
+    {
+      this.resetForm();
+      this.form.beneficiary = e;
+      this.calculateAge();
+
+    },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
       (this.beneficiary_cities = {}),
@@ -1171,6 +1180,9 @@ export default {
     validateForm() {},
   },
   mounted() {
+    this.form.beneficiary = this.dialog_data;
+    this.calculateAge();
+
     axios.get(route("api.aics.assistance-types")).then((response) => {
       this.assistance_types = response.data;
     });

@@ -21,7 +21,7 @@
     @routes()
 </head>
 <body>
-    <div id="app">
+    <div id="app" data-app>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -76,7 +76,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4"> 
             @yield('content')
         </main>
     </div>

@@ -7,7 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
-
+import Vuetify from 'vuetify';
 import VueRouter from "vue-router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -20,8 +20,9 @@ import VueViewer from 'v-viewer'
 import ImportFIle from './Components/ImportFIle.vue'
 import DirtyList from "./Components/DirtyList"
 import GISComponent from "./Components/GISComponent.vue"
+import Payroll from "./Components/Payroll"
 
-
+Vue.use(Vuetify); 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -81,6 +82,12 @@ const router = new VueRouter({
             name: "dirty_list",
             component: DirtyList,
             
+        },
+        {
+            path: "/payroll",
+            name: "payroll",
+            component: Payroll,
+            
         }
        
     ],
@@ -92,6 +99,7 @@ const app = new Vue({
     el: '#app',
     components: { App },
     router,
+    vuetify: new Vuetify(),
 });
 
 Vue.filter("formatDate", function (value) {
