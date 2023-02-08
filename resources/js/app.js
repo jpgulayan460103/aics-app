@@ -100,6 +100,7 @@ const app = new Vue({
     components: { App },
     router,
     vuetify: new Vuetify(),
+    
 });
 
 Vue.filter("formatDate", function (value) {

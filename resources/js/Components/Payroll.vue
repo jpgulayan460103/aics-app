@@ -74,7 +74,7 @@
 
             <button
               type="submit"
-              class="btn btn-primary btn-lg btn-lg btn-block"
+              class="btn btn-primary btn-block"
             >
               SUBMIT
             </button>

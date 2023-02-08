@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AicsBeneficiary;
+use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class AicsBeneficiaryController extends Controller
@@ -81,5 +83,11 @@ class AicsBeneficiaryController extends Controller
     public function destroy(AicsBeneficiary $aicsBeneficiary)
     {
         //
+    }
+
+    public function getCategories()
+    {
+        return ["categories"=>Category::all(), "subcategory"=> Subcategory::all()];
+        
     }
 }

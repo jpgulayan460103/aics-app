@@ -1,7 +1,6 @@
 <template>
   <form @submit.prevent="submit" enctype="multipart/form-data">
-   
-    <div class="container-fluid" >
+    <div class="container-fluid">
       <!--<div class="row">
         <div class="col-md-4 text-center">
          <img
@@ -384,7 +383,7 @@
                 <label for="mobile_number"
                   >Telepono
                   <small
-                    >(Mobile Number Ex. 091234567890)
+                    >(Mobile Number)
                     <span class="red">*</span>
                   </small>
                 </label>
@@ -394,7 +393,6 @@
                   v-model="form.beneficiary.mobile_number"
                   type="text"
                   class="form-control"
-                  placeholder="091234567890"
                 />
 
                 <div
@@ -862,7 +860,72 @@
         </div>
       </div>
 
-      <div class="card mt-2" v-if="requirements">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-title">Beneficiary Category</div>
+            <div class="card-body">
+              Target Sector
+
+              <select v-model="form.category" class="form-control">
+                <option></option>
+                <option
+                  v-for="(e, i) in categories"
+                  :key="i"
+                  :value="e.category"
+                >
+                  {{ e.category }}
+                </option>
+              </select>
+
+              Specific Subcategory
+
+              <select v-model="form.subcategory" class="form-control">
+                <option></option>
+                <option
+                  v-for="(e, i) in subcategories"
+                  :key="i"
+                  :value="e.subcategory"
+                >
+                  {{ e.subcategory }}
+                </option>
+              </select>
+
+              
+              <div class="" v-if="form.subcategory == 'Others'">
+                Others
+                <input
+                  type="text"
+                  v-model="form.subcategory_others"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-title">Social Worker's Assessment</div>
+            <div class="card-body">
+              <textarea
+                name=""
+                id=""
+                v-model="form.assessment"
+                class="form-control"
+                cols="30"
+                rows="5"
+              ></textarea>
+
+              Interviewed by
+              <input type="text" class="form-control" v-model="form.interviewed_by">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+     
+
+     <!-- <div class="card mt-2" v-if="requirements">
         <div class="card-title">Requirements <span></span></div>
 
         <div class="card-body">
@@ -904,7 +967,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div>-->
 
       <div class="text-center col-md-12" style="padding: 10px 0px">
         <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block">
@@ -943,6 +1006,7 @@ export default {
         assistance: {
           documents: [],
         },
+        assessment: "",
       },
       // form: {},
       assistance_types: {},
@@ -973,15 +1037,16 @@ export default {
       //logo:  location.protocol + "//" + location.host +  "/" + process.env.MIX_BASE_NAME +"/images/DSWD-DVO-LOGO.png",
       logo:
         location.protocol + "//" + location.host + "/images/DSWD-DVO-LOGO.png",
+
+      categories: [],
+      subcategories: [],
     };
   },
   watch: {
-    dialog_data(e)
-    {
+    dialog_data(e) {
       this.resetForm();
       this.form.beneficiary = e;
       this.calculateAge();
-
     },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
@@ -1099,6 +1164,7 @@ export default {
         assistance: {
           documents: [],
         },
+        assessment: "",
       };
     },
 
@@ -1188,6 +1254,11 @@ export default {
     });
     axios.get(route("api.psgc.show", "region")).then((response) => {
       this.regions = this.groupByKey(response.data, "region_name");
+    });
+
+    axios.get(route("api.categories")).then((response) => {
+      this.categories = response.data.categories;
+      this.subcategories = response.data.subcategory;
     });
   },
 };

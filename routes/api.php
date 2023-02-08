@@ -29,6 +29,7 @@ Route::group(['prefix' => '/aics'], function () {
     Route::get('beneficiaries', [\App\Http\Controllers\AicsBeneficiaryController::class, 'index']);
     Route::get('clients', [\App\Http\Controllers\AicsClientController::class, 'index']);
     Route::post('clients', [\App\Http\Controllers\AicsClientController::class, 'client_upload'])->name("api.client.upload");
+    Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class,'getCategories'])->name("api.categories");
 
 });
 
@@ -41,3 +42,6 @@ Route::get('dirty_list', [\App\Http\Controllers\DirtyListClientsController::clas
 
 Route::post('payrolls', [\App\Http\Controllers\PayrollController::class,'create'])->name("api.payroll.create");
 Route::get('payrolls', [\App\Http\Controllers\PayrollController::class,'index'])->name("api.payroll.index");
+
+
+
