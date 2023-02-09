@@ -106,7 +106,8 @@ class AicsClientController extends Controller
         ]);
 
         $dirtylist->save();
-        Excel::import(new ClientsImport($dirtylist->id),  $file);
+        $res = Excel::import(new ClientsImport($dirtylist->id),  $file);
+        dd($res);
         return redirect('/')->with('success', 'All good!');
     }
 }

@@ -867,12 +867,12 @@
             <div class="card-body">
               Target Sector
 
-              <select v-model="form.category" class="form-control">
+              <select v-model="form.beneficiary.category_id" class="form-control">
                 <option></option>
                 <option
                   v-for="(e, i) in categories"
                   :key="i"
-                  :value="e.category"
+                  :value="e.id"
                 >
                   {{ e.category }}
                 </option>
@@ -880,23 +880,22 @@
 
               Specific Subcategory
 
-              <select v-model="form.subcategory" class="form-control">
+              <select v-model="form.beneficiary.subcategory_id" class="form-control">
                 <option></option>
                 <option
                   v-for="(e, i) in subcategories"
                   :key="i"
-                  :value="e.subcategory"
+                  :value="e.id"
                 >
                   {{ e.subcategory }}
                 </option>
               </select>
 
-              
               <div class="" v-if="form.subcategory == 'Others'">
                 Others
                 <input
                   type="text"
-                  v-model="form.subcategory_others"
+                  v-model="form.beneficiary.subcategory_others"
                   class="form-control"
                 />
               </div>
@@ -910,22 +909,37 @@
               <textarea
                 name=""
                 id=""
-                v-model="form.assessment"
+                v-model="form.beneficiary.assessment"
                 class="form-control"
                 cols="30"
                 rows="5"
               ></textarea>
 
               Interviewed by
-              <input type="text" class="form-control" v-model="form.interviewed_by">
+              <input
+                type="text"
+                class="form-control"
+                v-model="form.beneficiary.interviewed_by"
+              />
             </div>
           </div>
         </div>
       </div>
-      
-     
+    
+      <br>
 
-     <!-- <div class="card mt-2" v-if="requirements">
+      <div class="card">
+        <div class="card-title"> Select Payroll</div>
+        <div class="card-body">
+         
+
+          <select name="" id="" v-model="form.payroll" class="form-control">
+            <option v-for="(p, i) in payrolls" :key="i">{{ p.title }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- <div class="card mt-2" v-if="requirements">
         <div class="card-title">Requirements <span></span></div>
 
         <div class="card-body">
@@ -1040,6 +1054,7 @@ export default {
 
       categories: [],
       subcategories: [],
+      payrolls: [],
     };
   },
   watch: {
@@ -1260,6 +1275,13 @@ export default {
       this.categories = response.data.categories;
       this.subcategories = response.data.subcategory;
     });
+
+    axios
+      .get(route("api.payroll.index"))
+      .then((response) => {
+        this.payrolls = response.data;
+      })
+      .catch((error) => console.log(error));
   },
 };
 </script>

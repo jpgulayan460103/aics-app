@@ -2,11 +2,34 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2">
-        <ul>
+        <!--<ul>
           <li v-for="(link, k) in links" :key="k">
             <router-link :to="link.to">{{ link.text }}</router-link>
           </li>
-        </ul>
+        </ul>-->
+
+
+        <v-list dense>
+     
+      <v-list-item-group
+        v-model="selectedItem"
+        color="primary"
+      >
+        <v-list-item
+          v-for="(link, i) in links"
+          :key="i"
+          :to="link.to"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="link.icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title v-text="link.text"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+    
        
       </div>
       <div class="col-md-10">
@@ -20,34 +43,23 @@
 export default {
   data() {
     return {
+      selectedItem: 1,
       links: [
-        /*{
-          to: "/",
-          text: "Dashboard",
-        },
+       
         {
           to: "/",
-          text: "Client List",
+          text: "Home",
         },
         {
-          to: "import",
+          to: "/import",
           text: "Import",
         },
         {
-          to: "gis",
-          text: "GIS",
-        },
-        */
-        {
-          to: "import",
-          text: "Import",
-        },
-        {
-          to: "dirty_list",
+          to: "/master_list",
           text: "Master List",
         },
         {
-          to: "payroll",
+          to: "/payroll",
           text: "Payroll",
         },
       ],

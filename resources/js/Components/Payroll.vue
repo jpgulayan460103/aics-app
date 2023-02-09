@@ -72,10 +72,7 @@
               class="form-control"
             />
 
-            <button
-              type="submit"
-              class="btn btn-primary btn-block"
-            >
+            <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
             </button>
           </form>
@@ -84,9 +81,9 @@
     </v-dialog>
 
     <v-card flat>
-     
-      <v-card-title>Payroll
-        <v-spacer/>  <v-btn @click="openModal = true" dark>New Payroll</v-btn>
+      <v-card-title
+        >Payroll <v-spacer />
+        <v-btn @click="NewPayroll()" dark>New Payroll</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -98,11 +95,16 @@
           :search="search"
         >
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="EditItem(item)">
+            <v-icon small class="mr-5" @click="ViewList(item.id)">
+              mdi-format-list-text
+            </v-icon>
+
+            <v-icon small class="mr-5" @click="EditItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small class="mr-2" @click="ViewList(item)">
-              mdi-eye
+
+            <v-icon small class="mr-5" @click="DeleteItem(item)">
+              mdi-delete
             </v-icon>
           </template>
         </v-data-table>
@@ -128,6 +130,7 @@ export default {
         { value: "province", text: "Province", sortable: true },
         { value: "muni_city", text: "City/Municipality", sortable: true },
         { value: "barangay", text: "Barangay", sortable: true },
+        { value: "actions", text: "Actions", sortable: true },
       ],
       payrolls: [],
     };
@@ -135,19 +138,74 @@ export default {
   methods: {
     submit() {
       this.isBusy = true;
-      axios
-        .post(route("api.payroll.create"), this.formData)
-        .then((response) => {
-          this.isBusy = false;
-          this.data = response.data;
-          this.getPayrolls();
-        })
-        .catch((error) => console.log(error));
+      if (this.formData.id > 0) {
+        axios
+          .post(route("api.payroll.update", this.formData.id), this.formData)
+          .then((response) => {
+            console.log(response.data);
+            this.isBusy = false;
+            this.getPayrolls();
+            this.openModal = false;
+          })
+          .catch((error) => console.log(error));
+      } else {
+        axios
+          .post(route("api.payroll.create"), this.formData)
+          .then((response) => {
+            this.isBusy = false;
+            this.data = response.data;
+
+            if (response.data.Message == "Saved") {
+              this.getPayrolls();
+              this.openModal = false;
+            } else {
+              if (response.data.Message.errorInfo) {
+                alert(response.data.Message.errorInfo[2]);
+              } else {
+                alert(response.data.Message);
+              }
+            }
+          })
+          .catch((error) => console.log(error));
+      }
     },
     getPayrolls() {
       axios.get(route("api.payroll.index")).then((response) => {
         this.payrolls = response.data;
       });
+    },
+    NewPayroll() {
+      this.formData = {};
+      this.openModal = true;
+    },
+    EditItem(e) {
+      this.formData = {};
+      this.formData = e;
+      this.openModal = true;
+    },
+    DeleteItem(e) {
+      let x = confirm("Delete this Payroll?");
+      if (x) {
+        axios
+          .post(route("api.payrolls.delete", e.id))
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.Message == "Deleted") {
+              alert(response.data.Message);
+              this.getPayrolls();
+            } else {
+              alert(response.data.Message);
+            }
+          })
+          .catch((error) => console.log(error));
+      } else {
+        alert("Cancelled");
+      }
+    },
+    ViewList(id) {
+      //this.$router.push("payroll/" + id);
+      this.$router.push({ name: 'payroll_list', params: { "id":id } })
+
     },
   },
   mounted() {

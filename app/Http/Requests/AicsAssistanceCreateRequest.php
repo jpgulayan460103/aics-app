@@ -28,7 +28,7 @@ class AicsAssistanceCreateRequest extends FormRequest
     {
         return [
             'aics_type_id' => ['required'],
-            'documents.*' => 'file|max:20480|mimetypes:application/pdf,image/jpeg,image/png'
+           // 'documents.*' => 'file|max:20480|mimetypes:application/pdf,image/jpeg,image/png'
         ];
     }
 

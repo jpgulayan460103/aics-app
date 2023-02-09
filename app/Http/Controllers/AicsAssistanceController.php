@@ -54,7 +54,7 @@ class AicsAssistanceController extends Controller
             //Assistance Validation
             $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
             $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
-            (new AicsAssistanceCreateRequest())->withValidator($assistance_validator);
+           // (new AicsAssistanceCreateRequest())->withValidator($assistance_validator);
             if ($assistance_validator->fails()) {
                 $errors['assistance'] = $assistance_validator->errors();
             }

@@ -42,6 +42,8 @@ Route::get('dirty_list', [\App\Http\Controllers\DirtyListClientsController::clas
 
 Route::post('payrolls', [\App\Http\Controllers\PayrollController::class,'create'])->name("api.payroll.create");
 Route::get('payrolls', [\App\Http\Controllers\PayrollController::class,'index'])->name("api.payroll.index");
-
-
+Route::post('payrolls/{id}', [\App\Http\Controllers\PayrollController::class,'update'])->name("api.payroll.update");
+Route::post('payrolls/del/{id}', [\App\Http\Controllers\PayrollController::class,'destroy'])->name("api.payrolls.delete");
+Route::get('payrolls/{id}', [\App\Http\Controllers\PayrollController::class,'show'])->name("api.payroll.show");
+Route::get('payrolls/print/{id}', [\App\Http\Controllers\PayrollController::class,'print'])->name("api.payroll.print");
 

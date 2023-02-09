@@ -23,6 +23,13 @@ class AicsBeneficiary extends Model
         'gender',
         'occupation',
         'monthly_salary',
+        'category_id',
+        'subcategory_id',
+        'assessment',
+        'interviewed_by',
+        'subcategory_others',
+        
+
     ];
 
     public function aics_client()

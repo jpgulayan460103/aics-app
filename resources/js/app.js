@@ -21,6 +21,7 @@ import ImportFIle from './Components/ImportFIle.vue'
 import DirtyList from "./Components/DirtyList"
 import GISComponent from "./Components/GISComponent.vue"
 import Payroll from "./Components/Payroll"
+import PayrollClientList from "./Components/PayrollClientList"
 
 Vue.use(Vuetify); 
 Vue.use(VueRouter);
@@ -78,8 +79,8 @@ const router = new VueRouter({
             
         },
         {
-            path: "/dirty_list",
-            name: "dirty_list",
+            path: "/master_list",
+            name: "master_list",
             component: DirtyList,
             
         },
@@ -88,7 +89,15 @@ const router = new VueRouter({
             name: "payroll",
             component: Payroll,
             
+        },
+        {
+            path: "/payroll/:id?",
+            name: "payroll_list",
+            component: PayrollClientList,
+            props: true 
+            
         }
+       
        
     ],
 });

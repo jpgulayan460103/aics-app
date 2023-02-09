@@ -1,11 +1,16 @@
 <template>
-  <form @submit.prevent="submit" enctype="multipart/form-data">
-    <input type="file" name="" id="" @input="onFileChange($event)" />
-    
-    <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block">
-      SUBMIT
-    </button>
-  </form>
+  <v-card flat>
+    <v-card-title>Import</v-card-title>
+    <v-card-text>
+      <form @submit.prevent="submit" enctype="multipart/form-data">
+        <input type="file" name="" id="" @input="onFileChange($event)" />
+
+        <button type="submit" class="btn btn-primary">
+          SUBMIT
+        </button>
+      </form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
