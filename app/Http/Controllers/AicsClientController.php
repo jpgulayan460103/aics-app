@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ImportErrors;
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
 
 use App\Imports\ClientsImport;
 use App\Models\DirtyList;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Str;
 
 class AicsClientController extends Controller
 {
@@ -92,21 +96,59 @@ class AicsClientController extends Controller
 
     public function client_upload(Request $request)
     {
-        $file = request("file");
-        $filename = $request->file->getClientOriginalName();
-        $year = date("Y");
-        $month = date("m");
-
-        $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
-        $url = Storage::url($path);
-
-        $dirtylist = new DirtyList([
-            'file_directory' => $url,
-            'file_name' => $filename,
+        $validatedData = $request->validate([
+            'file' => ['required', 'file', 'max:20000', 'mimetypes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv'],
         ]);
+        DB::beginTransaction();
+        try {
+            $file = request("file");
+            $original_filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $filename = $original_filename.".".$file->getClientOriginalExtension();
+            $year = date("Y");
+            $month = date("m");
+    
+            $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
+            $url = Storage::url($path);
+    
+            Excel::import(new ClientsImport(),  $file);
+            DB::commit();
+            return [
+                "success" => "All good!",
+            ];
+            
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
-        $dirtylist->save();
-        Excel::import(new ClientsImport($dirtylist->id),  $file);
-        return redirect('/')->with('success', 'All good!');
+            $failures = $e->failures();
+     
+            $errors = [];
+
+            $errors[] = [
+                "file",
+                "row",
+                "field",
+                "value",
+                "errors",
+            ];
+            foreach ($failures as $failure) {
+                $values = $failure->values();
+                $errors[] = [
+                    'file' => $file->getClientOriginalName(),
+                    'row' => $failure->row(),
+                    'field' => $failure->attribute(),
+                    'value' => $values[$failure->attribute()],
+                    'errors' => implode("," ,$failure->errors()),
+                ];
+            }
+
+            $errors_file_name = $original_filename."-errors-".Str::slug(Carbon::now()).".xlsx";
+            Excel::store(new ImportErrors($errors), "public/$errors_file_name", 'local');
+            return response([
+                'errors' => [
+                    'file' => ["The file has invalid data."],
+                    'errors_file_path' => Storage::path("public/$errors_file_name"),
+                ],
+                'message' => "The given data was invalid."
+            ], 422);
+        }
     }
 }

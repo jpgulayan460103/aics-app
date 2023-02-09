@@ -26,6 +26,7 @@
     "dependencies": {
         "bootstrap-icons": "^1.10.2",
         "bootstrap-vue": "^2.23.1",
+        "cross-env": "^7.0.3",
         "path": "^0.12.7",
         "stream": "^0.0.2",
         "v-viewer": "^1.6.4",
