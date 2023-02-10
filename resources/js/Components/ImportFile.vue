@@ -5,9 +5,19 @@
       <form @submit.prevent="submit" enctype="multipart/form-data">
         <input type="file" name="" id="" @input="onFileChange($event)" />
 
-        <button type="submit" class="btn btn-primary">
+        <v-btn
+          class="ma-2"
+          :loading="isBusy"
+          :disabled="isBusy"
+          color="secondary"
+          type="submit"
+        >
           SUBMIT
-        </button>
+        </v-btn>
+
+        <!--<button type="submit" class="btn btn-primary" :loading="loading">
+          SUBMIT
+        </button>-->
       </form>
     </v-card-text>
   </v-card>
@@ -19,11 +29,13 @@ export default {
   data() {
     return {
       file: [],
+      isBusy: false,
     };
   },
   methods: {
     submit() {
       console.log("here");
+      this.isBusy = true;
       let formData = new FormData();
       formData.append("file", this.file);
 
@@ -34,7 +46,9 @@ export default {
       axios
         .post(route("api.client.upload"), formData, headers)
         .then((response) => {
+          this.isBusy = false;
           console.log(response.data);
+          alert(response.data);
         })
         .catch((error) => console.log(error));
     },
