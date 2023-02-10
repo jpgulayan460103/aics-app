@@ -10,6 +10,8 @@
         table {
             width: 100%;
         }
+        body {font-size: 10pt;}
+        #payroll th ,#payroll  td{border:solid 1px #dedede;}
     </style>
 </head>
 
@@ -39,6 +41,34 @@
             <td>Barangay: {{ $data->brangay }}</td>
         </tr>
     </table>
+
+
+    <table id="payroll" cellpadding=5 cellspacing=0>
+        <tr>
+            <th>No.</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Amount</th>
+            <th>Signature</th>
+            <th>Date Paid</th>
+        </tr>
+        @foreach ($data->clients as $item)
+            <tr>
+                <td>No.</td>
+                <td> {{ $item->last_name }}</td>
+                <td>{{ $item->first_name }}</td>
+                <td>{{ $item->middle_name }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        @endforeach
+    </table>
+
+
+
+
 </body>
 
 </html>

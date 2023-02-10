@@ -54,36 +54,10 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'psgc_id'       => Psgc::where('brgy_psgc', $row['psgc'])->first()->id,
         ]);
 
-        /*new AicsBeneficiary([
-            => 
-            'first_name'    => trim($row[0]),
-            'middle_name'   => trim($row[1]),
-            'last_name'     => trim($row[2]),
-            'ext_name'      => trim($row[3]),
-            'birth_date'    => trim(date_format(date_create($row[4]), "Y-m-d")),
-            'barangay'      => strtoupper(trim($row[5])),
-            
-            'city_muni'     => strtoupper(trim($row[6])), PSGC CODE
-            'province'      => strtoupper(trim($row[7])),
-            'region'        => strtoupper(trim($row[8])),
-            
-            'fund_source'   => trim($row[9]),
-            
-            'psgc_id'       => trim($row[10]),
-            'mobile_number' => trim($row[11]),
-            'rel_beneficiary'=> trim($row[12]),       
-        ]);*/
-
-
-       
         
     }
 
-    /* public function headingRow(): int
-    {
-        return 1;
-    }*/
-
+ 
     public function startRow(): int
     {
         return 2;

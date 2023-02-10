@@ -19,6 +19,18 @@ class AicsClient extends Model
         'mobile_number',
         'birth_date',
         'rel_beneficiary',
+        'assessment',
+        'interviewed_by',        
+        'subcategory_others',
+        'category_id',
+        'subcategory_id',
+        'age',
+        'gender',
+        'occupation',
+        'monthly_salary',
+        'payroll_id',
+        'aics_type_id'
+
     ];
 
     public function user()

@@ -80,7 +80,7 @@ export default {
   methods: {
     getList() {
       axios
-        .get(route("api.dirty_list.index"))
+        .get(route("api.clients"))
         .then((response) => {
           this.isBusy = !this.isBusy;
           this.data = response.data;

@@ -27,7 +27,7 @@
               class="form-control"
             />
 
-            <label for="">Region</label>
+            <!--<label for="">Region</label>
             <input
               type="text"
               name=""
@@ -61,13 +61,145 @@
               v-model="formData.barangay"
               id=""
               class="form-control"
-            />
+            />-->
+
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <label
+                  >Region <small>(Ex. NCR)</small>
+                  <span color="red">*</span>
+                </label>
+                <select
+                  id="psgc_id"
+                  name=""
+                  v-model="region_selector"
+                  v-if="regions"
+                  class="form-control"
+                  @change="getPsgc"
+                >
+                  <option value=""></option>
+                  <option :value="e" v-for="(e, i) in regions" :key="i">
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.psgc_id"
+                  style="color: red"
+                >
+                  {{ validationErrors.psgc_id[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  >Province/District <small>(Ex. Dis. III)</small>
+                  <span color="red">*</span>
+                </label>
+                <select
+                  id="psgc_id"
+                  name=""
+                  v-model="province_selector"
+                  v-if="provinces"
+                  class="form-control"
+                >
+                  <option :value="e" v-for="(e, i) in provinces" :key="i">
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.psgc_id"
+                  style="color: red"
+                >
+                  {{ validationErrors.psgc_id[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label>
+                  City/Municipality <small>(Ex. Quezon City)</small>
+                  <span color="red">*</span>
+                </label>
+
+                <select
+                  name=""
+                  v-model="city_selector"
+                  v-if="cities"
+                  class="form-control"
+                >
+                  <option :value="e" v-for="(e, i) in cities" :key="i">
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.psgc_id"
+                  style="color: red"
+                >
+                  {{ validationErrors.psgc_id[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label
+                  >Barangay
+                  <small>(Ex. Batasan Hills)</small>
+                  <span color="red">*</span>
+                </label>
+                <select
+                  id="psgc_id"
+                  name=""
+                  v-model="formData.psgc_id"
+                  v-if="cities"
+                  class="form-control"
+                >
+                  <option :value="e[0].id" v-for="(e, i) in barangays" :key="i">
+                    {{ i }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.psgc_id"
+                  style="color: red"
+                >
+                  {{ validationErrors.psgc_id[0] }}
+                </div>
+              </div>
+            </div>
 
             <label for="">Schedule</label>
             <input
               type="date"
               name=""
               v-model="formData.schedule"
+              id=""
+              class="form-control"
+            />
+
+            <label for="">Approved By</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.approved_by"
+              id=""
+              class="form-control"
+            />
+
+            <label for="">Certified By (1)</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.certified_by1"
+              id=""
+              class="form-control"
+            />
+
+            <label for="">Certified By (2)</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.certified_by2"
               id=""
               class="form-control"
             />
@@ -122,7 +254,7 @@ export default {
         title: "",
       },
       search: "",
-      isBusy: true,
+      isBusy: false,
       headers: [
         { value: "id", text: "ID", sortable: true },
         { value: "title", text: "Title", sortable: true },
@@ -133,7 +265,31 @@ export default {
         { value: "actions", text: "Actions", sortable: true },
       ],
       payrolls: [],
+      provinces: {},
+      cities: {},
+      regions:{},
+      barangays: {},
+      region_selector: {},
+      province_selector: {},
+      city_selector: {},
+      validationErrors: {}
     };
+  },
+  watch: {
+    region_selector(newVal, oldVal) {
+      ((this.provinces = {}), (this.cities = {}), (this.barangays = {})),
+        (this.provinces = this.groupByKey(newVal, "province_name"));
+    },
+
+    province_selector(newVal, oldVal) {
+      ((this.cities = {}), (this.barangays = {})),
+        (this.cities = this.groupByKey(newVal, "city_name"));
+    },
+
+    city_selector(newVal, oldVal) {
+      (this.barangays = {}),
+        (this.barangays = this.groupByKey(newVal, "brgy_name"));
+    },
   },
   methods: {
     submit() {
@@ -204,12 +360,36 @@ export default {
     },
     ViewList(id) {
       //this.$router.push("payroll/" + id);
-      this.$router.push({ name: 'payroll_list', params: { "id":id } })
-
+      this.$router.push({ name: "payroll_list", params: { id: id } });
+    },
+    getPsgc() {
+      axios
+        .get(route("api.psgc.show", "brgy"), {
+          params: {
+            field: "region_psgc",
+            value: this.region_selector[0].region_psgc,
+          },
+        })
+        .then((response) => {
+          this.psgc = response.data;
+          this.provinces = this.groupByKey(this.psgc, "province_name");
+        });
+    },
+    groupByKey(array, key) {
+      return array.reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, {
+          [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        });
+      }, {});
     },
   },
   mounted() {
     this.getPayrolls();
+
+    axios.get(route("api.psgc.show", "region")).then((response) => {
+      this.regions = this.groupByKey(response.data, "region_name");
+    });
   },
 };
 </script>

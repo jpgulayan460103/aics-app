@@ -1,23 +1,18 @@
 <template>
   <v-card flat>
-    <v-card-title>Import</v-card-title>
+    <v-card-title>Import </v-card-title>
     <v-card-text>
       <form @submit.prevent="submit" enctype="multipart/form-data">
-        <input type="file" name="" id="" @input="onFileChange($event)" />
+        <input type="file" name="" id="" @input="onFileChange($event)" required/>
 
-        <v-btn
-          class="ma-2"
-          :loading="isBusy"
-          :disabled="isBusy"
-          color="secondary"
-          type="submit"
-        >
+        
+
+        <v-btn :loading="isBusy"  color="black"
+      class="ma-2 white--text" :disabled="isBusy" type="submit" >
           SUBMIT
         </v-btn>
 
-        <!--<button type="submit" class="btn btn-primary" :loading="loading">
-          SUBMIT
-        </button>-->
+        feedback: {{ feedback }}
       </form>
     </v-card-text>
   </v-card>
@@ -30,6 +25,7 @@ export default {
     return {
       file: [],
       isBusy: false,
+      feedback: "",
     };
   },
   methods: {
@@ -46,9 +42,10 @@ export default {
       axios
         .post(route("api.client.upload"), formData, headers)
         .then((response) => {
+          console.log("ajdlkasd");
           this.isBusy = false;
           console.log(response.data);
-          alert(response.data);
+         this.feedback = response.data.message;
         })
         .catch((error) => console.log(error));
     },

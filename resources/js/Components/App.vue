@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2">
@@ -37,6 +38,7 @@
       </div>
     </div>
   </div>
+</v-app>
 </template>
 
 <script>
@@ -67,7 +69,7 @@ export default {
   },
   methods: {},
   mounted() {
-    console.log("app");
+   
   },
 };
 </script>

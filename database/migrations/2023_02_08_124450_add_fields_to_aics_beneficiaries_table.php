@@ -13,19 +13,28 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
      */
     public function up()
     {
-        Schema::table('aics_beneficiaries', function (Blueprint $table) {
+        Schema::table('aics_clients', function (Blueprint $table) {
+            $table->integer('age')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('monthly_salary')->nullable();
+
+            $table->bigInteger("aics_type_id")->unsigned()->nullable();
+            $table->foreign('aics_type_id')->references('id')->on('aics_types')->onDelete('cascade');
+
             $table->longText("assessment")->nullable();
-            $table->string("interviewed_by");
-            $table->string("subcategory_others")->nullable();
-        });
+            $table->string("interviewed_by")->nullable();
 
+            $table->bigInteger("category_id")->unsigned()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
-        Schema::table('aics_beneficiaries', function (Blueprint $table) {
-            $table->unsignedBigInteger('subcategory_id')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-
-            $table->foreign('category_id')->references('id')->on('category_id')->onDelete('cascade');
+            $table->bigInteger("subcategory_id")->unsigned()->nullable();
             $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
+            $table->string("subcategory_others")->nullable();
+
+            $table->bigInteger("payroll_id")->unsigned()->nullable();
+            $table->foreign('payroll_id')->references('id')->on('payrolls')->onDelete('cascade');
+
         });
     }
 
@@ -36,7 +45,10 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
      */
     public function down()
     {
-        Schema::table('aics_beneficiaries', function (Blueprint $table) {
+
+
+
+        Schema::table('aics_clients', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
             $table->dropForeign(['subcategory_id']);
             $table->dropColumn('subcategory_others');

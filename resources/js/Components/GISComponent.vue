@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="submit" enctype="multipart/form-data">
     <div class="container-fluid">
+    
       <!--<div class="row">
         <div class="col-md-4 text-center">
          <img
@@ -42,7 +43,7 @@
       <!--<div v-if="validationErrors">
         <ul class="alert alert-danger">
           <li
-            v-for="(value, index) in validationErrors.beneficiary"
+            v-for="(value, index) in validationErrors"
             :key="index"
           >
            {{index}} -  {{ value }}
@@ -59,7 +60,7 @@
       <div class="card mt-2">
         <div class="card-title">
           NAIS HINGIIN NA TULONG (Assistance Requested)
-          <span class="red">*</span>
+          <span color="red">*</span>
         </div>
         <div class="card-body">
           <div class="col-md-12">
@@ -67,7 +68,7 @@
 
             <select
               name="assistance_type"
-              v-model="form.assistance.aics_type_id"
+              v-model="form.aics_type_id"
               class="form-control"
               @change="getRequirements"
             >
@@ -79,8 +80,8 @@
         </div>
       </div>
 
-      <div class="card mt-2">
-        <div class="card-title">Ako ang: <span class="red">*</span></div>
+      <!--<div class="card mt-2">
+        <div class="card-title">Ako ang: <span color="red">*</span></div>
         <div class="card-body">
           <div class="container-fluid">
             <div class="row">
@@ -111,7 +112,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <div class="card mt-2">
         <div class="card-title">
@@ -122,45 +123,45 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="last_name">
-                  Apelyido <small>(Last name) <span class="red">*</span></small>
+                  Apelyido <small>(Last name) <span color="red">*</span></small>
                 </label>
                 <input
                   id="last_name"
-                  v-model="form.beneficiary.last_name"
+                  v-model="form.last_name"
                   type="text"
                   class="form-control"
                 />
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.last_name
+                    validationErrors &&
+                    validationErrors.last_name
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.last_name[0] }}
+                  {{ validationErrors.last_name[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
                 <label for="first_name">
                   Unang Pangalan
-                  <small>(First name) <span class="red">*</span></small></label
+                  <small>(First name) <span color="red">*</span></small></label
                 >
                 <input
                   id="first_name"
-                  v-model="form.beneficiary.first_name"
+                  v-model="form.first_name"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.first_name
+                    validationErrors &&
+                    validationErrors.first_name
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.first_name[0] }}
+                  {{ validationErrors.first_name[0] }}
                 </div>
               </div>
 
@@ -170,19 +171,19 @@
                 >
                 <input
                   id="middle_name"
-                  v-model="form.beneficiary.middle_name"
+                  v-model="form.middle_name"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.middle_name
+                    validationErrors &&
+                    validationErrors.middle_name
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.middle_name[0] }}
+                  {{ validationErrors.middle_name[0] }}
                 </div>
               </div>
 
@@ -192,13 +193,13 @@
                 ><br />
                 <select
                   id="ext_name"
-                  v-model="form.beneficiary.ext_name"
+                  v-model="form.ext_name"
                   type="text"
                   class="form-control"
                   :class="{
                     'is-invalid':
                       validationErrors.ext_name &&
-                      validationErrors.beneficiary.ext_name,
+                      validationErrors.ext_name,
                   }"
                 >
                   <option value=""></option>
@@ -214,12 +215,12 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.ext_name
+                    validationErrors &&
+                    validationErrors.ext_name
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.ext_name[0] }}
+                  {{ validationErrors.ext_name[0] }}
                 </div>
               </div>
             </div>
@@ -229,23 +230,23 @@
                 <label for="street_number"
                   >House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
                 <input
                   id="street_number"
-                  v-model="form.beneficiary.street_number"
+                  v-model="form.street_number"
                   class="form-control"
                   type="text"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.street_number
+                    validationErrors &&
+                    validationErrors.street_number
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.street_number[0] }}
+                  {{ validationErrors.street_number[0] }}
                 </div>
               </div>
             </div>
@@ -253,7 +254,7 @@
               <div class="col-md-3">
                 <label
                   >Region <small>(Ex. NCR)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
                 <select
                   id="psgc_id"
@@ -271,19 +272,19 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.psgc_id
+                    validationErrors &&
+                    validationErrors.psgc_id
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.psgc_id[0] }}
+                  {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
                 <label
                   >Province/District <small>(Ex. Dis. III)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
                 <select
                   id="psgc_id"
@@ -303,19 +304,19 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.psgc_id
+                    validationErrors &&
+                    validationErrors.psgc_id
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.psgc_id[0] }}
+                  {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
                 <label>
                   City/Municipality <small>(Ex. Quezon City)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
 
                 <select
@@ -335,12 +336,12 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.psgc_id
+                    validationErrors &&
+                    validationErrors.psgc_id
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.psgc_id[0] }}
+                  {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
@@ -348,12 +349,12 @@
                 <label
                   >Barangay
                   <small>(Ex. Batasan Hills)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
                 <select
                   id="psgc_id"
                   name=""
-                  v-model="form.beneficiary.psgc_id"
+                  v-model="form.psgc_id"
                   v-if="beneficiary_cities"
                   class="form-control"
                 >
@@ -368,12 +369,12 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.psgc_id
+                    validationErrors &&
+                    validationErrors.psgc_id
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.psgc_id[0] }}
+                  {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
             </div>
@@ -384,36 +385,36 @@
                   >Telepono
                   <small
                     >(Mobile Number)
-                    <span class="red">*</span>
+                    <span color="red">*</span>
                   </small>
                 </label>
 
                 <input
                   id="mobile_number"
-                  v-model="form.beneficiary.mobile_number"
+                  v-model="form.mobile_number"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.mobile_number
+                    validationErrors &&
+                    validationErrors.mobile_number
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.mobile_number[0] }}
+                  {{ validationErrors.mobile_number[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
                 <label for="birth_date"
                   >Kapanganakan <small>(Birthdate)</small>
-                  <span class="red">*</span></label
+                  <span color="red">*</span></label
                 >
                 <input
                   id="birth_date"
-                  v-model="form.beneficiary.birth_date"
+                  v-model="form.birth_date"
                   type="date"
                   class="form-control"
                   :max="max_date"
@@ -422,26 +423,26 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.birth_date
+                    validationErrors &&
+                    validationErrors.birth_date
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.birth_date[0] }}
+                  {{ validationErrors.birth_date[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
                 <label for="age"
                   >Edad <small>(Age)</small>
-                  <span class="red">*</span>
+                  <span color="red">*</span>
                 </label>
 
                 <input
                   id="age"
                   type="text"
                   class="form-control"
-                  :value="form.beneficiary.age"
+                  :value="form.age"
                   readonly
                 />
               </div>
@@ -449,13 +450,13 @@
               <div class="col-md-3">
                 <label for="gender"
                   >Kasarian <small>(gender)</small>
-                  <span class="red">*</span></label
+                  <span color="red">*</span></label
                 >
                 <select
                   name=""
                   id=""
                   class="form-control"
-                  v-model="form.beneficiary.gender"
+                  v-model="form.gender"
                 >
                   <option
                     :value="gender"
@@ -468,12 +469,12 @@
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.gender
+                    validationErrors &&
+                    validationErrors.gender
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.gender[0] }}
+                  {{ validationErrors.gender[0] }}
                 </div>
               </div>
             </div>
@@ -482,45 +483,45 @@
               <div class="col-md-3">
                 <label for="occupation"
                   >Trabaho <small> (Occupation)</small>
-                  <span class="red">*</span></label
+                  <span color="red">*</span></label
                 >
                 <input
                   id="occupation"
-                  v-model="form.beneficiary.occupation"
+                  v-model="form.occupation"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.occupation
+                    validationErrors &&
+                    validationErrors.occupation
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.occupation[0] }}
+                  {{ validationErrors.occupation[0] }}
                 </div>
               </div>
               <div class="col-md-3">
                 <label for="monthly_salary"
                   >Buwanang Kita <small> (Monthly Salary) </small>
-                  <span class="red">*</span></label
+                  <span color="red">*</span></label
                 >
                 <input
                   id="monthly_salary"
-                  v-model="form.beneficiary.monthly_salary"
+                  v-model="form.monthly_salary"
                   type="text"
                   class="form-control"
                 />
 
                 <div
                   v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.beneficiary.monthly_salary
+                    validationErrors &&
+                    validationErrors.monthly_salary
                   "
                   style="color: red"
                 >
-                  {{ validationErrors.beneficiary.monthly_salary[0] }}
+                  {{ validationErrors.monthly_salary[0] }}
                 </div>
               </div>
             </div>
@@ -528,337 +529,6 @@
         </div>
       </div>
 
-      <div class="card mt-2" v-if="is_beneficiary == false">
-        <div class="card-title">
-          IMPORMASYON NG KINATAWAN (Representative's Identifying Information)
-        </div>
-
-        <div class="card-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-3">
-                <label for="last_name">
-                  Apelyido <small>(Last name)</small>
-                  <span class="red">*</span>
-                </label>
-
-                <input
-                  id="last_name"
-                  v-model="form.client.last_name"
-                  type="text"
-                  class="form-control"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.beneficiary &&
-                    validationErrors.client.last_name
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.last_name[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="first_name">
-                  Unang Pangalan <small>(First name)</small
-                  ><span class="red">*</span></label
-                >
-                <input
-                  id="first_name"
-                  v-model="form.client.first_name"
-                  type="text"
-                  class="form-control"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.first_name
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.first_name[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="middle_name"
-                  >Gitnang Pangalan <small>(Middle name)</small></label
-                >
-                <input
-                  id="middle_name"
-                  v-model="form.client.middle_name"
-                  type="text"
-                  class="form-control"
-                />
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.middle_name
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.middle_name[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="ext_name"
-                  >Ext <small>(Sr.,Jr., II, III)</small></label
-                ><br />
-                <select
-                  id="ext_name"
-                  v-model="form.client.ext_name"
-                  type="text"
-                  class="form-control"
-                >
-                  <option value=""></option>
-                  <option value="JR">JR</option>
-                  <option value="SR">SR</option>
-                  <option value="I">I</option>
-                  <option value="II">II</option>
-                  <option value="III">III</option>
-                  <option value="IV">IV</option>
-                  <option value="V">V</option>
-                  <option value="VI">VI</option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client && validationErrors.client.ext_name
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.ext_name[0] }}
-                </div>
-              </div>
-            </div>
-
-            <div class="row mt-2">
-              <div class="col-md-12">
-                <label for="street_number"
-                  >House No./Street/Purok
-                  <small>(Ex. 123 Sun St.)</small>
-                  <span class="red">*</span>
-                </label>
-                <input
-                  id="street_number"
-                  v-model="form.client.street_number"
-                  class="form-control"
-                  type="text"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.street_number
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.street_number[0] }}
-                </div>
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label for="psgc_id"
-                  >Region <small>(Ex. NCR)</small
-                  ><span class="red">*</span></label
-                >
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="client_region_selector"
-                  v-if="regions"
-                  class="form-control"
-                  @change="getClientPsgc"
-                >
-                  <option :value="e" v-for="(e, i) in regions" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client && validationErrors.client.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.psgc_id[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="psgc_id"
-                  >Province/District <small>(Ex. Dis. III)</small>
-                  <span class="red">*</span>
-                </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="client_province_selector"
-                  v-if="client_provinces"
-                  class="form-control"
-                >
-                  <option
-                    :value="e"
-                    v-for="(e, i) in client_provinces"
-                    :key="i"
-                  >
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client && validationErrors.client.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.psgc_id[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="psgc_id"
-                  >City/Municipality <small>(Ex. Quezon City)</small>
-                  <span class="red">*</span></label
-                >
-
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="client_city_selector"
-                  v-if="client_cities"
-                  class="form-control"
-                >
-                  <option :value="e" v-for="(e, i) in client_cities" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client && validationErrors.client.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.psgc_id[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="psgc_id"
-                  >Barangay <small>(Ex. Batasan Hills)</small>
-                  <span class="red">*</span></label
-                >
-
-                <select
-                  name=""
-                  v-model="form.client.psgc_id"
-                  v-if="beneficiary_cities"
-                  class="form-control"
-                >
-                  <option
-                    :value="e[0].id"
-                    v-for="(e, i) in client_barangays"
-                    :key="i"
-                  >
-                    {{ i }}
-                  </option>
-                </select>
-
-                <div
-                  v-if="
-                    validationErrors.client && validationErrors.client.psgc_id
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.psgc_id[0] }}
-                </div>
-              </div>
-            </div>
-
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label for="mobile_number"
-                  >Telepono <small>(Mobile Number)</small>
-                  <span class="red">*</span>
-                </label>
-
-                <input
-                  id="mobile_number"
-                  v-model="form.client.mobile_number"
-                  type="text"
-                  class="form-control"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.mobile_number
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.mobile_number[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <label for="birth_date"
-                  >Kapanganakan <small>(Birthdate)</small>
-                  <span class="red">*</span>
-                </label>
-                <input
-                  id="birth_date"
-                  v-model="form.client.birth_date"
-                  type="date"
-                  :max="max_date"
-                  class="form-control"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.birth_date
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.birth_date[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <label for="relasyon"
-                  >Relasyon sa Benepisyaryo
-                  <small> (Relationship to Beneficiary) </small>
-                  <span class="red">*</span>
-                </label>
-                <input
-                  id="relasyon"
-                  v-model="form.client.rel_beneficiary"
-                  type="text"
-                  class="form-control"
-                />
-
-                <div
-                  v-if="
-                    validationErrors.client &&
-                    validationErrors.client.rel_beneficiary
-                  "
-                  style="color: red"
-                >
-                  {{ validationErrors.client.rel_beneficiary[0] }}
-                </div>
-              </div>
-
-              <div class="col-md-3"></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="row">
         <div class="col-md-4">
@@ -867,7 +537,7 @@
             <div class="card-body">
               Target Sector
 
-              <select v-model="form.beneficiary.category_id" class="form-control">
+              <select v-model="form.category_id" class="form-control">
                 <option></option>
                 <option
                   v-for="(e, i) in categories"
@@ -880,7 +550,7 @@
 
               Specific Subcategory
 
-              <select v-model="form.beneficiary.subcategory_id" class="form-control">
+              <select v-model="form.subcategory_id" class="form-control">
                 <option></option>
                 <option
                   v-for="(e, i) in subcategories"
@@ -891,11 +561,11 @@
                 </option>
               </select>
 
-              <div class="" v-if="form.subcategory == 'Others'">
+              <div class="" v-if="form.subcategory_id == 8">
                 Others
                 <input
                   type="text"
-                  v-model="form.beneficiary.subcategory_others"
+                  v-model="form.subcategory_others"
                   class="form-control"
                 />
               </div>
@@ -909,7 +579,7 @@
               <textarea
                 name=""
                 id=""
-                v-model="form.beneficiary.assessment"
+                v-model="form.assessment"
                 class="form-control"
                 cols="30"
                 rows="5"
@@ -919,7 +589,7 @@
               <input
                 type="text"
                 class="form-control"
-                v-model="form.beneficiary.interviewed_by"
+                v-model="form.interviewed_by"
               />
             </div>
           </div>
@@ -932,9 +602,10 @@
         <div class="card-title"> Select Payroll</div>
         <div class="card-body">
          
+          <pre>{{ payrolls }}</pre>
 
-          <select name="" id="" v-model="form.payroll" class="form-control">
-            <option v-for="(p, i) in payrolls" :key="i">{{ p.title }}</option>
+          <select name="" id="" v-model="form.payroll_id" class="form-control">
+            <option v-for="(p, i) in payrolls" :key="i" :value="p.id">{{ p.title }}</option>
           </select>
         </div>
       </div>
@@ -967,7 +638,7 @@
             >
               <p>
                 {{ r.name }}
-                <span class="red"> {{ r.is_required ? "*" : "" }}</span>
+                <span color="red"> {{ r.is_required ? "*" : "" }}</span>
               </p>
 
               <div class="alert alert-primary">
@@ -1005,24 +676,8 @@ export default {
   props: ["dialog_data"],
   data() {
     return {
-      /*form: this.$inertia.form({
-        beneficiary: {},
-        client: {},
-        assistance: {},
-      }),*/
-      form: {
-        beneficiary: {
-          region: "",
-        },
-        client: {
-          rel_beneficiary: "",
-        },
-        assistance: {
-          documents: [],
-        },
-        assessment: "",
-      },
-      // form: {},
+  
+      form: {},
       assistance_types: {},
       psgc: {},
       regions: {},
@@ -1048,19 +703,24 @@ export default {
       },
       max_date: new Date().toISOString().split("T")[0],
 
-      //logo:  location.protocol + "//" + location.host +  "/" + process.env.MIX_BASE_NAME +"/images/DSWD-DVO-LOGO.png",
-      logo:
-        location.protocol + "//" + location.host + "/images/DSWD-DVO-LOGO.png",
-
+    
       categories: [],
       subcategories: [],
       payrolls: [],
     };
   },
   watch: {
+
+    'form.subcategory_id': function (newVal, oldVal){
+         if(newVal != 8)
+         {
+          this.form.subcategory_others = "";
+         }
+     },
+
     dialog_data(e) {
       this.resetForm();
-      this.form.beneficiary = e;
+      this.form= e;
       this.calculateAge();
     },
     beneficiary_region_selector(newVal, oldVal) {
@@ -1095,7 +755,7 @@ export default {
       (this.client_barangays = {}),
         (this.client_barangays = this.groupByKey(newVal, "brgy_name"));
     },
-    is_beneficiary(newVal, oldVal) {
+    /*is_beneficiary(newVal, oldVal) {
       console.log(newVal);
       if (newVal === true) {
         this.form.client = this.form.beneficiary;
@@ -1104,57 +764,25 @@ export default {
         this.form.client = {};
         this.form.client.rel_beneficiary = "";
       }
-    },
+    },*/
   },
 
   methods: {
     submit() {
-      if (this.form.assistance.aics_type_id) {
-        if (this.is_beneficiary == true) {
-          this.form.client = this.form.beneficiary;
-          this.form.client.rel_beneficiary = "Myself";
-        }
+      if (this.form.aics_type_id) {
+      
 
-        const config = {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        };
-
-        let formData = new FormData();
-
-        _.each(this.form.client, (value, key) => {
-          formData.append("client[" + key + "]", value);
-        });
-
-        _.each(this.form.beneficiary, (value, key) => {
-          formData.append("beneficiary[" + key + "]", value);
-        });
-
-        _.each(this.form.assistance, (value, key) => {
-          if (typeof value === "object") {
-            _.each(value, (v, k) => {
-              formData.append("assistance[" + key + "][" + k + "]", v);
-            });
-          } else {
-            formData.append("assistance[" + key + "]", value);
-          }
-        });
-
-        const headers = {
-          "Content-Type": "multipart/form-data;",
-        };
-
+      
         axios
-          .post(route("assistances.store"), formData, headers)
+          .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             console.log(response.data);
-            if (response.data.aics_beneficiary_id) {
+            /*if (response.data.aics_beneficiary_id) {
               alert(
                 "Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly."
               );
               this.resetForm();
-            }
+            }*/
           })
           .catch((error) => {
             if (error.response.status == 422) {
@@ -1169,32 +797,21 @@ export default {
       }
     },
     resetForm() {
-      this.form = {
-        beneficiary: {
-          region: "",
-        },
-        client: {
-          rel_beneficiary: "",
-        },
-        assistance: {
-          documents: [],
-        },
-        assessment: "",
-      };
+      this.form = {};
     },
 
     onFileChange(i, e) {
-      this.form.assistance.documents[i] = e.target.files[0];
+      this.form.documents[i] = e.target.files[0];
     },
 
     getRequirements() {
-      this.form.assistance.documents = {};
+      this.form.documents = {};
       if (this.validationErrors.assistance) {
         this.validationErrors.assistance = {};
       }
 
       this.requirements = this.assistance_types.filter((x) => {
-        if (x.id === this.form.assistance.aics_type_id) {
+        if (x.id === this.form.aics_type_id) {
           return x.requirements;
         }
       });
@@ -1235,14 +852,14 @@ export default {
     },
 
     calculateAge: function () {
-      if (!this.form.beneficiary.birth_date) {
+      if (!this.form.birth_date) {
         this.form.age = 0;
       } else {
         let currentDate = new Date();
-        let birthDate = new Date(this.form.beneficiary.birth_date);
+        let birthDate = new Date(this.form.birth_date);
         let difference = currentDate - birthDate;
         let age = Math.floor(difference / 31557600000);
-        this.form.beneficiary.age = age;
+        this.form.age = age;
       }
     },
 
@@ -1261,7 +878,7 @@ export default {
     validateForm() {},
   },
   mounted() {
-    this.form.beneficiary = this.dialog_data;
+    this.form= this.dialog_data;
     this.calculateAge();
 
     axios.get(route("api.aics.assistance-types")).then((response) => {

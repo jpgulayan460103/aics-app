@@ -24,7 +24,7 @@ class AicsClientController extends Controller
      */
     public function index()
     {
-        //
+        return AicsClient::all();
     }
 
     /**
@@ -118,6 +118,8 @@ class AicsClientController extends Controller
             
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
+            
+
             $failures = $e->failures();
      
             $errors = [];
@@ -142,6 +144,8 @@ class AicsClientController extends Controller
 
             $errors_file_name = $original_filename."-errors-".Str::slug(Carbon::now()).".xlsx";
             Excel::store(new ImportErrors($errors), "public/$errors_file_name", 'local');
+
+           
             return response([
                 'errors' => [
                     'file' => ["The file has invalid data."],

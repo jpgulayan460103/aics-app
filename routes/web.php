@@ -40,5 +40,5 @@ Auth::routes();
 
 Route::get('/holiday-crawler', [App\Models\HolidayCrawler::class, 'crawler'])->name('holiday-crawler');
 
-Route::get('/{any}',  [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');
-//Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*');
+//Route::get('/{any}',  [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');
+Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*');
