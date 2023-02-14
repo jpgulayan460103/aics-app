@@ -125,10 +125,11 @@ class PayrollController extends Controller
 
     public function print($id)
     {
-        $payroll = Payroll::find($id);
+        $payroll = Payroll::with("psgc")->find($id);
         if($payroll)
         {
-            //return view('pdf.payroll', $payroll);
+            #return view('pdf.payroll', ["data" => $payroll]);
+       
 
             $pdf = Pdf::loadView('pdf.payroll', ["data" => $payroll]);
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');

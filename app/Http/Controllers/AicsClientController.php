@@ -7,6 +7,7 @@ use App\Models\AicsClient;
 use Illuminate\Http\Request;
 
 use App\Imports\ClientsImport;
+use App\Models\AicsType;
 use App\Models\DirtyList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,8 @@ class AicsClientController extends Controller
      */
     public function index()
     {
-        return AicsClient::all();
+       // return AicsClient::paginate(10);
+       return AicsClient::with("psgc")->get();
     }
 
     /**

@@ -7,68 +7,151 @@
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <title>Document</title>
     <style>
+        body {
+            font-size: 9pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         table {
             width: 100%;
+
         }
-        body {font-size: 10pt;}
-        #payroll th ,#payroll  td{border:solid 1px #dedede;}
+
+        #payroll th,
+        #payroll td {
+            border: solid 1px #dedede;
+        }
+
+
+
+        table tr.page {
+            page-break-before: always
+        }
+
+
+
+        header {
+            position: fixed;
+            top: -60px;
+            left: 0px;
+            right: 0px;
+            background-color: lightblue;
+            height: 50px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+
+            height: auto;
+        }
+
+        footer table td {
+            vertical-align: top;
+        }
+
+        p {
+            page-break-after: always;
+        }
+
+        p:last-child {
+            page-break-after: never;
+        }
     </style>
 </head>
 
 <body>
-    <table>
-        <tr>
-            <td style="text-align:center;">Republic of the Philippines <br />
-                DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
-                Field Office XI, Davao City
 
-            </td>
-
-        </tr>
-        <tr>
-            <td style="text-align:center;">
-                <h3> {{ $data->title }} </h3>
-
-            </td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td>Municipality: {{ $data->muni_city }}</td>
-            <td style="text-align: right;">{{ $data->schedule }}</td>
-        </tr>
-        <tr>
-            <td>Barangay: {{ $data->brangay }}</td>
-        </tr>
-    </table>
-
-
-    <table id="payroll" cellpadding=5 cellspacing=0>
-        <tr>
-            <th>No.</th>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Amount</th>
-            <th>Signature</th>
-            <th>Date Paid</th>
-        </tr>
-        @foreach ($data->clients as $item)
+    <footer>
+        <table style="table-layout:fixed; font-size:8pt;">
             <tr>
-                <td>No.</td>
-                <td> {{ $item->last_name }}</td>
-                <td>{{ $item->first_name }}</td>
-                <td>{{ $item->middle_name }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>
+                    <p>I hereby certify that each person whose names appear on this roll are entitled to each
+                        assistance.</p>
+
+                </td>
+                <td>
+                    <ol>
+                        <li>Adequate available funds in the amount of Php</li>
+                        <li>Expenditure property certified</li>
+                        <li>Supported by documents appearing legal and proper</li>
+                        <li>Account codes proper</li>
+                    </ol>
+
+                </td>
+                <td style="text-align: center;">
+                    <p>Approved by:</p>
+
+                </td>
+                <td>
+                    <p>I certify on my official oath that I have this ____ day of ________, 20____ paid this to each man
+                        whose names appears
+                        on the amount set opposite his/her name, he/she having presented himself/herself,
+                        established her identity, and his/her signature/thumbmark on this space provided.
+                    </p>
+
+                </td>
+
             </tr>
-        @endforeach
-    </table>
+            <tr style="text-align: center;">
+                <td> {{ $data->certified_by1 }} </td>
+                <td> {{ $data->certified_by2 }} </td>
+                <td> {{ $data->approved_by }} </td>
+                <td> {{ $data->sdo }} <br> SDO </td>
+            </tr>
+        </table>
+    </footer>
 
 
 
+    <main>
+        <table id="payroll" cellpadding=8 cellspacing=0>
+            @foreach ($data->clients as $key => $item)
+                {{ $index = $key + 1 }}
+                @if ($key == 0 || $key % 10 == 0)
+                    <tr @if ($key != 0 && $key % 10 == 0) class="page" @endif;>
+                        <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
+                            DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
+                            Field Office XI, Davao City
+                            <h3> {{ $data->title }} </h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:left; border: 0px;">
+                            City/Municipality: {{ $data->psgc->city_name }}
+                            <br>
+                            Barangay: {{ $data->psgc->brgy_name }}
+                        </td>
+                        <td colspan="3" style="text-align:right; border: 0px; text-transform:uppercase;">
+                            {{ date_format(date_create($data->schedule), 'F Y') }}
 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>No.</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Amount</th>
+                        <th>Signature</th>
+                        <th>Date Paid</th>
+                    </tr>
+                @endif;
+
+                <tr>
+                    <td style="text-align:center; width:20px;">{{ $index }} </td>
+                    <td> {{ $item->last_name }} {{ $item->ext_name }}</td>
+                    <td>{{ $item->first_name }}</td>
+                    <td>{{ $item->middle_name }}</td>
+                    <td style="width:200px;"></td>
+                    <td style="width:200px;"></td>
+                    <td style="width:100px;"></td>
+                </tr>
+            @endforeach
+        </table>
+    </main>
 </body>
 
 </html>

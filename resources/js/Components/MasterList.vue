@@ -27,6 +27,7 @@
       </v-card-title>
       <v-card-text>
         <v-data-table
+          dense
           :headers="headers"
           :items="data"
           :items-per-page="50"
@@ -34,6 +35,26 @@
           loading-text="Loading... Please wait"
           :search="search"
         >
+          <template v-slot:item.status="{ item }">
+            <span v-if="item.payroll_id"> In Payroll </span>
+          </template>
+
+          <template v-slot:item.barangay="{ item }">
+            <span v-if="item.psgc"> {{ item.psgc.brgy_name }}</span>
+          </template>
+
+          <template v-slot:item.city_muni="{ item }">
+            <span v-if="item.psgc"> {{ item.psgc.city_name }}</span>
+          </template>
+
+          <template v-slot:item.province="{ item }">
+            <span v-if="item.psgc"> {{ item.psgc.province_name }}</span>
+          </template>
+
+          <template v-slot:item.region="{ item }">
+            <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
+          </template>
+
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="EditItem(item)">
               mdi-pencil
@@ -46,10 +67,10 @@
 </template>
  
 <script>
-import GISComponent from './GISComponent.vue';
+import GISComponent from "./GISComponent.vue";
 
 export default {
-  components: {GISComponent},
+  components: { GISComponent },
   data() {
     return {
       search: "",
@@ -70,7 +91,7 @@ export default {
         { value: "city_muni", text: "City/Muni", sortable: true },
         { value: "province", text: "Province", sortable: true },
         { value: "region", text: "Region", sortable: true },
-        { value: "fund_source", text: "Fund Source", sortable: true },
+
         { value: "status", text: "Status", sortable: true },
         { value: "actions", text: "Actions" },
       ],

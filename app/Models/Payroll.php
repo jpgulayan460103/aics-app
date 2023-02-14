@@ -14,4 +14,9 @@ class Payroll extends Model
     {
         return $this->hasMany(AicsClient::class);
     }
+
+    public function psgc()
+    {
+        return $this->belongsTo(Psgc::class);
+    }
 }

@@ -64,8 +64,6 @@
         </div>
         <div class="card-body">
           <div class="col-md-12">
-            <!--<label for="">The Client needs assistance for</label>-->
-
             <select
               name="assistance_type"
               v-model="form.aics_type_id"
@@ -79,40 +77,6 @@
           </div>
         </div>
       </div>
-
-      <!--<div class="card mt-2">
-        <div class="card-title">Ako ang: <span color="red">*</span></div>
-        <div class="card-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="is_beneficiary"
-                  v-model="is_beneficiary"
-                  :value="true"
-                />
-                <label class="form-check-label" for="inlineRadio1"
-                  >Beneficiary</label
-                >
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="is_beneficiary"
-                  v-model="is_beneficiary"
-                  :value="false"
-                />
-                <label class="form-check-label" for="inlineRadio2"
-                  >Representative</label
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>-->
 
       <div class="card mt-2">
         <div class="card-title">
@@ -132,10 +96,7 @@
                   class="form-control"
                 />
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.last_name
-                  "
+                  v-if="validationErrors && validationErrors.last_name"
                   style="color: red"
                 >
                   {{ validationErrors.last_name[0] }}
@@ -155,10 +116,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.first_name
-                  "
+                  v-if="validationErrors && validationErrors.first_name"
                   style="color: red"
                 >
                   {{ validationErrors.first_name[0] }}
@@ -177,10 +135,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.middle_name
-                  "
+                  v-if="validationErrors && validationErrors.middle_name"
                   style="color: red"
                 >
                   {{ validationErrors.middle_name[0] }}
@@ -198,8 +153,7 @@
                   class="form-control"
                   :class="{
                     'is-invalid':
-                      validationErrors.ext_name &&
-                      validationErrors.ext_name,
+                      validationErrors.ext_name && validationErrors.ext_name,
                   }"
                 >
                   <option value=""></option>
@@ -214,10 +168,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.ext_name
-                  "
+                  v-if="validationErrors && validationErrors.ext_name"
                   style="color: red"
                 >
                   {{ validationErrors.ext_name[0] }}
@@ -240,10 +191,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.street_number
-                  "
+                  v-if="validationErrors && validationErrors.street_number"
                   style="color: red"
                 >
                   {{ validationErrors.street_number[0] }}
@@ -271,10 +219,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.psgc_id
-                  "
+                  v-if="validationErrors && validationErrors.psgc_id"
                   style="color: red"
                 >
                   {{ validationErrors.psgc_id[0] }}
@@ -303,10 +248,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.psgc_id
-                  "
+                  v-if="validationErrors && validationErrors.psgc_id"
                   style="color: red"
                 >
                   {{ validationErrors.psgc_id[0] }}
@@ -335,10 +277,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.psgc_id
-                  "
+                  v-if="validationErrors && validationErrors.psgc_id"
                   style="color: red"
                 >
                   {{ validationErrors.psgc_id[0] }}
@@ -368,10 +307,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.psgc_id
-                  "
+                  v-if="validationErrors && validationErrors.psgc_id"
                   style="color: red"
                 >
                   {{ validationErrors.psgc_id[0] }}
@@ -397,10 +333,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.mobile_number
-                  "
+                  v-if="validationErrors && validationErrors.mobile_number"
                   style="color: red"
                 >
                   {{ validationErrors.mobile_number[0] }}
@@ -422,10 +355,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.birth_date
-                  "
+                  v-if="validationErrors && validationErrors.birth_date"
                   style="color: red"
                 >
                   {{ validationErrors.birth_date[0] }}
@@ -468,10 +398,7 @@
                 </select>
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.gender
-                  "
+                  v-if="validationErrors && validationErrors.gender"
                   style="color: red"
                 >
                   {{ validationErrors.gender[0] }}
@@ -493,10 +420,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.occupation
-                  "
+                  v-if="validationErrors && validationErrors.occupation"
                   style="color: red"
                 >
                   {{ validationErrors.occupation[0] }}
@@ -515,10 +439,7 @@
                 />
 
                 <div
-                  v-if="
-                    validationErrors &&
-                    validationErrors.monthly_salary
-                  "
+                  v-if="validationErrors && validationErrors.monthly_salary"
                   style="color: red"
                 >
                   {{ validationErrors.monthly_salary[0] }}
@@ -529,7 +450,6 @@
         </div>
       </div>
 
-
       <div class="row">
         <div class="col-md-4">
           <div class="card">
@@ -539,11 +459,7 @@
 
               <select v-model="form.category_id" class="form-control">
                 <option></option>
-                <option
-                  v-for="(e, i) in categories"
-                  :key="i"
-                  :value="e.id"
-                >
+                <option v-for="(e, i) in categories" :key="i" :value="e.id">
                   {{ e.category }}
                 </option>
               </select>
@@ -552,11 +468,7 @@
 
               <select v-model="form.subcategory_id" class="form-control">
                 <option></option>
-                <option
-                  v-for="(e, i) in subcategories"
-                  :key="i"
-                  :value="e.id"
-                >
+                <option v-for="(e, i) in subcategories" :key="i" :value="e.id">
                   {{ e.subcategory }}
                 </option>
               </select>
@@ -595,17 +507,16 @@
           </div>
         </div>
       </div>
-    
-      <br>
+
+      <br />
 
       <div class="card">
-        <div class="card-title"> Select Payroll</div>
+        <div class="card-title">Select Payroll</div>
         <div class="card-body">
-         
-          <pre>{{ payrolls }}</pre>
-
           <select name="" id="" v-model="form.payroll_id" class="form-control">
-            <option v-for="(p, i) in payrolls" :key="i" :value="p.id">{{ p.title }}</option>
+            <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
+              {{ p.title }}
+            </option>
           </select>
         </div>
       </div>
@@ -676,17 +587,16 @@ export default {
   props: ["dialog_data"],
   data() {
     return {
-  
       form: {},
       assistance_types: {},
       psgc: {},
       regions: {},
-      client_provinces: {},
+      /*client_provinces: {},
       client_cities: {},
       client_barangays: {},
       client_region_selector: {},
       client_province_selector: {},
-      client_city_selector: {},
+      client_city_selector: {},*/
       beneficiary_provinces: {},
       beneficiary_cities: {},
       beneficiary_barangays: {},
@@ -703,25 +613,31 @@ export default {
       },
       max_date: new Date().toISOString().split("T")[0],
 
-    
       categories: [],
       subcategories: [],
       payrolls: [],
     };
   },
   watch: {
+    "form.subcategory_id": function (newVal, oldVal) {
+      if (newVal != 8) {
+        this.form.subcategory_others = "";
+      }
+    },
 
-    'form.subcategory_id': function (newVal, oldVal){
-         if(newVal != 8)
-         {
-          this.form.subcategory_others = "";
-         }
-     },
+    "form.psgc_id": function (newVal, oldVal) {
+      console.log(newVal);
+    },
 
     dialog_data(e) {
       this.resetForm();
-      this.form= e;
+      this.form = e;
       this.calculateAge();
+      this.beneficiary_region_selector =
+        this.regions[this.dialog_data.psgc.region_name];
+      this.getBeneficiaryPsgc();
+      this.beneficiary_province_selector =
+        this.beneficiary_provinces[this.dialog_data.psgc.province_name];
     },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
@@ -733,13 +649,18 @@ export default {
     beneficiary_province_selector(newVal, oldVal) {
       ((this.beneficiary_cities = {}), (this.beneficiary_barangays = {})),
         (this.beneficiary_cities = this.groupByKey(newVal, "city_name"));
+
+      if (this.dialog_data.psgc) {
+        this.beneficiary_city_selector =
+          this.beneficiary_cities[this.dialog_data.psgc.city_name];
+      }
     },
 
     beneficiary_city_selector(newVal, oldVal) {
       (this.beneficiary_barangays = {}),
         (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
     },
-    client_region_selector(newVal, oldVal) {
+    /*client_region_selector(newVal, oldVal) {
       ((this.client_provinces = {}),
       (this.client_cities = {}),
       (this.client_barangays = {})),
@@ -754,7 +675,7 @@ export default {
     client_city_selector(newVal, oldVal) {
       (this.client_barangays = {}),
         (this.client_barangays = this.groupByKey(newVal, "brgy_name"));
-    },
+    },*/
     /*is_beneficiary(newVal, oldVal) {
       console.log(newVal);
       if (newVal === true) {
@@ -770,9 +691,6 @@ export default {
   methods: {
     submit() {
       if (this.form.aics_type_id) {
-      
-
-      
         axios
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
@@ -798,6 +716,12 @@ export default {
     },
     resetForm() {
       this.form = {};
+      this.beneficiary_provinces = {};
+      this.beneficiary_cities = {};
+      this.beneficiary_barangays = {};
+      this.beneficiary_region_selector = {};
+      this.beneficiary_province_selector = {};
+      this.beneficiary_city_selector = {};
     },
 
     onFileChange(i, e) {
@@ -831,6 +755,13 @@ export default {
             this.beneficiary_psgc,
             "province_name"
           );
+
+          if (this.dialog_data.psgc) {
+            this.beneficiary_province_selector =
+              this.beneficiary_provinces[this.dialog_data.psgc.province_name];
+            this.beneficiary_city_selector =
+              this.beneficiary_cities[this.dialog_data.psgc.city_name];
+          }
         });
     },
 
@@ -875,30 +806,53 @@ export default {
     isEmpty(value) {
       return _.isEmpty(value);
     },
-    validateForm() {},
+
+    getAssistanceTypes() {
+      axios.get(route("api.aics.assistance-types")).then((response) => {
+        this.assistance_types = response.data;
+      });
+    },
+    getRegions() {
+      axios.get(route("api.psgc.show", "region")).then((response) => {
+        this.regions = this.groupByKey(response.data, "region_name");
+        if (this.dialog_data.psgc) {
+          this.beneficiary_region_selector =
+            this.regions[this.dialog_data.psgc.region_name];
+          this.getBeneficiaryPsgc();
+        
+        }
+      });
+    },
+    getCategories() {
+      axios.get(route("api.categories")).then((response) => {
+        this.categories = response.data.categories;
+        this.subcategories = response.data.subcategory;
+      });
+    },
+    getPayrolls() {
+      axios
+        .get(route("api.payroll.index"))
+        .then((response) => {
+          this.payrolls = response.data;
+        })
+        .catch((error) => console.log(error));
+    },
   },
   mounted() {
-    this.form= this.dialog_data;
+    this.form = this.dialog_data;
     this.calculateAge();
+    this.getAssistanceTypes();
+    this.getRegions();
+    this.getCategories();
+    this.getPayrolls();
 
-    axios.get(route("api.aics.assistance-types")).then((response) => {
-      this.assistance_types = response.data;
-    });
-    axios.get(route("api.psgc.show", "region")).then((response) => {
-      this.regions = this.groupByKey(response.data, "region_name");
-    });
-
-    axios.get(route("api.categories")).then((response) => {
-      this.categories = response.data.categories;
-      this.subcategories = response.data.subcategory;
-    });
-
-    axios
-      .get(route("api.payroll.index"))
-      .then((response) => {
-        this.payrolls = response.data;
-      })
-      .catch((error) => console.log(error));
+    /*console.log( this.regions);
+      if(this.regions.length > 0 && this.dialog_data.psgc)
+      {
+        this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name];
+        this.getBeneficiaryPsgc();
+       
+      }*/
   },
 };
 </script>

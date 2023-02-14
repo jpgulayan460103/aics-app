@@ -54,7 +54,8 @@ class PsgcController extends Controller
                 $field = $request->field;
                 $value = $request->value;
                 return Psgc::getBrgys($field, $value);
-            
+            case 'id':
+                return Psgc::find($request->id);
             default:
                 # code...
                 break;
