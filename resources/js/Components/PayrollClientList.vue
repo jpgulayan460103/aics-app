@@ -1,6 +1,6 @@
 <template>
   <v-card flat outlined>
-    <v-system-bar color="primary">
+    <v-system-bar color="white" >
       <v-icon @click="print()"> mdi-printer</v-icon>
       <v-icon>mdi-download</v-icon>
     </v-system-bar>
@@ -12,8 +12,8 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          CITY/MUNICIPALITY : {{ data.muni_city }}<br />
-          BARANGAY : {{ data.barangay }} <br />
+          CITY/MUNICIPALITY : {{ data.psgc.city_name }}<br />
+          BARANGAY : {{  data.psgc.brgy_name }} <br />
         </div>
         <div class="col-md-6 text-end">
           {{ data.schedule }}

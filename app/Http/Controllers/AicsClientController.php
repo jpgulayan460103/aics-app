@@ -10,6 +10,7 @@ use App\Imports\ClientsImport;
 use App\Models\AicsType;
 use App\Models\DirtyList;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -25,8 +26,8 @@ class AicsClientController extends Controller
      */
     public function index()
     {
-       // return AicsClient::paginate(10);
-       return AicsClient::with("psgc")->get();
+        // return AicsClient::paginate(10);
+        return AicsClient::with("psgc")->get();
     }
 
     /**
@@ -81,8 +82,14 @@ class AicsClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $aics_client = AicsClient::findOrFail($id)->update($request->all());
-        return $aics_client;
+        try {
+            $aics_client = AicsClient::findOrFail($id)->update($request->all());
+            if ($aics_client) {
+                return ["message"=> "Saved", "client"=> $aics_client];
+            }
+        } catch (Exception $e) {
+            return ["message"=> $e];
+        }
     }
 
     /**
@@ -105,25 +112,24 @@ class AicsClientController extends Controller
         try {
             $file = request("file");
             $original_filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-            $filename = $original_filename.".".$file->getClientOriginalExtension();
+            $filename = $original_filename . "." . $file->getClientOriginalExtension();
             $year = date("Y");
             $month = date("m");
-    
+
             $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
             $url = Storage::url($path);
-    
+
             Excel::import(new ClientsImport(),  $file);
             DB::commit();
             return [
                 "success" => "All good!",
             ];
-            
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
-            
+
 
             $failures = $e->failures();
-     
+
             $errors = [];
 
             $errors[] = [
@@ -140,14 +146,14 @@ class AicsClientController extends Controller
                     'row' => $failure->row(),
                     'field' => $failure->attribute(),
                     'value' => $values[$failure->attribute()],
-                    'errors' => implode("," ,$failure->errors()),
+                    'errors' => implode(",", $failure->errors()),
                 ];
             }
 
-            $errors_file_name = $original_filename."-errors-".Str::slug(Carbon::now()).".xlsx";
+            $errors_file_name = $original_filename . "-errors-" . Str::slug(Carbon::now()) . ".xlsx";
             Excel::store(new ImportErrors($errors), "public/$errors_file_name", 'local');
 
-           
+
             return response([
                 'errors' => [
                     'file' => ["The file has invalid data."],

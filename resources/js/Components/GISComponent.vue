@@ -695,6 +695,7 @@ export default {
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             console.log(response.data);
+            alert(response.data.message);
             /*if (response.data.aics_beneficiary_id) {
               alert(
                 "Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly."
