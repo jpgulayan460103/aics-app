@@ -59,7 +59,8 @@ class PayrollController extends Controller
      */
     public function show($id)
     {
-        $payroll = Payroll::find($id)->with("clients")->get();
+        $payroll = Payroll::with("clients")->find($id);
+       
         if($payroll)
         {
             return $payroll;

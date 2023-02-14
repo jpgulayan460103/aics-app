@@ -272,7 +272,8 @@ export default {
       region_selector: {},
       province_selector: {},
       city_selector: {},
-      validationErrors: {}
+      validationErrors: {},
+      search: "",
     };
   },
   watch: {

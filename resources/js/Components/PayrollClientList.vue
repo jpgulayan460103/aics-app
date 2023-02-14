@@ -34,9 +34,6 @@
           </v-icon>
         </template>
       </v-data-table>
-
-      
-
     </v-card-text>
   </v-card>
 </template>
@@ -56,28 +53,34 @@ export default {
         { value: "ext_name", text: "Ext", sortable: false },
         { value: "amount", text: "Amount", sortable: false },
         { value: "signature", text: "signature", sortable: false },
-       
       ],
     };
   },
-  methods:
-  {
-    print()
+  watch() {
+    id();
     {
-      window.open(route("api.payroll.print",this.id), "_blank")
+      this.getClients();
     }
+  },
+  methods: {
+    print() {
+      window.open(route("api.payroll.print", this.id), "_blank");
+    },
+    getClients() {
+      axios
+        .get(route("api.payroll.show", this.id))
+        .then((res) => {
+          this.data = res.data;
+          this.isBusy = false;
+        })
+        .catch((error) => console.log(error));
+    },
   },
   mounted() {
     console.log("list");
     console.log(this.id);
     this.isBusy = true;
-    axios
-      .get(route("api.payroll.show", this.id))
-      .then((res) => {
-        this.data = res.data[0];
-        this.isBusy = false;
-      })
-      .catch((error) => console.log(error));
+    this.getClients();
   },
 };
 </script>

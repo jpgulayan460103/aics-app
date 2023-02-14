@@ -12,7 +12,7 @@ class Payroll extends Model
 
     public function clients()
     {
-        return $this->hasMany(AicsClient::class);
+        return $this->hasMany(AicsClient::class, "payroll_id");
     }
 
     public function psgc()
