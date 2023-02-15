@@ -37,6 +37,8 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
 
             $table->string('status')->nullable();
             $table->date("date_claimed")->nullable();
+            
+            $table->dateTime('payroll_insert_at')->nullable();
 
         });
     }

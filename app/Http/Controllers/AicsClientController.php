@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Str;
 
+
 class AicsClientController extends Controller
 {
     /**
@@ -83,10 +84,31 @@ class AicsClientController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $aics_client = AicsClient::findOrFail($id)->update($request->all());
-            if ($aics_client) {
+            $aics_client = AicsClient::findOrFail($id);
+
+            if( $aics_client)
+            {
+                $aics_client->update($request->all());
+
+                if ($request->payroll_id &&  !$aics_client->payroll_insert_at ) {
+                    $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
+                }
+
+                if(!$request->payroll_id)
+                {
+                    $aics_client->payroll_insert_at =null;
+                    $aics_client->claimed =null;
+                    
+                }
+
+                
+                $aics_client->save();
+
                 return ["message"=> "Saved", "client"=> $aics_client];
+
             }
+            
+          
         } catch (Exception $e) {
             return ["message"=> $e];
         }
