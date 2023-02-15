@@ -18,6 +18,8 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
             $table->string('gender')->nullable();
             $table->string('occupation')->nullable();
             $table->string('monthly_salary')->nullable();
+            $table->string('civil_status')->nullable();
+            $table->string('mode_of_admission')->nullable();
 
             $table->bigInteger("aics_type_id")->unsigned()->nullable();
             $table->foreign('aics_type_id')->references('id')->on('aics_types')->onDelete('cascade');

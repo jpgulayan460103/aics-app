@@ -32,6 +32,8 @@ class AicsClient extends Model
         'aics_type_id',
         'status',
         'date_claimed',
+        'civil_status',
+        'mode_of_admission'
 
     ];
 

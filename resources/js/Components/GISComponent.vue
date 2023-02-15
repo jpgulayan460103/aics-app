@@ -1,7 +1,6 @@
 <template>
   <form @submit.prevent="submit" enctype="multipart/form-data">
     <div class="container-fluid">
-    
       <!--<div class="row">
         <div class="col-md-4 text-center">
          <img
@@ -60,7 +59,7 @@
       <div class="card mt-2">
         <div class="card-title">
           NAIS HINGIIN NA TULONG (Assistance Requested)
-          <span color="red">*</span>
+          <span color="red" ></span>
         </div>
         <div class="card-body">
           <div class="col-md-12">
@@ -87,7 +86,7 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="last_name">
-                  Apelyido <small>(Last name) <span color="red">*</span></small>
+                  Apelyido <small>(Last name) <span color="red" ></span></small>
                 </label>
                 <input
                   id="last_name"
@@ -106,7 +105,7 @@
               <div class="col-md-3">
                 <label for="first_name">
                   Unang Pangalan
-                  <small>(First name) <span color="red">*</span></small></label
+                  <small>(First name) <span color="red" ></span></small></label
                 >
                 <input
                   id="first_name"
@@ -181,7 +180,7 @@
                 <label for="street_number"
                   >House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
                 <input
                   id="street_number"
@@ -202,7 +201,7 @@
               <div class="col-md-3">
                 <label
                   >Region <small>(Ex. NCR)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
                 <select
                   id="psgc_id"
@@ -229,7 +228,7 @@
               <div class="col-md-3">
                 <label
                   >Province/District <small>(Ex. Dis. III)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
                 <select
                   id="psgc_id"
@@ -258,7 +257,7 @@
               <div class="col-md-3">
                 <label>
                   City/Municipality <small>(Ex. Quezon City)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
 
                 <select
@@ -288,7 +287,7 @@
                 <label
                   >Barangay
                   <small>(Ex. Batasan Hills)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
                 <select
                   id="psgc_id"
@@ -321,7 +320,7 @@
                   >Telepono
                   <small
                     >(Mobile Number)
-                    <span color="red">*</span>
+                    <span color="red" ></span>
                   </small>
                 </label>
 
@@ -343,7 +342,7 @@
               <div class="col-md-3">
                 <label for="birth_date"
                   >Kapanganakan <small>(Birthdate)</small>
-                  <span color="red">*</span></label
+                  <span color="red" ></span></label
                 >
                 <input
                   id="birth_date"
@@ -365,7 +364,7 @@
               <div class="col-md-3">
                 <label for="age"
                   >Edad <small>(Age)</small>
-                  <span color="red">*</span>
+                  <span color="red" ></span>
                 </label>
 
                 <input
@@ -380,7 +379,7 @@
               <div class="col-md-3">
                 <label for="gender"
                   >Kasarian <small>(gender)</small>
-                  <span color="red">*</span></label
+                  <span color="red" ></span></label
                 >
                 <select
                   name=""
@@ -410,7 +409,7 @@
               <div class="col-md-3">
                 <label for="occupation"
                   >Trabaho <small> (Occupation)</small>
-                  <span color="red">*</span></label
+                  <span color="red" ></span></label
                 >
                 <input
                   id="occupation"
@@ -429,7 +428,7 @@
               <div class="col-md-3">
                 <label for="monthly_salary"
                   >Buwanang Kita <small> (Monthly Salary) </small>
-                  <span color="red">*</span></label
+                  <span color="red" ></span></label
                 >
                 <input
                   id="monthly_salary"
@@ -443,6 +442,54 @@
                   style="color: red"
                 >
                   {{ validationErrors.monthly_salary[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="civil_status"
+                  >Civil Status <span color="red" ></span></label
+                >
+                <select
+                  id="civil_status"
+                  v-model="form.civil_status"
+                  class="form-control"
+                >
+                  <option
+                    :value="e"
+                    v-for="(e, i) in ['Single', 'Married', 'Common-law']"
+                    :key="i"
+                  >
+                    {{ e }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.civil_status"
+                  style="color: red"
+                >
+                  {{ validationErrors.civil_status[0] }}
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <label for="mode_of_admission"
+                  >Mode of Admission <span color="red" ></span></label
+                >
+                <select
+                  id="mode_of_admission"
+                  v-model="form.mode_of_admission"
+                  class="form-control"
+                >
+                  <option :value="e" v-for="(e, i) in ['Referral']" :key="i">
+                    {{ e }}
+                  </option>
+                </select>
+
+                <div
+                  v-if="validationErrors && validationErrors.mode_of_admission"
+                  style="color: red"
+                >
+                  {{ validationErrors.mode_of_admission[0] }}
                 </div>
               </div>
             </div>
@@ -821,7 +868,6 @@ export default {
           this.beneficiary_region_selector =
             this.regions[this.dialog_data.psgc.region_name];
           this.getBeneficiaryPsgc();
-        
         }
       });
     },

@@ -212,6 +212,25 @@
               id=""
               class="form-control"
             />
+
+            <label for="">Fund Source</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.source_of_fund"
+              id=""
+              class="form-control"
+            />
+
+            <label for="">Charging</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.charging"
+              id=""
+              class="form-control"
+            />
+
             <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
             </button>
