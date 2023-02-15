@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClientExport;
 use App\Exports\ImportErrors;
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
@@ -103,6 +104,15 @@ class AicsClientController extends Controller
         //
     }
 
+    public function export() 
+    {
+        $export_file_name = "aics-online-app-export-".Str::slug(Carbon::now()).".xlsx";
+        Excel::store(new ClientExport(), "public/$export_file_name", 'local');
+        return [
+            "file" => url(Storage::url("public/$export_file_name")),
+        ];
+    }
+
     public function client_upload(Request $request)
     {
         $validatedData = $request->validate([
@@ -162,7 +172,7 @@ class AicsClientController extends Controller
             return response([
                 'errors' => [
                     'file' => ["The file has invalid data."],
-                    'errors_file_path' => Storage::path("public/$errors_file_name"),
+                    'errors_file_path' => url(Storage::url("public/$errors_file_name")),
                 ],
                 'message' => "The given data was invalid."
             ], 422);

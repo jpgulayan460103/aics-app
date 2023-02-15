@@ -53,6 +53,15 @@ class AicsClient extends Model
     {
         return $this->belongsTo(Psgc::class);
     }
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
+    }
+
+    public function aics_type()
+    {
+        return $this->belongsTo(AicsType::class);
+    }
 
     public function aics_beneficiaries()
     {
