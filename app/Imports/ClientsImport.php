@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\AicsClient;
+use App\Models\DirtyList;
 use App\Models\DirtyListClients;
 use App\Models\Psgc;
 use App\Rules\AllowedStringName;
@@ -22,11 +23,11 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
      */
 
      use RemembersRowNumber;
-     private $dirty_list_id;
+     private $dirtyList;
 
-     public function  __construct()
+     public function  __construct(DirtyList $dirtyList)
      {
-
+        $this->dirtyList = $dirtyList;
      }
 
     public function model(array $row)
@@ -45,16 +46,20 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
                     break;
             }
         }
+        $psgc_id = null;
+        if(isset($row['psgc'])){
+            $psgc = Psgc::where('brgy_psgc', $row['psgc'])->first();
+            $psgc_id = $psgc->id;
+        }
         return new AicsClient([
+            'dirty_list_id' => $this->dirtyList->id,
             'first_name'    => mb_strtoupper(trim($row['first_name'])),
             'middle_name'   => mb_strtoupper(trim($row['middle_name'])),
             'last_name'     => mb_strtoupper(trim($row['last_name'])),
             'ext_name'      => mb_strtoupper(trim($row['ext_name'])),
             'birth_date'    => $birth_date,
-            'psgc_id'       => Psgc::where('brgy_psgc', $row['psgc'])->first()->id,
+            'psgc_id'       => $psgc_id,
         ]);
-
-        
     }
 
  
@@ -80,13 +85,8 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'middle_name' => ['max:255', new AllowedStringName()],
             'last_name' => ['required','max:255', new AllowedStringName()],
             'ext_name' => ['max:255', new AllowedStringName()],
-            'birth_date' => 'required|date',
-            'barangay' => 'required',
-            'city_muni' => 'required',
-            'province' => 'required',
-            'region' => 'required',
-            'psgc' => 'required|exists:psgcs,brgy_psgc',
-            // 'fund_source' => 'required',
+            'birth_date' => 'sometimes|date',
+            'psgc' => 'sometimes|exists:psgcs,brgy_psgc',
         ];
     }
 
@@ -104,6 +104,13 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
                     $data['birth_date'] = null;
                     break;
             }
+        }
+        if(empty($data['psgc'])){
+            unset($data['psgc']);
+        }
+        
+        if(empty($data['birth_date'])){
+            unset($data['birth_date']);
         }
         
         return $data;

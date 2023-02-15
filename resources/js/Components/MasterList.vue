@@ -26,6 +26,15 @@
         ></v-text-field>
       </v-card-title>
       <v-card-text>
+        <v-btn
+          elevation="2"
+          icon
+          @click="exportClients"
+          :disabled="isExporting"
+          :loading="isExporting"
+        >
+          <v-icon>mdi-download</v-icon>
+        </v-btn>
         <v-data-table
           dense
           :headers="headers"
@@ -68,6 +77,7 @@
  
 <script>
 import GISComponent from "./GISComponent.vue";
+import { debounce } from "lodash";
 
 export default {
   components: { GISComponent },
@@ -76,6 +86,7 @@ export default {
       search: "",
       data: [],
       isBusy: true,
+      isExporting: false,
       perPage: 100,
       currentPage: 1,
       dialog_create: false,
@@ -113,6 +124,17 @@ export default {
       this.dialogData_edit = {};
       this.dialogData_edit = item;
     },
+    exportClients: debounce(function(){
+      this.isExporting = true;
+      axios.post(route('api.client.export'))
+      .then(res => {
+        this.isExporting = false;
+        window.location.href = res.data.file;
+      })
+      .catch(err => {
+        this.isExporting = false;
+      })
+    }, 500)
   },
   mounted() {
     this.getList();

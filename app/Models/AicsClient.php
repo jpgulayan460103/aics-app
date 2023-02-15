@@ -33,9 +33,20 @@ class AicsClient extends Model
         'status',
         'date_claimed',
         'civil_status',
-        'mode_of_admission'
-
+        'mode_of_admission',
+        'dirty_list_id',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::updating(function($model) {
+            if($model->payroll_id){
+                $model->dirty_list_id = null;
+            }
+        });
+    }
+
 
     public function user()
     {
@@ -45,6 +56,15 @@ class AicsClient extends Model
     public function psgc()
     {
         return $this->belongsTo(Psgc::class);
+    }
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
+    }
+
+    public function aics_type()
+    {
+        return $this->belongsTo(AicsType::class);
     }
 
     public function aics_beneficiaries()
