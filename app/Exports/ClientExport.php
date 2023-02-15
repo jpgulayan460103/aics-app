@@ -22,7 +22,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $collection = AicsClient::query()->with(['psgc', 'payroll', 'aics_type'])->whereNull('payroll_id')->get();
+        $collection = AicsClient::query()->with(['psgc', 'payroll', 'aics_type'])->whereNotNull('payroll_id')->get();
         return $collection->map(function ($item, $key) {
             $item->key = $key;
             return $item;
