@@ -119,7 +119,12 @@ class AicsClientController extends Controller
             $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
             $url = Storage::url($path);
 
-            Excel::import(new ClientsImport(),  $file);
+            $dirtylist = DirtyList::create([
+                'file_directory' => $url,
+                'file_name' => $filename,
+            ]);
+
+            Excel::import(new ClientsImport($dirtylist),  $file);
             DB::commit();
             return [
                 "success" => "All good!",

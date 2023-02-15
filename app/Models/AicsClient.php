@@ -29,9 +29,20 @@ class AicsClient extends Model
         'occupation',
         'monthly_salary',
         'payroll_id',
-        'aics_type_id'
-
+        'aics_type_id',
+        'dirty_list_id',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::updating(function($model) {
+            if($model->payroll_id){
+                $model->dirty_list_id = null;
+            }
+        });
+    }
+
 
     public function user()
     {
