@@ -31,6 +31,7 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('clients', [\App\Http\Controllers\AicsClientController::class, 'client_upload'])->name("api.client.upload");
     Route::post('clients/{id}', [\App\Http\Controllers\AicsClientController::class, 'update'])->name("api.client.update");
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class,'getCategories'])->name("api.categories");
+    Route::get('reports', [\App\Http\Controllers\AicsClientController::class, 'report'])->name("api.report");
 
 });
 

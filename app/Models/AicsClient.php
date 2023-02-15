@@ -29,7 +29,9 @@ class AicsClient extends Model
         'occupation',
         'monthly_salary',
         'payroll_id',
-        'aics_type_id'
+        'aics_type_id',
+        'status',
+        'date_claimed',
 
     ];
 

@@ -18,8 +18,6 @@
               class="form-control"
             />
 
-          
-
             <!--<label for="">Region</label>
             <input
               type="text"
@@ -179,8 +177,6 @@
               class="form-control"
             />
 
-           
-
             <label for="">Certified By (1)</label>
             <input
               type="text"
@@ -207,7 +203,7 @@
               id=""
               class="form-control"
             />
-            
+
             <label for="">SDO</label>
             <input
               type="text"
@@ -238,6 +234,18 @@
           loading-text="Loading... Please wait"
           :search="search"
         >
+          <template v-slot:item.province="{ item }">
+            {{ item.psgc.province_name }}
+          </template>
+
+          <template v-slot:item.muni_city="{ item }">
+            {{ item.psgc.city_name }}
+          </template>
+
+          <template v-slot:item.barangay="{ item }">
+            {{ item.psgc.brgy_name }}
+          </template>
+
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-5" @click="ViewList(item.id)">
               mdi-format-list-text
@@ -279,7 +287,7 @@ export default {
       payrolls: [],
       provinces: {},
       cities: {},
-      regions:{},
+      regions: {},
       barangays: {},
       region_selector: {},
       province_selector: {},

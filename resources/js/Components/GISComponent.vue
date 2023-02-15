@@ -514,6 +514,7 @@
         <div class="card-title">Select Payroll</div>
         <div class="card-body">
           <select name="" id="" v-model="form.payroll_id" class="form-control">
+            <option value=""></option>
             <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
               {{ p.title }}
             </option>

@@ -16,7 +16,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        return Payroll::all();
+        return Payroll::with("psgc")->get();
     }
 
     /**

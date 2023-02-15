@@ -81,7 +81,7 @@ export default {
       dialog_create: false,
       dialogData_edit: {},
       headers: [
-        { value: "id", text: "ID", sortable: true },
+       
         { value: "first_name", text: "First Name", sortable: true },
         { value: "middle_name", text: "Middle Name", sortable: true },
         { value: "last_name", text: "Last Name", sortable: true },

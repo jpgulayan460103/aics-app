@@ -35,6 +35,9 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
             $table->bigInteger("payroll_id")->unsigned()->nullable();
             $table->foreign('payroll_id')->references('id')->on('payrolls')->onDelete('cascade');
 
+            $table->string('status')->nullable();
+            $table->date("date_claimed")->nullable();
+
         });
     }
 
@@ -56,6 +59,9 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
             $table->dropColumn('assessment');
             $table->dropColumn('subcategory_id');
             $table->dropColumn('category_id');
+           
+            $table->dropColumn('status');
+            $table->dropColumn('date_claimed');
         });
     }
 }

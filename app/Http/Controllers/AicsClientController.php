@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Imports\ClientsImport;
 use App\Models\AicsType;
-use App\Models\DirtyList;
+use App\Models\Payroll;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -162,5 +162,16 @@ class AicsClientController extends Controller
                 'message' => "The given data was invalid."
             ], 422);
         }
+    }
+
+    public function report()
+    {
+        return Payroll::with("psgc")
+            ->withCount([
+                "clients",  
+                'clients as clients_paid' => function ($query) {
+                    $query->where('status', '=', 'claimed');
+            }])
+            ->get();
     }
 }
