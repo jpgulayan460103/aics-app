@@ -140,13 +140,13 @@
                     </tr>
                 @endif;
 
-                <tr>
+                <tr style="text-align:center;">
                     <td style="text-align:center; width:20px;">{{ $index }} </td>
                     <td> {{ $item->last_name }} {{ $item->ext_name }}</td>
                     <td>{{ $item->first_name }}</td>
-                    <td>{{ $item->middle_name }}</td>
-                    <td style="width:200px;"></td>
-                    <td style="width:200px;"></td>
+                    <td >{{ $item->middle_name }}</td>
+                    <td style="width:100px">{{$data->amount}}</td>
+                    <td style="width:200px"></td>
                     <td style="width:100px;"></td>
                 </tr>
             @endforeach

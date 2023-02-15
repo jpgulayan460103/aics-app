@@ -45,9 +45,11 @@ export default {
           console.log("ajdlkasd");
           this.isBusy = false;
           console.log(response.data);
-         this.feedback = response.data.message;
+         this.feedback = response.data.success;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {console.log(error);
+          this.feedback = response.data.errors.message;
+        });
     },
     onFileChange(e) {
       console.log(e);

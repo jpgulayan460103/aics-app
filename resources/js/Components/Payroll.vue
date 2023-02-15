@@ -18,14 +18,7 @@
               class="form-control"
             />
 
-            <label for="">SDO</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.sdo"
-              id=""
-              class="form-control"
-            />
+          
 
             <!--<label for="">Region</label>
             <input
@@ -177,14 +170,16 @@
               class="form-control"
             />
 
-            <label for="">Approved By</label>
+            <label for="">Amount</label>
             <input
-              type="text"
+              type="number"
               name=""
-              v-model="formData.approved_by"
+              v-model="formData.amount"
               id=""
               class="form-control"
             />
+
+           
 
             <label for="">Certified By (1)</label>
             <input
@@ -204,6 +199,23 @@
               class="form-control"
             />
 
+            <label for="">Approved By</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.approved_by"
+              id=""
+              class="form-control"
+            />
+            
+            <label for="">SDO</label>
+            <input
+              type="text"
+              name=""
+              v-model="formData.sdo"
+              id=""
+              class="form-control"
+            />
             <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
             </button>
