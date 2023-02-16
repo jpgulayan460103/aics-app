@@ -69,6 +69,10 @@ export default {
           value: 'file_directory',
         },
         {
+          text: 'Uploaded on',
+          value: 'created_at',
+        },
+        {
           text: 'Actions',
           value: 'actions',
         },
