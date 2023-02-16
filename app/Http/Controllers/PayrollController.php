@@ -125,13 +125,60 @@ class PayrollController extends Controller
 
     public function print($id)
     {
+        $payroll = Payroll::with("psgc","clients")->find($id);
+        if ($payroll) {
+            return view('pdf.payroll', ["data" => $payroll,  "grand_total"=> ($payroll->clients()->count() * $payroll->amount)]);
+
+            /*$pdf = Pdf::loadView('pdf.payroll', 
+                ["data" => $payroll,  
+                "grand_total"=> ($payroll->clients()->count() * $payroll->amount) 
+            ]);
+            return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');*/
+        };
+        
+        /*$payroll = Payroll::with("psgc","clients")->find($id);
+        if ($payroll) {
+            #return view('pdf.payroll', ["data" => $payroll]);
+
+            $pdf = Pdf::loadView('pdf.payroll', 
+                ["data" => $payroll,  
+                "grand_total"=> ($payroll->clients()->count() * $payroll->amount) 
+            ]);
+            return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
+        };*/
+    }
+
+    public function print_footer($id)
+    {
         $payroll = Payroll::with("psgc")->find($id);
         if ($payroll) {
             #return view('pdf.payroll', ["data" => $payroll]);
 
 
-            $pdf = Pdf::loadView('pdf.payroll', ["data" => $payroll]);
+            $pdf = Pdf::loadView('pdf.payroll_footer', ["data" => $payroll]);
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
         };
+    }
+    
+    public function printv2($id)
+    {
+        $payroll_clients = Payroll::find($id)->clients()->paginate(10);
+        $payroll = Payroll::with("psgc")->find($id);
+       
+       
+        if ($payroll) {
+
+            abort_unless($payroll_clients->count(), 204);
+
+
+            $pdf = Pdf::loadView('pdf.payrollv2', 
+                ["clients" => $payroll_clients,
+                "payroll"=>$payroll,
+                "grand_total"=>$payroll_clients->total() * $payroll->amount,
+            ]);
+            return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
+
+            //return view('pdf.payrollv2', ["data" => $payroll]);
+        }
     }
 }

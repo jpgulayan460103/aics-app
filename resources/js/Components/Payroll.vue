@@ -242,7 +242,18 @@
     <v-card flat>
       <v-card-title
         >Payroll <v-spacer />
-        <v-btn @click="NewPayroll()" dark>New Payroll</v-btn>
+        <v-btn @click="NewPayroll()" dark class="m-1">New Payroll</v-btn>
+        
+        <v-btn        
+          
+          @click="exportClients"
+          :disabled="isExporting"
+          :loading="isExporting"
+          dark
+        >
+          Export 
+        </v-btn>
+
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -274,9 +285,9 @@
               mdi-pencil
             </v-icon>
 
-            <v-icon small class="mr-5" @click="DeleteItem(item)">
+            <!--<v-icon small class="mr-5" @click="DeleteItem(item)">
               mdi-delete
-            </v-icon>
+            </v-icon>-->
           </template>
         </v-data-table>
       </v-card-text>
@@ -285,6 +296,9 @@
 </template>
 
 <script>
+import { debounce } from "lodash";
+
+
 export default {
   data() {
     return {
@@ -298,9 +312,12 @@ export default {
         { value: "id", text: "ID", sortable: true },
         { value: "title", text: "Title", sortable: true },
         { value: "sdo", text: "SDO", sortable: true },
+        
         { value: "province", text: "Province", sortable: true },
         { value: "muni_city", text: "City/Municipality", sortable: true },
         { value: "barangay", text: "Barangay", sortable: true },
+       
+        { value: "amount", text: "AMOUNT", sortable: true },
         { value: "actions", text: "Actions", sortable: true },
       ],
       payrolls: [],
@@ -313,6 +330,7 @@ export default {
       city_selector: {},
       validationErrors: {},
       search: "",
+      isExporting: false,
     };
   },
   watch: {
@@ -423,6 +441,18 @@ export default {
         });
       }, {});
     },
+    exportClients: debounce(function () {
+      this.isExporting = true;
+      axios
+        .post(route("api.client.export"))
+        .then((res) => {
+          this.isExporting = false;
+          window.location.href = res.data.file;
+        })
+        .catch((err) => {
+          this.isExporting = false;
+        });
+    }, 500),
   },
   mounted() {
     this.getPayrolls();

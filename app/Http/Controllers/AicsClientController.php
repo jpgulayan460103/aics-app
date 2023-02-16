@@ -89,18 +89,27 @@ class AicsClientController extends Controller
             $aics_client = AicsClient::findOrFail($id);
 
             if( $aics_client)
-            {
+            {   
+                $payroll_id_before =  $aics_client->payroll_id;
                 $aics_client->update($request->all());
 
                 if ($request->payroll_id &&  !$aics_client->payroll_insert_at ) {
+                    #NEW TO PAYROLL
                     $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
+                    $aics_client->status =null;
                 }
 
-                if(!$request->payroll_id)
-                {
-                    $aics_client->payroll_insert_at =null;
-                    $aics_client->claimed =null;
+                if($request->payroll_id != $payroll_id_before)
+                {   #MOVED TO DIFF PAYROLL
                     
+                    $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
+                    $aics_client->status =null;
+                }
+                
+                if(!$request->payroll_id) 
+                {   #RESET/REMOVE FROM PAYROLL
+                    $aics_client->payroll_insert_at =null;
+                    $aics_client->status =null;                    
                 }
 
                 

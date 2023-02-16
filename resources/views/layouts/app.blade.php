@@ -25,7 +25,7 @@
 </head>
 <body>
     <div id="app" data-app>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none" >
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     AICS Online Application

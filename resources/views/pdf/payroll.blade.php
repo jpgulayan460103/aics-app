@@ -64,7 +64,7 @@
 
 <body>
 
-    <footer>
+    <!--<footer>
         <table style="table-layout:fixed; font-size:8pt;">
             <tr>
                 <td>
@@ -96,22 +96,27 @@
 
             </tr>
             <tr style="text-align: center;">
-                <td> {{ $data->certified_by1 }} </td>
-                <td> {{ $data->certified_by2 }} </td>
-                <td> {{ $data->approved_by }} </td>
-                <td> {{ $data->sdo }} <br> SDO </td>
+                <td> { $data->certified_by1 } </td>
+                <td> { $data->certified_by2 } </td>
+                <td> { $data->approved_by } </td>
+                <td> { $data->sdo } <br> SDO </td>
             </tr>
         </table>
-    </footer>
+    </footer>-->
 
 
 
     <main>
-        <table id="payroll" cellpadding=8 cellspacing=0>
+      
+      
+              
+        <table id="payroll" cellpadding=9 cellspacing=0>
             @foreach ($data->clients as $key => $item)
-                {{ $index = $key + 1 }}
+            <span style="display:none;">{{ $index = $key + 1 }}</span>
+           
+               
                 @if ($key == 0 || $key % 10 == 0)
-                    <tr @if ($key != 0 && $key % 10 == 0) class="page" @endif;>
+                    <tr @if ($key != 0 && $key % 10 == 0) class="page" @endif>
                         <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
                             DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
                             Field Office XI, Davao City
@@ -138,17 +143,36 @@
                         <th>Signature</th>
                         <th>Date Paid</th>
                     </tr>
-                @endif;
+                @endif
 
                 <tr style="text-align:center;">
                     <td style="text-align:center; width:20px;">{{ $index }} </td>
                     <td> {{ $item->last_name }} {{ $item->ext_name }}</td>
                     <td>{{ $item->first_name }}</td>
                     <td >{{ $item->middle_name }}</td>
-                    <td style="width:100px">{{$data->amount}}</td>
+                    <td style="width:100px">{{number_format($data->amount)}}</td>
                     <td style="width:200px"></td>
                     <td style="width:100px;"></td>
                 </tr>
+                @if($index %10 == 0)
+                <tr> <td colspan="4" style="text-align:center; font-weight:bold;" >Sub Total</td>
+                    <td ></td>
+                    <td colspan="2"></td>
+                </tr>
+                @endif
+
+               @if(sizeof($data->clients) == $index)
+                <tr >
+                    <td colspan="4" style="text-align:center; font-weight:bold;" >Grand Total</td>
+                    
+                    <td style="text-align:center; font-weight:bold;">{{number_format($grand_total)}}</td>
+                    <td colspan="2"></td>
+                </tr>
+                <!--<tr style="text-align:center;font-size:6pt">
+                    <td colspan="7">** NOTHING FOLLOWS **</td>
+                </tr>-->
+                @endif
+
             @endforeach
         </table>
     </main>

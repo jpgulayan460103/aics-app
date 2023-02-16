@@ -12,9 +12,10 @@
 
         <v-list dense>
      
-      <v-list-item-group
+      <v-list-item-group 
         v-model="selectedItem"
         color="primary"
+        class="d-print-none"
       >
         <v-list-item
           v-for="(link, i) in links"

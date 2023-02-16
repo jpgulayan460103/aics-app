@@ -9,7 +9,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <GISComponent :dialog_data="dialogData_edit"></GISComponent>
+          <GISComponent :dialog_data="dialogData_edit" :getList="getList" ></GISComponent>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -26,29 +26,21 @@
         ></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-btn
-          elevation="2"
-          icon
-          @click="exportClients"
-          :disabled="isExporting"
-          :loading="isExporting"
-        >
-          <v-icon>mdi-download</v-icon>
-        </v-btn>
         <v-data-table
           dense
           :headers="headers"
           :items="data"
-          :items-per-page="50"
+          :items-per-page="10"
           :loading="isBusy"
           loading-text="Loading... Please wait"
           :search="search"
         >
           <template v-slot:item.status="{ item }">
-            
-            <v-chip v-if="item.payroll_id"> In Payroll 
-              {{item.payroll.amount}}
-            <span color="green" v-if="item.status=='claimed'" dark> | {{ item.status }}</span></v-chip>
+                       
+            <v-chip v-if="item.payroll_id && item.payroll && item.payroll.amount">
+              In Payroll {{ item.payroll.amount }}
+              <span v-if="item.status == 'claimed'"> | {{ item.status }}</span>
+            </v-chip>
           </template>
 
           <template v-slot:item.barangay="{ item }">
@@ -67,7 +59,6 @@
             <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
           </template>
 
-         
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="EditItem(item)">
               mdi-pencil
@@ -81,7 +72,6 @@
  
 <script>
 import GISComponent from "./GISComponent.vue";
-import { debounce } from "lodash";
 
 export default {
   components: { GISComponent },
@@ -90,7 +80,7 @@ export default {
       search: "",
       data: [],
       isBusy: true,
-      isExporting: false,
+
       perPage: 100,
       currentPage: 1,
       dialog_create: false,
@@ -104,7 +94,7 @@ export default {
         { value: "barangay", text: "Barangay", sortable: true },
         { value: "city_muni", text: "City/Muni", sortable: true },
         { value: "province", text: "Province", sortable: true },
-        { value: "region", text: "Region", sortable: true },
+        //{ value: "region", text: "Region", sortable: true },
 
         { value: "status", text: "Status", sortable: true },
         { value: "actions", text: "Actions" },
@@ -114,10 +104,11 @@ export default {
 
   methods: {
     getList() {
+      this.isBusy = true;
       axios
         .get(route("api.clients"))
         .then((response) => {
-          this.isBusy = !this.isBusy;
+          this.isBusy = false;
           this.data = response.data;
         })
         .catch((error) => console.log(error));
@@ -127,18 +118,6 @@ export default {
       this.dialogData_edit = {};
       this.dialogData_edit = item;
     },
-    exportClients: debounce(function () {
-      this.isExporting = true;
-      axios
-        .post(route("api.client.export"))
-        .then((res) => {
-          this.isExporting = false;
-          window.location.href = res.data.file;
-        })
-        .catch((err) => {
-          this.isExporting = false;
-        });
-    }, 500),
   },
   mounted() {
     this.getList();

@@ -59,7 +59,7 @@
       <div class="card mt-2">
         <div class="card-title">
           NAIS HINGIIN NA TULONG (Assistance Requested)
-          <span color="red" ></span>
+          <span color="red"></span>
         </div>
         <div class="card-body">
           <div class="col-md-12">
@@ -86,7 +86,7 @@
             <div class="row">
               <div class="col-md-3">
                 <label for="last_name">
-                  Apelyido <small>(Last name) <span color="red" ></span></small>
+                  Apelyido <small>(Last name) <span color="red"></span></small>
                 </label>
                 <input
                   id="last_name"
@@ -105,8 +105,8 @@
               <div class="col-md-3">
                 <label for="first_name">
                   Unang Pangalan
-                  <small>(First name) <span color="red" ></span></small></label
-                >
+                  <small>(First name) <span color="red"></span></small
+                ></label>
                 <input
                   id="first_name"
                   v-model="form.first_name"
@@ -180,7 +180,7 @@
                 <label for="street_number"
                   >House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
-                  <span color="red" ></span>
+                  <span color="red"></span>
                 </label>
                 <input
                   id="street_number"
@@ -201,7 +201,7 @@
               <div class="col-md-3">
                 <label
                   >Region <small>(Ex. NCR)</small>
-                  <span color="red" ></span>
+                  <span color="red"></span>
                 </label>
                 <select
                   id="psgc_id"
@@ -228,7 +228,7 @@
               <div class="col-md-3">
                 <label
                   >Province/District <small>(Ex. Dis. III)</small>
-                  <span color="red" ></span>
+                  <span color="red"></span>
                 </label>
                 <select
                   id="psgc_id"
@@ -257,7 +257,7 @@
               <div class="col-md-3">
                 <label>
                   City/Municipality <small>(Ex. Quezon City)</small>
-                  <span color="red" ></span>
+                  <span color="red"></span>
                 </label>
 
                 <select
@@ -287,7 +287,7 @@
                 <label
                   >Barangay
                   <small>(Ex. Batasan Hills)</small>
-                  <span color="red" ></span>
+                  <span style="color:red;">*</span>
                 </label>
                 <select
                   id="psgc_id"
@@ -320,7 +320,7 @@
                   >Telepono
                   <small
                     >(Mobile Number)
-                    <span color="red" ></span>
+                    <span style="color:red;">*</span>
                   </small>
                 </label>
 
@@ -342,8 +342,8 @@
               <div class="col-md-3">
                 <label for="birth_date"
                   >Kapanganakan <small>(Birthdate)</small>
-                  <span color="red" ></span></label
-                >
+                  <span color="red"></span
+                ></label>
                 <input
                   id="birth_date"
                   v-model="form.birth_date"
@@ -364,7 +364,7 @@
               <div class="col-md-3">
                 <label for="age"
                   >Edad <small>(Age)</small>
-                  <span color="red" ></span>
+                  <span color="red"></span>
                 </label>
 
                 <input
@@ -378,9 +378,8 @@
 
               <div class="col-md-3">
                 <label for="gender"
-                  >Kasarian <small>(gender)</small>
-                  <span color="red" ></span></label
-                >
+                  >Kasarian <small>(gender)</small> <span color="red"></span
+                ></label>
                 <select
                   name=""
                   id=""
@@ -408,9 +407,8 @@
             <div class="row mt-2">
               <div class="col-md-3">
                 <label for="occupation"
-                  >Trabaho <small> (Occupation)</small>
-                  <span color="red" ></span></label
-                >
+                  >Trabaho <small> (Occupation)</small> <span color="red"></span
+                ></label>
                 <input
                   id="occupation"
                   v-model="form.occupation"
@@ -428,8 +426,8 @@
               <div class="col-md-3">
                 <label for="monthly_salary"
                   >Buwanang Kita <small> (Monthly Salary) </small>
-                  <span color="red" ></span></label
-                >
+                  <span color="red"></span
+                ></label>
                 <input
                   id="monthly_salary"
                   v-model="form.monthly_salary"
@@ -447,7 +445,7 @@
 
               <div class="col-md-3">
                 <label for="civil_status"
-                  >Civil Status <span color="red" ></span></label
+                  >Civil Status  <span style="color:red;">*</span></label
                 >
                 <select
                   id="civil_status"
@@ -473,7 +471,7 @@
 
               <div class="col-md-3">
                 <label for="mode_of_admission"
-                  >Mode of Admission <span color="red" ></span></label
+                  >Mode of Admission  <span style="color:red;">*</span></label
                 >
                 <select
                   id="mode_of_admission"
@@ -558,12 +556,12 @@
       <br />
 
       <div class="card">
-        <div class="card-title">Select Payroll</div>
+        <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
           <select name="" id="" v-model="form.payroll_id" class="form-control">
             <option value=""></option>
             <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
-              {{ p.title }}
+              {{ p.title }} | {{ p.amount }}
             </option>
           </select>
         </div>
@@ -628,14 +626,18 @@
   color: #fff;
   padding: 1pc;
 }
+
 </style>
 
 <script>
 export default {
-  props: ["dialog_data"],
+  props: ["dialog_data", "getList"],
   data() {
     return {
-      form: {},
+      form: {
+        aics_type_id: 8,
+        mode_of_admission: "Referral",
+      },
       assistance_types: {},
       psgc: {},
       regions: {},
@@ -680,6 +682,9 @@ export default {
     dialog_data(e) {
       this.resetForm();
       this.form = e;
+      this.form.aics_type_id = 8;
+      this.form.mode_of_admission = "Referral";
+
       this.calculateAge();
       this.beneficiary_region_selector =
         this.regions[this.dialog_data.psgc.region_name];
@@ -744,6 +749,7 @@ export default {
           .then((response) => {
             console.log(response.data);
             alert(response.data.message);
+            this.getList();
             /*if (response.data.aics_beneficiary_id) {
               alert(
                 "Naisumite na ang Form. Isang kinatawan ng DSWD ang makikipag-ugnayan sa iyo, mayat-maya. \nForm submitted. A DSWD representative will contact you shortly."
@@ -764,7 +770,10 @@ export default {
       }
     },
     resetForm() {
-      this.form = {};
+      this.form = {
+        aics_type_id: 8,
+        mode_of_admission: "Referral",
+      };
       this.beneficiary_provinces = {};
       this.beneficiary_cities = {};
       this.beneficiary_barangays = {};
@@ -888,6 +897,8 @@ export default {
   },
   mounted() {
     this.form = this.dialog_data;
+    this.form.aics_type_id = 8;
+    this.form.mode_of_admission = "Referral";
     this.calculateAge();
     this.getAssistanceTypes();
     this.getRegions();

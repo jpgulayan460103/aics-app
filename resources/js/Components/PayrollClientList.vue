@@ -1,36 +1,42 @@
 <template>
   <v-card flat outlined>
-    <v-system-bar color="white">
-      <v-icon @click="print()"> mdi-printer</v-icon>
-      <v-icon>mdi-download</v-icon>
-    </v-system-bar>
     <v-card-title>
+
+      <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
+      
+      <v-btn @click="print()" color="black" dark class="m-1">
+        <v-icon > mdi-printer </v-icon>  Print Current Page:{{ page }}</v-btn>
+      
+        <v-btn @click="print_w_gt()" color="black" dark class="m-1">
+          <v-icon > mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
+        </v-btn>
      
-    </v-card-title>
+      <v-icon @click="print_footer()"> mdi mdi-foot-print</v-icon>
+      <!--<v-icon>mdi-download</v-icon>-->
+   
+     </v-card-title>
     <v-card-text>
       <div class="row">
-        <div class="col-md-12 text-center">
-          <h2>{{ data.title }}</h2>
+        <div class="col-md-12 text-center d-print-block">
+          <h6>{{ data.title }}</h6>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6" v-if="data.psgc">
           CITY/MUNICIPALITY : {{ data.psgc.city_name }}<br />
           BARANGAY : {{ data.psgc.brgy_name }} <br />
-          {{ data.schedule }}
+          SCHEDULE : {{ data.schedule }}
         </div>
         <div class="col-md-6 text-end">
-          
-
           <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            class="d-print-none"
+          ></v-text-field>
         </div>
       </div>
       <v-data-table
@@ -41,6 +47,11 @@
         :loading="isBusy"
         loading-text="Loading... Please wait"
         :search="search"
+        @update:page="currentPage"
+        :footer-props="{
+              'items-per-page-options':[10],
+              'disable-items-per-page': true,
+            }"
       >
         <template v-slot:item.amount="{ item }">
           {{ data.amount }}
@@ -52,14 +63,13 @@
           </v-icon>
         </template>-->
 
-        <template v-slot:item.status="{item}">
+        <template v-slot:item.status="{ item }">
           <v-edit-dialog
             :return-value.sync="item.status"
             large
             persistent
             @save="save(item)"
             @cancel="cancel(item)"
-          
           >
             <div>{{ item.status }}</div>
             <template v-slot:input>
@@ -73,6 +83,22 @@
         </template>
       </v-data-table>
     </v-card-text>
+
+    <!--<v-dialog v-model="print_options" width="300px" height="300px">
+      <v-card>
+        <v-card-title></v-card-title>
+        <v-card-text>
+
+         Select Page: 
+         <input type="text" name="" id="" v-model="page" class="form-control">
+          <label>
+          With Grand Total &
+          Footer? </label> <input type="checkbox" name="" id="" v-model="gt"  >
+
+        </v-card-text>
+      </v-card>
+    </v-dialog>-->
+
   </v-card>
 </template>
 
@@ -84,18 +110,24 @@ export default {
       data: [],
       isBusy: false,
       headers: [
-        
         { value: "last_name", text: "Last Name", sortable: false },
+        { value: "ext_name", text: "Ext", sortable: false, width:"20px;" },
         { value: "first_name", text: "First Name", sortable: false },
         { value: "middle_name", text: "Middle Name", sortable: false },
-        { value: "ext_name", text: "Ext", sortable: false },
+
         { value: "amount", text: "Amount", sortable: false },
 
         { value: "status", text: "Status", sortable: false },
       ],
       search: "",
+      page: 1,
+      print_options: false,
+     
     };
   },
+  computed: {
+   lastPage() {return Math.ceil(this.data.clients.length/10);}
+},
   watch() {
     id();
     {
@@ -104,7 +136,20 @@ export default {
   },
   methods: {
     print() {
-      window.open(route("api.payroll.print", this.id), "_blank");
+      window.open(
+        route("api.payroll.printv2", { id: this.id, page: this.page }),
+        "_blank"
+      );
+    },
+    print_w_gt()
+    {
+      window.open(
+        route("api.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1}),
+        "_blank"
+      );
+    },
+    print_footer() {
+      window.open(route("api.payroll.print_footer", this.id), "_blank");
     },
     getClients() {
       axios
@@ -117,16 +162,20 @@ export default {
     },
     save(e) {
       console.log(e);
-      axios.post(route("api.client.update",e.id),e).then(response => {
-        console.log(response.data);
-      }).catch(error=>console.log(error));
+      axios
+        .post(route("api.client.update", e.id), e)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => console.log(error));
     },
-    cancel(e)
-    {
+    cancel(e) {
       e;
+    },
+    currentPage(e)
+    {
+      this.page = e;
     }
-  
-    
   },
   mounted() {
     console.log("list");

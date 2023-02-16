@@ -28,7 +28,9 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'aics_type',
             'subcategory',
             'category',
-        ])->whereNotNull('payroll_id')->get();
+        ])->whereNotNull('payroll_id')
+        ->orderBy('payroll_insert_at',"asc")
+        ->get();
         return $collection->map(function ($item, $key) {
             $item->key = $key;
             return $item;
@@ -117,7 +119,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             $aics_client->age,
             $aics_client->mode_of_admission,
             $aics_client->aics_type ? $aics_client->aics_type->name : "",
-            $aics_client->payroll ?  $aics_client->amount: "",
+            $aics_client->payroll ?  $aics_client->payroll->amount: "",
             "",
             "",
             "",
