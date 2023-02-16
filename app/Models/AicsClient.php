@@ -62,6 +62,14 @@ class AicsClient extends Model
     {
         return $this->belongsTo(AicsType::class);
     }
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function aics_beneficiaries()
     {

@@ -22,7 +22,13 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $collection = AicsClient::query()->with(['psgc', 'payroll', 'aics_type'])->whereNotNull('payroll_id')->get();
+        $collection = AicsClient::query()->with([
+            'psgc',
+            'payroll',
+            'aics_type',
+            'subcategory',
+            'category',
+        ])->whereNotNull('payroll_id')->get();
         return $collection->map(function ($item, $key) {
             $item->key = $key;
             return $item;
@@ -108,9 +114,10 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             "civil_status",
             Carbon::parse($aics_client->birth_date)->format("m/d/Y"),
             $aics_client->age,
-            "mode_of_admision",
+            "Referral",
             $aics_client->aics_type?->name,
             $aics_client->payroll?->amount,
+            "Source of Fund1",
             "",
             "",
             "",
@@ -120,7 +127,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             "",
             "",
             "",
-            "ClientCategory",
+            $aics_client->category ? $aics_client->category->category : "",
             "All",
             "1",
             "1",
