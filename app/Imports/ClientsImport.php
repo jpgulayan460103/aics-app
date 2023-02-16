@@ -53,10 +53,11 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
         }
         return new AicsClient([
             'dirty_list_id' => $this->dirtyList->id,
-            'first_name'    => mb_strtoupper(trim($row['first_name'])),
-            'middle_name'   => mb_strtoupper(trim($row['middle_name'])),
-            'last_name'     => mb_strtoupper(trim($row['last_name'])),
-            'ext_name'      => mb_strtoupper(trim($row['ext_name'])),
+            'first_name'    => mb_strtoupper(trim($row['first_name'] ?? null)),
+            'middle_name'   => mb_strtoupper(trim($row['middle_name'] ?? null)),
+            'last_name'     => mb_strtoupper(trim($row['last_name'] ?? null)),
+            'ext_name'      => mb_strtoupper(trim($row['ext_name'] ?? null)),
+            'street_number' => mb_strtoupper(trim($row['street_number'] ?? null)),
             'birth_date'    => $birth_date,
             'psgc_id'       => $psgc_id,
         ]);
@@ -85,6 +86,7 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'middle_name' => ['max:255', new AllowedStringName()],
             'last_name' => ['required','max:255', new AllowedStringName()],
             'ext_name' => ['max:255', new AllowedStringName()],
+            'street_number' => 'max:255',
             'birth_date' => 'sometimes|date',
             'psgc' => 'sometimes|exists:psgcs,brgy_psgc',
         ];
