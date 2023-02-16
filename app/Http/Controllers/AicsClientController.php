@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Imports\ClientsImport;
 use App\Models\AicsType;
-use App\Models\DirtyList;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +16,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Str;
+
+use App\Models\DirtyList;
+
 
 class AicsClientController extends Controller
 {
@@ -28,7 +30,7 @@ class AicsClientController extends Controller
     public function index()
     {
         // return AicsClient::paginate(10);
-        return AicsClient::with("psgc")->get();
+        return AicsClient::with("psgc","payroll")->get();
     }
 
     /**
@@ -84,10 +86,31 @@ class AicsClientController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $aics_client = AicsClient::findOrFail($id)->update($request->all());
-            if ($aics_client) {
+            $aics_client = AicsClient::findOrFail($id);
+
+            if( $aics_client)
+            {
+                $aics_client->update($request->all());
+
+                if ($request->payroll_id &&  !$aics_client->payroll_insert_at ) {
+                    $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
+                }
+
+                if(!$request->payroll_id)
+                {
+                    $aics_client->payroll_insert_at =null;
+                    $aics_client->claimed =null;
+                    
+                }
+
+                
+                $aics_client->save();
+
                 return ["message"=> "Saved", "client"=> $aics_client];
+
             }
+            
+          
         } catch (Exception $e) {
             return ["message"=> $e];
         }

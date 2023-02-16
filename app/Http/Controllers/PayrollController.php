@@ -6,6 +6,7 @@ use App\Models\Payroll;
 use Exception;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
@@ -16,7 +17,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        return Payroll::all();
+        return Payroll::with("psgc")->get();
     }
 
     /**
@@ -36,7 +37,7 @@ class PayrollController extends Controller
                 return ["Message" => "Failed"];
             }
         } catch (\Throwable $th) {
-            return ["Message"=>$th];
+            return ["Message" => $th];
         }
     }
 
@@ -59,14 +60,12 @@ class PayrollController extends Controller
      */
     public function show($id)
     {
-        $payroll = Payroll::with("clients","psgc")->find($id);
-       
-        if($payroll)
-        {
+        $payroll = Payroll::with("clients", "psgc")->find($id);
+
+        if ($payroll) {
             return $payroll;
-        }else
-        {
-            return ["Message"=>"Not Found"];
+        } else {
+            return ["Message" => "Not Found"];
         }
     }
 
@@ -127,15 +126,12 @@ class PayrollController extends Controller
     public function print($id)
     {
         $payroll = Payroll::with("psgc")->find($id);
-        if($payroll)
-        {
+        if ($payroll) {
             #return view('pdf.payroll', ["data" => $payroll]);
-       
+
 
             $pdf = Pdf::loadView('pdf.payroll', ["data" => $payroll]);
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
-
         };
     }
-
 }

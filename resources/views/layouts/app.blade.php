@@ -17,6 +17,9 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <style>
+        @import url('node_modules/material-design-icons-iconfont/dist/material-design-icons.css');
+      </style>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @routes()
 </head>

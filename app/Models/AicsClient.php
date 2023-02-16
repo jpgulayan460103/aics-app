@@ -59,7 +59,7 @@ class AicsClient extends Model
     }
     public function payroll()
     {
-        return $this->belongsTo(Payroll::class);
+        return $this->belongsTo(Payroll::class, "payroll_id");
     }
 
     public function aics_type()

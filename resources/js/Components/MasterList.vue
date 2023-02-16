@@ -45,7 +45,10 @@
           :search="search"
         >
           <template v-slot:item.status="{ item }">
-            <span v-if="item.payroll_id"> In Payroll </span>
+            
+            <v-chip v-if="item.payroll_id"> In Payroll 
+              {{item.payroll.amount}}
+            <span color="green" v-if="item.status=='claimed'" dark> | {{ item.status }}</span></v-chip>
           </template>
 
           <template v-slot:item.barangay="{ item }">
@@ -64,6 +67,7 @@
             <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
           </template>
 
+         
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="EditItem(item)">
               mdi-pencil
@@ -92,7 +96,6 @@ export default {
       dialog_create: false,
       dialogData_edit: {},
       headers: [
-        { value: "id", text: "ID", sortable: true },
         { value: "first_name", text: "First Name", sortable: true },
         { value: "middle_name", text: "Middle Name", sortable: true },
         { value: "last_name", text: "Last Name", sortable: true },
@@ -124,17 +127,18 @@ export default {
       this.dialogData_edit = {};
       this.dialogData_edit = item;
     },
-    exportClients: debounce(function(){
+    exportClients: debounce(function () {
       this.isExporting = true;
-      axios.post(route('api.client.export'))
-      .then(res => {
-        this.isExporting = false;
-        window.location.href = res.data.file;
-      })
-      .catch(err => {
-        this.isExporting = false;
-      })
-    }, 500)
+      axios
+        .post(route("api.client.export"))
+        .then((res) => {
+          this.isExporting = false;
+          window.location.href = res.data.file;
+        })
+        .catch((err) => {
+          this.isExporting = false;
+        });
+    }, 500),
   },
   mounted() {
     this.getList();

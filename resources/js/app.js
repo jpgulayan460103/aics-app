@@ -7,6 +7,9 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
+import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+
 import Vuetify from 'vuetify';
 import VueRouter from "vue-router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -23,7 +26,7 @@ import GISComponent from "./Components/GISComponent.vue"
 import Payroll from "./Components/Payroll"
 import PayrollClientList from "./Components/PayrollClientList"
 
-Vue.use(Vuetify); 
+Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
@@ -48,35 +51,35 @@ const router = new VueRouter({
             path: "/import",
             name: "import",
             component: ImportFile,
-            
+
         },
         {
             path: "/gis",
             name: "gis",
             component: GISComponent,
-            
+
         },
         {
             path: "/master_list",
             name: "master_list",
             component: MasterList,
-            
+
         },
         {
             path: "/payroll",
             name: "payroll",
             component: Payroll,
-            
+
         },
         {
             path: "/payroll/:id?",
             name: "payroll_list",
             component: PayrollClientList,
-            props: true 
-            
+            props: true
+
         }
-       
-       
+
+
     ],
 });
 
@@ -86,12 +89,17 @@ Vue.filter("formatDate", function (value) {
     }
 });
 
+export default new Vuetify({
+    icons: {
+      iconfont: 'mdi', // default - only for display purposes
+    },
+  })
 
 const app = new Vue({
     el: '#app',
     components: { App },
     router,
     vuetify: new Vuetify(),
-    
+
 });
 
