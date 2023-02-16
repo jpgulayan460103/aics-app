@@ -18,6 +18,8 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
             $table->string('gender')->nullable();
             $table->string('occupation')->nullable();
             $table->string('monthly_salary')->nullable();
+            $table->string('civil_status')->nullable();
+            $table->string('mode_of_admission')->nullable();
 
             $table->bigInteger("aics_type_id")->unsigned()->nullable();
             $table->foreign('aics_type_id')->references('id')->on('aics_types')->onDelete('cascade');
@@ -34,6 +36,11 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
 
             $table->bigInteger("payroll_id")->unsigned()->nullable();
             $table->foreign('payroll_id')->references('id')->on('payrolls')->onDelete('cascade');
+
+            $table->string('status')->nullable();
+            $table->date("date_claimed")->nullable();
+            
+            $table->dateTime('payroll_insert_at')->nullable();
 
         });
     }
@@ -56,6 +63,9 @@ class AddFieldsToAicsBeneficiariesTable extends Migration
             $table->dropColumn('assessment');
             $table->dropColumn('subcategory_id');
             $table->dropColumn('category_id');
+           
+            $table->dropColumn('status');
+            $table->dropColumn('date_claimed');
         });
     }
 }

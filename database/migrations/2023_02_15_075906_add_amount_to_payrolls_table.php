@@ -14,10 +14,10 @@ class AddAmountToPayrollsTable extends Migration
     public function up()
     {
         Schema::table('payrolls', function (Blueprint $table) {
-            $table->double('amount', 8, 2);
-
-
-           
+            $table->double('amount', 8, 2)->nullable();
+            $table->string('source_of_fund')->nullable();
+            $table->string('charging')->nullable();
+            
         });
     }
 
@@ -30,6 +30,9 @@ class AddAmountToPayrollsTable extends Migration
     {
         Schema::table('payrolls', function (Blueprint $table) {
             $table->dropColumn('amount');
+            $table->dropColumn('source_of_fund');
+            $table->dropColumn('charging');
+            
         });
     }
 }

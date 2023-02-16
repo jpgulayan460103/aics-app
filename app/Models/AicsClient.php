@@ -30,6 +30,10 @@ class AicsClient extends Model
         'monthly_salary',
         'payroll_id',
         'aics_type_id',
+        'status',
+        'date_claimed',
+        'civil_status',
+        'mode_of_admission',
         'dirty_list_id',
     ];
 
