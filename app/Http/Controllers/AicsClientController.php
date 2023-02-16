@@ -122,11 +122,12 @@ class AicsClientController extends Controller
         try {
             $file = request("file");
             $original_filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-            $filename = $original_filename . "." . $file->getClientOriginalExtension();
+            $filename = $original_filename. "-" .Str::slug(Carbon::now()) . "." . $file->getClientOriginalExtension();
             $year = date("Y");
             $month = date("m");
 
-            $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
+            // $path = Storage::disk('local')->put("public/uploads/dirty_lists/$year/$month",  $file);
+            $path = Storage::disk('local')->putFileAs("public/uploads/dirty_lists/$year/$month", $file, $filename);
             $url = Storage::url($path);
 
             $dirtylist = DirtyList::create([

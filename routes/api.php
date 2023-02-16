@@ -49,3 +49,5 @@ Route::post('payrolls/del/{id}', [\App\Http\Controllers\PayrollController::class
 Route::get('payrolls/{id}', [\App\Http\Controllers\PayrollController::class,'show'])->name("api.payroll.show");
 Route::get('payrolls/print/{id}', [\App\Http\Controllers\PayrollController::class,'print'])->name("api.payroll.print");
 
+Route::get('uploaded-files', [\App\Http\Controllers\DirtyListController::class,'index'])->name("api.dirty-list.index");
+Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController::class,'destroy'])->name("api.dirty-list.delete");

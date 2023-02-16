@@ -78,8 +78,8 @@ class DirtyListController extends Controller
      * @param  \App\Models\DirtyList  $dirtyList
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DirtyList $dirtyList)
+    public function destroy($id)
     {
-        //
+        DirtyList::findOrFail($id)->delete();
     }
 }

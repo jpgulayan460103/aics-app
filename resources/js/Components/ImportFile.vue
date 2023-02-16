@@ -3,7 +3,7 @@
     <v-card-title>Import </v-card-title>
     <v-card-text>
       <form @submit.prevent="submit" enctype="multipart/form-data">
-        <input type="file" name="" id="" @input="onFileChange($event)" required/>
+        <input type="file" name="" id="" @input="onFileChange($event)" required accept=".xlsx,.xls"/>
 
         
 
@@ -25,6 +25,26 @@
         
       </form>
     </v-card-text>
+
+
+    <v-card-title>Imported Files</v-card-title>
+    <v-card-text>
+      <v-data-table
+        :headers="headers"
+        :items="uploadedFiles"
+        :items-per-page="5"
+        class="elevation-1"
+      >
+        <template v-slot:item.file_directory="{ item }">
+          <a :href="item.file_directory">{{ item.file_directory }}</a>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="deleteFile(item)">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -37,6 +57,23 @@ export default {
       isBusy: false,
       feedback: "",
       errorFile: "",
+      headers: [
+        {
+          text: 'File Name',
+          align: 'start',
+          value: 'file_name',
+        },
+        {
+          text: 'File Directory',
+          align: 'start',
+          value: 'file_directory',
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+        },
+      ],
+      uploadedFiles: [],
     };
   },
   methods: {
@@ -57,7 +94,8 @@ export default {
           console.log("ajdlkasd");
           this.isBusy = false;
           console.log(response.data);
-         this.feedback = response.data.success;
+          this.feedback = response.data.success;
+          this.getUploadedFiles();
         })
         .catch((error) => {
           this.isBusy = false;
@@ -71,7 +109,27 @@ export default {
       this.file = e.target.files[0];
       console.log(this.formData);
     },
+    getUploadedFiles(){
+      axios.get(route('api.dirty-list.index'))
+      .then(res => {
+        this.uploadedFiles = res.data;
+      })
+      .catch(err => {});
+    },
+    deleteFile(item){
+      if(confirm(`Are you sure you want to delete ${item.file_name}? This will remove unserved beneficiaries from this file.`)){
+        axios.delete(route('api.dirty-list.delete', item.id))
+        .then(res => {
+          this.getUploadedFiles();
+        })
+        .catch(err => {})
+        ;
+      }
+    }
   },
+  mounted(){
+    this.getUploadedFiles();
+  }
 };
 </script>
 
