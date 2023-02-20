@@ -100,8 +100,7 @@ class AicsClientController extends Controller
                 }
 
                 if($request->payroll_id != $payroll_id_before)
-                {   #MOVED TO DIFF PAYROLL
-                    
+                {   #MOVED TO DIFF PAYROLL                    
                     $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
                     $aics_client->status =null;
                 }

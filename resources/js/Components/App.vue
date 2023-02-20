@@ -65,6 +65,10 @@ export default {
           to: "/payroll",
           text: "Payroll",
         },
+        {
+          to: "/users",
+          text: "Users",
+        },
       ],
     };
   },

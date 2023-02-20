@@ -25,6 +25,7 @@ import MasterList from "./Components/MasterList"
 import GISComponent from "./Components/GISComponent.vue"
 import Payroll from "./Components/Payroll"
 import PayrollClientList from "./Components/PayrollClientList"
+import Users from "./Components/Users"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -75,6 +76,13 @@ const router = new VueRouter({
             path: "/payroll/:id?",
             name: "payroll_list",
             component: PayrollClientList,
+            props: true
+
+        },
+        {
+            path: "/users/:id?",
+            name: "users",
+            component: Users,
             props: true
 
         }
