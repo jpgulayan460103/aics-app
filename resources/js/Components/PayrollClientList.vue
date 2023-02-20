@@ -42,7 +42,10 @@
       <v-data-table
         v-if="data.clients"
         :headers="headers"
-        :items="data.clients"
+        :items="data.clients.map((i, index) => {
+            i.key = index + 1
+            return i;
+          })"
         :items-per-page="10"
         :loading="isBusy"
         loading-text="Loading... Please wait"
@@ -53,6 +56,11 @@
               'disable-items-per-page': true,
             }"
       >
+      <template v-slot:item.key="{ item }">
+         {{item.key}}
+        </template>
+
+
         <template v-slot:item.amount="{ item }">
           {{ data.amount }}
         </template>
@@ -103,6 +111,7 @@
 </template>
 
 <script>
+import { isEmpty} from 'lodash'
 export default {
   props: ["id"],
   data() {
@@ -110,7 +119,8 @@ export default {
       data: [],
       isBusy: false,
       headers: [
-        { value: "last_name", text: "Last Name", sortable: false },
+      { value: "key", text: "No.", sortable: false },
+      { value: "last_name", text: "Last Name", sortable: false },
         { value: "ext_name", text: "Ext", sortable: false, width:"20px;" },
         { value: "first_name", text: "First Name", sortable: false },
         { value: "middle_name", text: "Middle Name", sortable: false },
@@ -175,6 +185,9 @@ export default {
     currentPage(e)
     {
       this.page = e;
+    },
+    isEmpty(value){
+      return isEmpty(value);
     }
   },
   mounted() {

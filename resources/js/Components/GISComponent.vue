@@ -454,7 +454,7 @@
                 >
                   <option
                     :value="e"
-                    v-for="(e, i) in ['Single', 'Married', 'Common-law']"
+                    v-for="(e, i) in ['Single', 'Married', 'Common-law','Widowed', 'Separated']"
                     :key="i"
                   >
                     {{ e }}
