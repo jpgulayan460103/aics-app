@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClientExport;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Payroll;
 use Exception;
 use Illuminate\Http\Request;
@@ -180,5 +184,21 @@ class PayrollController extends Controller
 
             //return view('pdf.payrollv2', ["data" => $payroll]);
         }
+    }
+
+    public function export($payroll_id) 
+    {
+        $payroll = Payroll::findOrFail($payroll_id);
+        $filename = "";
+        $filename .= Str::slug($payroll->title)."-";
+        $filename .= Str::slug($payroll->charging)."-";
+        $filename .= Str::slug($payroll->sdo)."-";
+        $filename .= Str::slug($payroll->amount)."-";
+        $filename .= Str::slug(Carbon::now());
+        $export_file_name = "$filename.xlsx";
+        Excel::store(new ClientExport($payroll), "public/$export_file_name", 'local');
+        return [
+            "file" => url(Storage::url("public/$export_file_name")),
+        ];
     }
 }

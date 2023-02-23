@@ -32,7 +32,7 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('clients/{id}', [\App\Http\Controllers\AicsClientController::class, 'update'])->name("api.client.update");
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class,'getCategories'])->name("api.categories");
     Route::get('reports', [\App\Http\Controllers\AicsClientController::class, 'report'])->name("api.report");
-    Route::post('export/clients', [\App\Http\Controllers\AicsClientController::class, 'export'])->name("api.client.export");
+    Route::post('export/payroll/{id}', [\App\Http\Controllers\PayrollController::class, 'export'])->name("api.payroll.export");
 
 });
 

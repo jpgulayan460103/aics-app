@@ -243,17 +243,6 @@
       <v-card-title
         >Payroll <v-spacer />
         <v-btn @click="NewPayroll()" dark class="m-1">New Payroll</v-btn>
-        
-        <v-btn        
-          
-          @click="exportClients"
-          :disabled="isExporting"
-          :loading="isExporting"
-          dark
-        >
-          Export 
-        </v-btn>
-
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -277,6 +266,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
+            <v-icon small class="mr-5" @click="DownloadPayroll(item)"  :disabled="isExporting">
+              mdi-download
+            </v-icon>
+
             <v-icon small class="mr-5" @click="ViewList(item.id)">
               mdi-format-list-text
             </v-icon>
@@ -416,6 +409,18 @@ export default {
         alert("Cancelled");
       }
     },
+    DownloadPayroll: debounce(function(payroll) {
+      this.isExporting = true;
+      axios.post(route('api.payroll.export', payroll.id))
+      .then((res) => {
+        this.isExporting = false;
+        window.location.href = res.data.file;
+      })
+      .catch(err => {
+        console.warn(err);
+        this.isExporting = false;
+      });
+    }, 250),
     ViewList(id) {
       //this.$router.push("payroll/" + id);
       this.$router.push({ name: "payroll_list", params: { id: id } });
@@ -441,18 +446,6 @@ export default {
         });
       }, {});
     },
-    exportClients: debounce(function () {
-      this.isExporting = true;
-      axios
-        .post(route("api.client.export"))
-        .then((res) => {
-          this.isExporting = false;
-          window.location.href = res.data.file;
-        })
-        .catch((err) => {
-          this.isExporting = false;
-        });
-    }, 500),
   },
   mounted() {
     this.getPayrolls();
