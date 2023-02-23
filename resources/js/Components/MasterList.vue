@@ -38,7 +38,8 @@
           <template v-slot:item.status="{ item }">
                        
             <v-chip v-if="item.payroll_id && item.payroll && item.payroll.amount">
-              In Payroll {{ item.payroll.amount }}
+              In Payroll {{ item.payroll.amount }}            
+              | Client No: {{ item.sequence }}
               <span v-if="item.status == 'claimed'"> | {{ item.status }}</span>
             </v-chip>
           </template>

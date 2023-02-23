@@ -19,7 +19,7 @@
 
         #payroll th,
         #payroll td {
-            border: solid 1px #dedede;
+            border: solid 1px #a0a0a0;
         }
 
 
@@ -35,7 +35,6 @@
             top: -60px;
             left: 0px;
             right: 0px;
-            background-color: lightblue;
             height: 50px;
         }
 
@@ -58,6 +57,13 @@
 
         p:last-child {
             page-break-after: never;
+        }
+
+        .sig {
+            width: 80%;
+            border-bottom: solid 1px #000;
+            display: inline-block;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -97,11 +103,16 @@
             <span style="display:none;">{{ $sum = 0 }}</span>
             @foreach ($clients as $key => $client)
                 <tr>
+                    <!-- PAGINATOR DEFAULT INDEXING-->
+                    <!--  <td style="text-align:center; width:20px;">
+                        { ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
+                    </td>-->
+
                     <td style="text-align:center; width:20px;">
-                        {{ ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
+                        {{ $client->sequence }}
                     </td>
 
-                    <td> {{ $client->last_name }} {{ $client->ext_name }}</td>
+                    <td>{{ $client->last_name }} {{ $client->ext_name }}</td>
                     <td>{{ $client->first_name }}</td>
                     <td>{{ $client->middle_name }}</td>
                     <td style="width:100px; text-align:right;">{{ number_format($payroll->amount) }}</td>
@@ -115,58 +126,67 @@
                 <td style=" text-align:right;">{{ number_format($sum) }}</td>
                 <td colspan="2"> </td>
             </tr>
-            @if ($clients->onLastPage() && (isset($_GET["gt"]) && $_GET["gt"] ==1))
-            <tr style="font-weight:bold;">
-                <td colspan="4">Grand Total</td>
-                <td style=" text-align:right;">{{ number_format($grand_total) }}</td>
-                <td colspan="2"> </td>
-            </tr>
-        @endif
+            @if ($clients->onLastPage() && (isset($_GET['gt']) && $_GET['gt'] == 1))
+                <tr style="font-weight:bold;">
+                    <td colspan="4">Grand Total</td>
+                    <td style=" text-align:right;">{{ number_format($grand_total) }}</td>
+                    <td colspan="2"> </td>
+                </tr>
+            @endif
 
         </table>
         <div style="text-align: right; font-size:8pt">{{ $clients->currentPage() }}</div>
 
-        @if((isset($_GET["gt"]) && $_GET["gt"] ==1))
-        <footer>
-        <table style="table-layout:fixed; font-size:8pt;">
-            <tr>
-                <td>
-                    <p>I hereby certify that each person whose names appear on this roll are entitled to each
-                        assistance.</p>
+        @if (isset($_GET['gt']) && $_GET['gt'] == 1)
+            <footer>
+                <table style="table-layout:fixed; font-size:8pt;">
+                    <tr>
+                        <td>
+                            <p>I hereby certify that each person whose names appear on this roll are entitled to each
+                                assistance.</p>
+                        </td>
+                        <td>
+                            <ol>
+                                <li>Adequate available funds in the amount of Php</li>
+                                <li>Expenditure property certified</li>
+                                <li>Supported by documents appearing legal and proper</li>
+                                <li>Account codes proper</li>
+                            </ol>
 
-                </td>
-                <td>
-                    <ol>
-                        <li>Adequate available funds in the amount of Php</li>
-                        <li>Expenditure property certified</li>
-                        <li>Supported by documents appearing legal and proper</li>
-                        <li>Account codes proper</li>
-                    </ol>
+                        </td>
+                        <td style="text-align: center;">
+                            <p>Approved by:</p>
 
-                </td>
-                <td style="text-align: center;">
-                    <p>Approved by:</p>
+                        </td>
+                        <td>
+                            <p>I certify on my official oath that I have this ____ day of ________, 20____ paid this to
+                                each man
+                                whose names appears
+                                on the amount set opposite his/her name, he/she having presented himself/herself,
+                                established her identity, and his/her signature/thumbmark on this space provided.
+                            </p>
 
-                </td>
-                <td>
-                    <p>I certify on my official oath that I have this ____ day of ________, 20____ paid this to each man
-                        whose names appears
-                        on the amount set opposite his/her name, he/she having presented himself/herself,
-                        established her identity, and his/her signature/thumbmark on this space provided.
-                    </p>
+                        </td>
 
-                </td>
-
-            </tr>
-            <tr style="text-align: center;">
-                <td> {{ $payroll->certified_by1 }} </td>
-                <td> {{ $payroll->certified_by2 }}</td>
-                <td> {{ $payroll->approved_by }}</td>
-                <td> {{$payroll->sdo }} <br> SDO </td>
-            </tr>
-        </table>
-    </footer>
-    @endif
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td>
+                            <div class="sig">{{ $payroll->certified_by1 }} </div>
+                        </td>
+                        <td>
+                            <div class="sig">{{ $payroll->certified_by2 }}</div>
+                        </td>
+                        <td>
+                            <div class="sig">{{ $payroll->approved_by }}</div>
+                        </td>
+                        <td>
+                            <div class="sig">{{ $payroll->sdo }}</div>
+                            <br> SDO
+                        </td>
+                    </tr>
+                </table>
+            </footer>
+        @endif
 
 
 

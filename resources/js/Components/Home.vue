@@ -49,7 +49,7 @@ export default {
     getReports() {
       this.isBusy = true;
       axios.get( route("api.report")).then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         this.data = response.data;
         this.isBusy = false;
       });

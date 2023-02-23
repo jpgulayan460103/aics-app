@@ -30,7 +30,7 @@ class AicsClientController extends Controller
     public function index()
     {
         // return AicsClient::paginate(10);
-        return AicsClient::with("psgc","payroll")->get();
+        return AicsClient::with("psgc", "payroll")->get();
     }
 
     /**
@@ -88,39 +88,39 @@ class AicsClientController extends Controller
         try {
             $aics_client = AicsClient::findOrFail($id);
 
-            if( $aics_client)
-            {   
+            if ($aics_client) {
                 $payroll_id_before =  $aics_client->payroll_id;
                 $aics_client->update($request->all());
 
-                if ($request->payroll_id &&  !$aics_client->payroll_insert_at ) {
+                if ($request->payroll_id &&  !$aics_client->payroll_insert_at) {
                     #NEW TO PAYROLL
                     $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
-                    $aics_client->status =null;
+                    $aics_client->status = null;
+
+                    $count  = AicsClient::where("payroll_insert_at", "<=", $aics_client->payroll_insert_at)
+                        ->where("payroll_id", "=", $aics_client->payroll_id)->count();
+                    $aics_client->sequence =  $count + 1;
+                  
                 }
 
-                if($request->payroll_id != $payroll_id_before)
-                {   #MOVED TO DIFF PAYROLL                    
+                if ($request->payroll_id != $payroll_id_before) {   #MOVED TO DIFF PAYROLL                    
                     $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
-                    $aics_client->status =null;
-                }
-                
-                if(!$request->payroll_id) 
-                {   #RESET/REMOVE FROM PAYROLL
-                    $aics_client->payroll_insert_at =null;
-                    $aics_client->status =null;                    
+                    $aics_client->status = null;
                 }
 
-                
+                if (!$request->payroll_id) {   #RESET/REMOVE FROM PAYROLL
+                    $aics_client->payroll_insert_at = null;
+                    $aics_client->status = null;
+                }
+
                 $aics_client->save();
 
-                return ["message"=> "Saved", "client"=> $aics_client];
+              
 
+                return ["message" => "Saved", "client" => $aics_client];
             }
-            
-          
         } catch (Exception $e) {
-            return ["message"=> $e];
+            return ["message" => $e];
         }
     }
 
@@ -135,9 +135,9 @@ class AicsClientController extends Controller
         //
     }
 
-    public function export() 
+    public function export()
     {
-        $export_file_name = "aics-online-app-export-".Str::slug(Carbon::now()).".xlsx";
+        $export_file_name = "aics-online-app-export-" . Str::slug(Carbon::now()) . ".xlsx";
         Excel::store(new ClientExport(), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
@@ -153,7 +153,7 @@ class AicsClientController extends Controller
         try {
             $file = request("file");
             $original_filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-            $filename = $original_filename. "-" .Str::slug(Carbon::now()) . "." . $file->getClientOriginalExtension();
+            $filename = $original_filename . "-" . Str::slug(Carbon::now()) . "." . $file->getClientOriginalExtension();
             $year = date("Y");
             $month = date("m");
 
@@ -215,10 +215,11 @@ class AicsClientController extends Controller
     {
         return Payroll::with("psgc")
             ->withCount([
-                "clients",  
+                "clients",
                 'clients as clients_paid' => function ($query) {
                     $query->where('status', '=', 'claimed');
-            }])
+                }
+            ])
             ->get();
     }
 }

@@ -19,4 +19,6 @@ class Payroll extends Model
     {
         return $this->belongsTo(Psgc::class);
     }
+
+   
 }

@@ -95,9 +95,9 @@ export default {
       axios
         .post(route("api.client.upload"), formData, headers)
         .then((response) => {
-          console.log("ajdlkasd");
+         // console.log("ajdlkasd");
           this.isBusy = false;
-          console.log(response.data);
+         // console.log(response.data);
           this.feedback = response.data.success;
           this.getUploadedFiles();
         })
@@ -109,9 +109,9 @@ export default {
         });
     },
     onFileChange(e) {
-      console.log(e);
+     // console.log(e);
       this.file = e.target.files[0];
-      console.log(this.formData);
+     // console.log(this.formData);
     },
     getUploadedFiles(){
       axios.get(route('api.dirty-list.index'))

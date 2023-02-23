@@ -356,7 +356,7 @@ export default {
         axios
           .post(route("api.payroll.update", this.formData.id), this.formData)
           .then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             this.isBusy = false;
             this.getPayrolls();
             this.openModal = false;
@@ -403,7 +403,7 @@ export default {
         axios
           .post(route("api.payrolls.delete", e.id))
           .then((response) => {
-            console.log(response.data);
+           // console.log(response.data);
             if (response.data.Message == "Deleted") {
               alert(response.data.Message);
               this.getPayrolls();
