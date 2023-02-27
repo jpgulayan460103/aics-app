@@ -109,7 +109,7 @@ export default {
       data: [],
       isBusy: false,
       headers: [
-        { value: "key", text: "No.", sortable: false },
+        { value: "sequence", text: "No.", sortable: false },
         { value: "last_name", text: "Last Name", sortable: false },
         { value: "ext_name", text: "Ext", sortable: false, width: "20px;" },
         { value: "first_name", text: "First Name", sortable: false },
