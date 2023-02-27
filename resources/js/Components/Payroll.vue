@@ -168,20 +168,17 @@
             </v-icon>-->
 
             <v-icon small class="mr-5" @click="ViewList(item.id)">
-              mdi-format-list-text
+              mdi-eye
             </v-icon>
 
             <v-icon small class="mr-5" @click="EditItem(item)">
               mdi-pencil
             </v-icon>
-            <!--<v-btn @click="exportCoe(item.id)" dark>
-              Export (COE)
-            </v-btn>-->
-
+           
             <v-menu bottom left>
               <template v-slot:activator="{ on, attrs }">
 
-                <v-icon v-bind="attrs" v-on="on">mdi-download</v-icon>
+                <v-icon small v-bind="attrs" v-on="on">mdi-download</v-icon>
 
               </template>
 

@@ -106,10 +106,11 @@ class AicsClientController extends Controller
                     $aics_client->status = null;
                 }
 
-                if (!$request->payroll_id) {   #RESET/REMOVE FROM PAYROLL
+                /*if (!$request->payroll_id ) 
+                {   #RESET/REMOVE FROM PAYROLL
                     $aics_client->payroll_insert_at = null;
                     $aics_client->status = null;
-                }
+                }*/
 
                 $aics_client->save();
 
@@ -214,11 +215,11 @@ class AicsClientController extends Controller
 
     public function gis($id)
     {
-        $client =  AicsClient::with("psgc","aics_type","payroll:id,amount,source_of_fund","category","subcategory")->findOrFail($id);
+        $client =  AicsClient::with("psgc", "aics_type", "payroll:id,amount,source_of_fund", "category", "subcategory")->findOrFail($id);
         if ($client) {
-           
+
             //return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
-            $pdf = Pdf::loadView('pdf.gis',["aics_beneficiary" =>  $client->toArray()]);
+            $pdf = Pdf::loadView('pdf.gis', ["aics_beneficiary" =>  $client->toArray()]);
             return $pdf->stream('invoice.pdf');
         }
     }

@@ -3,18 +3,18 @@
     <v-card-title>
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
-      
+
       <v-btn @click="print()" color="black" dark class="m-1">
-        <v-icon > mdi-printer </v-icon>  Print Current Page:{{ page }}</v-btn>
-      
-        <v-btn @click="print_w_gt()" color="black" dark class="m-1">
-          <v-icon > mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
-        </v-btn>
-     
+        <v-icon> mdi-printer </v-icon> Print Current Page:{{ page }}</v-btn>
+
+      <v-btn @click="print_w_gt()" color="black" dark class="m-1">
+        <v-icon> mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
+      </v-btn>
+
       <v-icon @click="print_footer()"> mdi mdi-foot-print</v-icon>
       <!--<v-icon>mdi-download</v-icon>-->
-   
-     </v-card-title>
+
+    </v-card-title>
     <v-card-text>
       <div class="row">
         <div class="col-md-12 text-center d-print-block">
@@ -29,35 +29,29 @@
         </div>
         <div class="col-md-6 text-end">
           <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-            class="d-print-none"
-          ></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
+            class="d-print-none"></v-text-field>
         </div>
       </div>
-      <v-data-table
-        v-if="data.clients"
-        :headers="headers"
-        :items="data.clients.map((i, index) => {
-            i.key = index + 1
-            return i;
-          })"
-        :items-per-page="10"
-        :loading="isBusy"
-        loading-text="Loading... Please wait"
-        :search="search"
-        @update:page="currentPage"
-        :footer-props="{
-              'items-per-page-options':[10],
-              'disable-items-per-page': true,
-            }"
-      >
-      <template v-slot:item.key="{ item }">
-         {{item.key}}
+      <div class="col-md-12 text-end">
+
+        <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsClaimed()">Mark as
+          Claimed</v-btn>
+
+        <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsUnClaimed()">Mark as
+          Unclaimed</v-btn>
+
+      </div>
+      <v-data-table show-select v-model="selected" v-if="data.clients" :headers="headers" :items="data.clients.map((i, index) => {
+        i.key = index + 1
+        return i;
+      })" :items-per-page="10" :loading="isBusy" loading-text="Loading... Please wait" :search="search"
+        @update:page="currentPage" :footer-props="{
+          'items-per-page-options': [10],
+          'disable-items-per-page': true,
+        }">
+        <template v-slot:item.key="{ item }">
+          {{ item.key }}
         </template>
 
 
@@ -72,19 +66,15 @@
         </template>-->
 
         <template v-slot:item.status="{ item }">
-          <v-edit-dialog
-            :return-value.sync="item.status"
-            large
-            persistent
-            @save="save(item)"
-            @cancel="cancel(item)"
-          >
+          <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)">
             <div>{{ item.status }}</div>
             <template v-slot:input>
               <div class="mt-4 text-h6">Claim Status</div>
               <select class="form-control" v-model="item.status">
-                <option value=""></option>
+
                 <option value="claimed">Claimed</option>
+                <option value="">Unclaimed</option>
+                <option value="cancelled-revalidate">Cancelled (Revalidate)</option>
               </select>
             </template>
           </v-edit-dialog>
@@ -111,7 +101,7 @@
 </template>
 
 <script>
-import { isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 export default {
   props: ["id"],
   data() {
@@ -119,9 +109,9 @@ export default {
       data: [],
       isBusy: false,
       headers: [
-      { value: "key", text: "No.", sortable: false },
-      { value: "last_name", text: "Last Name", sortable: false },
-        { value: "ext_name", text: "Ext", sortable: false, width:"20px;" },
+        { value: "key", text: "No.", sortable: false },
+        { value: "last_name", text: "Last Name", sortable: false },
+        { value: "ext_name", text: "Ext", sortable: false, width: "20px;" },
         { value: "first_name", text: "First Name", sortable: false },
         { value: "middle_name", text: "Middle Name", sortable: false },
 
@@ -132,12 +122,12 @@ export default {
       search: "",
       page: 1,
       print_options: false,
-     
+      selected: [],
     };
   },
   computed: {
-   lastPage() {return Math.ceil(this.data.clients.length/10);}
-},
+    lastPage() { return Math.ceil(this.data.clients.length / 10); }
+  },
   watch() {
     id();
     {
@@ -151,10 +141,9 @@ export default {
         "_blank"
       );
     },
-    print_w_gt()
-    {
+    print_w_gt() {
       window.open(
-        route("api.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1}),
+        route("api.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1 }),
         "_blank"
       );
     },
@@ -171,33 +160,52 @@ export default {
         .catch((error) => console.log(error));
     },
     save(e) {
+      // console.log("in save");
       console.log(e);
       axios
         .post(route("api.client.update", e.id), e)
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
+          // console.log("response save");
+
         })
         .catch((error) => console.log(error));
     },
     cancel(e) {
       e;
     },
-    currentPage(e)
-    {
+    currentPage(e) {
       this.page = e;
     },
-    isEmpty(value){
+    isEmpty(value) {
       return isEmpty(value);
-    }
+    },
+    MarkAsClaimed() {
+      //let ids = this.selected.map(item => item.id);
+      this.selected.forEach(item => {
+        item.status = "claimed";
+        this.save(item);
+      });
+      this.getClients();
+    },
+    MarkAsUnClaimed() {
+      //let ids = this.selected.map(item => item.id);
+      this.selected.forEach(item => {
+        item.status = "";
+        this.save(item);
+      });
+      this.getClients();
+    },
+
   },
   mounted() {
-    console.log("list");
-    console.log(this.id);
+    //console.log("list");
+    // console.log(this.id);
     this.isBusy = true;
     this.getClients();
   },
+
 };
 </script>
 
-<style>
-</style>
+<style></style>

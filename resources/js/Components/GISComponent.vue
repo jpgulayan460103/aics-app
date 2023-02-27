@@ -30,9 +30,7 @@
         <div class="col-md-12">
           <img src="" />
           <!--<h1 style="font-size: 20pt">Assistance to Individuals in Crisis</h1>-->
-          <h2
-            style="font-family: 'Arial black', sans-serif; margin-bottom: 0px"
-          >
+          <h2 style="font-family: 'Arial black', sans-serif; margin-bottom: 0px">
             GENERAL INTAKE SHEET<br />
           </h2>
           <p>MAARING MAGPATULONG SUMAGOT SA DSWD PERSONNEL</p>
@@ -63,12 +61,7 @@
         </div>
         <div class="card-body">
           <div class="col-md-12">
-            <select
-              name="assistance_type"
-              v-model="form.aics_type_id"
-              class="form-control"
-              @change="getRequirements"
-            >
+            <select name="assistance_type" v-model="form.aics_type_id" class="form-control" @change="getRequirements">
               <option :value="e.id" v-for="e in assistance_types" :key="e.id">
                 {{ e.name }}
               </option>
@@ -88,16 +81,8 @@
                 <label for="last_name">
                   Apelyido <small>(Last name) <span color="red"></span></small>
                 </label>
-                <input
-                  id="last_name"
-                  v-model="form.last_name"
-                  type="text"
-                  class="form-control"
-                />
-                <div
-                  v-if="validationErrors && validationErrors.last_name"
-                  style="color: red"
-                >
+                <input id="last_name" v-model="form.last_name" type="text" class="form-control" />
+                <div v-if="validationErrors && validationErrors.last_name" style="color: red">
                   {{ validationErrors.last_name[0] }}
                 </div>
               </div>
@@ -105,56 +90,29 @@
               <div class="col-md-3">
                 <label for="first_name">
                   Unang Pangalan
-                  <small>(First name) <span color="red"></span></small
-                ></label>
-                <input
-                  id="first_name"
-                  v-model="form.first_name"
-                  type="text"
-                  class="form-control"
-                />
+                  <small>(First name) <span color="red"></span></small></label>
+                <input id="first_name" v-model="form.first_name" type="text" class="form-control" />
 
-                <div
-                  v-if="validationErrors && validationErrors.first_name"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.first_name" style="color: red">
                   {{ validationErrors.first_name[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="middle_name"
-                  >Gitnang Pangalan <small>(Middle name)</small></label
-                >
-                <input
-                  id="middle_name"
-                  v-model="form.middle_name"
-                  type="text"
-                  class="form-control"
-                />
+                <label for="middle_name">Gitnang Pangalan <small>(Middle name)</small></label>
+                <input id="middle_name" v-model="form.middle_name" type="text" class="form-control" />
 
-                <div
-                  v-if="validationErrors && validationErrors.middle_name"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.middle_name" style="color: red">
                   {{ validationErrors.middle_name[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="ext_name"
-                  >Ext <small>(Sr.,Jr., II, III)</small></label
-                ><br />
-                <select
-                  id="ext_name"
-                  v-model="form.ext_name"
-                  type="text"
-                  class="form-control"
-                  :class="{
-                    'is-invalid':
-                      validationErrors.ext_name && validationErrors.ext_name,
-                  }"
-                >
+                <label for="ext_name">Ext <small>(Sr.,Jr., II, III)</small></label><br />
+                <select id="ext_name" v-model="form.ext_name" type="text" class="form-control" :class="{
+                  'is-invalid':
+                    validationErrors.ext_name && validationErrors.ext_name,
+                }">
                   <option value=""></option>
                   <option value="JR">JR</option>
                   <option value="SR">SR</option>
@@ -166,10 +124,7 @@
                   <option value="VI">VI</option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.ext_name"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.ext_name" style="color: red">
                   {{ validationErrors.ext_name[0] }}
                 </div>
               </div>
@@ -177,79 +132,47 @@
 
             <div class="row mt-2">
               <div class="col-md-12">
-                <label for="street_number"
-                  >House No./Street/Purok
+                <label for="street_number">House No./Street/Purok
                   <small>(Ex. 123 Sun St.)</small>
                   <span color="red"></span>
                 </label>
-                <input
-                  id="street_number"
-                  v-model="form.street_number"
-                  class="form-control"
-                  type="text"
-                />
+                <input id="street_number" v-model="form.street_number" class="form-control" type="text" />
 
-                <div
-                  v-if="validationErrors && validationErrors.street_number"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.street_number" style="color: red">
                   {{ validationErrors.street_number[0] }}
                 </div>
               </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-3">
-                <label
-                  >Region <small>(Ex. NCR)</small>
+                <label>Region <small>(Ex. NCR)</small>
                   <span color="red"></span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="beneficiary_region_selector"
-                  v-if="regions"
-                  class="form-control"
-                  @change="getBeneficiaryPsgc"
-                >
+                <select id="psgc_id" name="" v-model="beneficiary_region_selector" v-if="regions" class="form-control"
+                  @change="getBeneficiaryPsgc">
                   <option value=""></option>
                   <option :value="e" v-for="(e, i) in regions" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label
-                  >Province/District <small>(Ex. Dis. III)</small>
+                <label>Province/District <small>(Ex. Dis. III)</small>
                   <span color="red"></span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="beneficiary_province_selector"
-                  v-if="beneficiary_provinces"
-                  class="form-control"
-                >
-                  <option
-                    :value="e"
-                    v-for="(e, i) in beneficiary_provinces"
-                    :key="i"
-                  >
+                <select id="psgc_id" name="" v-model="beneficiary_province_selector" v-if="beneficiary_provinces"
+                  class="form-control">
+                  <option :value="e" v-for="(e, i) in beneficiary_provinces" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
@@ -260,55 +183,29 @@
                   <span color="red"></span>
                 </label>
 
-                <select
-                  name=""
-                  v-model="beneficiary_city_selector"
-                  v-if="beneficiary_cities"
-                  class="form-control"
-                >
-                  <option
-                    :value="e"
-                    v-for="(e, i) in beneficiary_cities"
-                    :key="i"
-                  >
+                <select name="" v-model="beneficiary_city_selector" v-if="beneficiary_cities" class="form-control">
+                  <option :value="e" v-for="(e, i) in beneficiary_cities" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label
-                  >Barangay
+                <label>Barangay
                   <small>(Ex. Batasan Hills)</small>
                   <span style="color:red;">*</span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="form.psgc_id"
-                  v-if="beneficiary_cities"
-                  class="form-control"
-                >
-                  <option
-                    :value="e[0].id"
-                    v-for="(e, i) in beneficiary_barangays"
-                    :key="i"
-                  >
+                <select id="psgc_id" name="" v-model="form.psgc_id" v-if="beneficiary_cities" class="form-control">
+                  <option :value="e[0].id" v-for="(e, i) in beneficiary_barangays" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
@@ -316,89 +213,47 @@
 
             <div class="row mt-2">
               <div class="col-md-3">
-                <label for="mobile_number"
-                  >Telepono
-                  <small
-                    >(Mobile Number)
+                <label for="mobile_number">Telepono
+                  <small>(Mobile Number)
                     <span style="color:red;">*</span>
                   </small>
                 </label>
 
-                <input
-                  id="mobile_number"
-                  v-model="form.mobile_number"
-                  type="text"
-                  class="form-control"
-                />
+                <input id="mobile_number" v-model="form.mobile_number" type="text" class="form-control" />
 
-                <div
-                  v-if="validationErrors && validationErrors.mobile_number"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.mobile_number" style="color: red">
                   {{ validationErrors.mobile_number[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="birth_date"
-                  >Kapanganakan <small>(Birthdate)</small>
-                  <span color="red"></span
-                ></label>
-                <input
-                  id="birth_date"
-                  v-model="form.birth_date"
-                  type="date"
-                  class="form-control"
-                  :max="max_date"
-                  @input="calculateAge"
-                />
+                <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
+                  <span color="red"></span></label>
+                <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
+                  @input="calculateAge" />
 
-                <div
-                  v-if="validationErrors && validationErrors.birth_date"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
                   {{ validationErrors.birth_date[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="age"
-                  >Edad <small>(Age)</small>
+                <label for="age">Edad <small>(Age)</small>
                   <span color="red"></span>
                 </label>
 
-                <input
-                  id="age"
-                  type="text"
-                  class="form-control"
-                  :value="form.age"
-                  readonly
-                />
+                <input id="age" type="text" class="form-control" :value="form.age" readonly />
               </div>
 
               <div class="col-md-3">
-                <label for="gender"
-                  >Kasarian <small>(gender)</small> <span color="red"></span
-                ></label>
-                <select
-                  name=""
-                  id=""
-                  class="form-control"
-                  v-model="form.gender"
-                >
-                  <option
-                    :value="gender"
-                    v-for="gender in ['Babae', 'Lalake']"
-                    :key="gender"
-                  >
+                <label for="gender">Kasarian <small>(gender)</small> <span color="red"></span></label>
+                <select name="" id="" class="form-control" v-model="form.gender">
+                  <option :value="gender" v-for="gender in ['Babae', 'Lalake']" :key="gender">
                     {{ gender }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.gender"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.gender" style="color: red">
                   {{ validationErrors.gender[0] }}
                 </div>
               </div>
@@ -406,87 +261,46 @@
 
             <div class="row mt-2">
               <div class="col-md-3">
-                <label for="occupation"
-                  >Trabaho <small> (Occupation)</small> <span color="red"></span
-                ></label>
-                <input
-                  id="occupation"
-                  v-model="form.occupation"
-                  type="text"
-                  class="form-control"
-                />
+                <label for="occupation">Trabaho <small> (Occupation)</small> <span color="red"></span></label>
+                <input id="occupation" v-model="form.occupation" type="text" class="form-control" />
 
-                <div
-                  v-if="validationErrors && validationErrors.occupation"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.occupation" style="color: red">
                   {{ validationErrors.occupation[0] }}
                 </div>
               </div>
               <div class="col-md-3">
-                <label for="monthly_salary"
-                  >Buwanang Kita <small> (Monthly Salary) </small>
-                  <span color="red"></span
-                ></label>
-                <input
-                  id="monthly_salary"
-                  v-model="form.monthly_salary"
-                  type="text"
-                  class="form-control"
-                />
+                <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
+                  <span color="red"></span></label>
+                <input id="monthly_salary" v-model="form.monthly_salary" type="text" class="form-control" />
 
-                <div
-                  v-if="validationErrors && validationErrors.monthly_salary"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.monthly_salary" style="color: red">
                   {{ validationErrors.monthly_salary[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="civil_status"
-                  >Civil Status  <span style="color:red;">*</span></label
-                >
-                <select
-                  id="civil_status"
-                  v-model="form.civil_status"
-                  class="form-control"
-                >
-                  <option
-                    :value="e"
-                    v-for="(e, i) in ['Single', 'Married', 'Common-law','Widowed', 'Separated']"
-                    :key="i"
-                  >
+                <label for="civil_status">Civil Status <span style="color:red;">*</span></label>
+                <select id="civil_status" v-model="form.civil_status" class="form-control">
+                  <option :value="e" v-for="(e, i) in ['Single', 'Married', 'Common-law', 'Widowed', 'Separated']"
+                    :key="i">
                     {{ e }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.civil_status"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.civil_status" style="color: red">
                   {{ validationErrors.civil_status[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label for="mode_of_admission"
-                  >Mode of Admission  <span style="color:red;">*</span></label
-                >
-                <select
-                  id="mode_of_admission"
-                  v-model="form.mode_of_admission"
-                  class="form-control"
-                >
+                <label for="mode_of_admission">Mode of Admission <span style="color:red;">*</span></label>
+                <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control">
                   <option :value="e" v-for="(e, i) in ['Referral']" :key="i">
                     {{ e }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.mode_of_admission"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.mode_of_admission" style="color: red">
                   {{ validationErrors.mode_of_admission[0] }}
                 </div>
               </div>
@@ -520,11 +334,7 @@
 
               <div class="" v-if="form.subcategory_id == 8">
                 Others
-                <input
-                  type="text"
-                  v-model="form.subcategory_others"
-                  class="form-control"
-                />
+                <input type="text" v-model="form.subcategory_others" class="form-control" />
               </div>
             </div>
           </div>
@@ -533,21 +343,10 @@
           <div class="card">
             <div class="card-title">Social Worker's Assessment</div>
             <div class="card-body">
-              <textarea
-                name=""
-                id=""
-                v-model="form.assessment"
-                class="form-control"
-                cols="30"
-                rows="5"
-              ></textarea>
+              <textarea name="" id="" v-model="form.assessment" class="form-control" cols="30" rows="5"></textarea>
 
               Interviewed by
-              <input
-                type="text"
-                class="form-control"
-                v-model="form.interviewed_by"
-              />
+              <input type="text" class="form-control" v-model="form.interviewed_by" />
             </div>
           </div>
         </div>
@@ -559,7 +358,7 @@
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
           <select name="" id="" v-model="form.payroll_id" class="form-control">
-            <option value=""></option>
+            
             <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
               {{ p.title }} | {{ p.amount }}
             </option>
@@ -626,7 +425,6 @@
   color: #fff;
   padding: 1pc;
 }
-
 </style>
 
 <script>
@@ -694,8 +492,8 @@ export default {
     },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
-      (this.beneficiary_cities = {}),
-      (this.beneficiary_barangays = {})),
+        (this.beneficiary_cities = {}),
+        (this.beneficiary_barangays = {})),
         (this.beneficiary_provinces = this.groupByKey(newVal, "province_name"));
     },
 
@@ -743,7 +541,7 @@ export default {
 
   methods: {
     submit() {
-      if (this.form.aics_type_id) {
+      if (this.form.payroll_id) {
         axios
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
@@ -765,7 +563,7 @@ export default {
           });
       } else {
         alert(
-          "Pumili ng nais hingiin na tulong. \nPlease select assistance request."
+          "Pumili ng Payroll!"
         );
       }
     },
@@ -860,7 +658,7 @@ export default {
           [obj[key]]: (hash[obj[key]] || []).concat(obj),
         });
       }, {});
-      
+
     },
 
     isEmpty(value) {
@@ -918,7 +716,6 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
 
 
