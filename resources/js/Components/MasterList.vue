@@ -40,7 +40,7 @@
             <v-chip v-if="item.payroll_id && item.payroll && item.payroll.amount">
               In Payroll {{ item.payroll.amount }}            
               | Client No: {{ item.sequence }}
-              <span v-if="item.status == 'claimed'"> | {{ item.status }}</span>
+              <span v-if="item.status == 'claimed'">  | {{ item.status }}</span>
             </v-chip>
           </template>
 
@@ -64,6 +64,11 @@
             <v-icon small class="mr-2" @click="EditItem(item)">
               mdi-pencil
             </v-icon>
+
+            <v-icon small class="mr-2" @click="PrintGIS(item)" v-if="item.payroll_id">
+              mdi-printer
+            </v-icon>
+
           </template>
         </v-data-table>
       </v-card-text>
@@ -119,6 +124,13 @@ export default {
       this.dialogData_edit = {};
       this.dialogData_edit = item;
     },
+    PrintGIS(item)
+    {
+      window.open(
+        route("api.pdf.gis2", { id: item.id  }),
+        "_blank"
+      );
+    }
   },
   mounted() {
     this.getList();

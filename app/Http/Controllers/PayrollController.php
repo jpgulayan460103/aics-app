@@ -7,6 +7,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+
 
 class PayrollController extends Controller
 {
@@ -180,5 +182,31 @@ class PayrollController extends Controller
 
             //return view('pdf.payrollv2', ["data" => $payroll]);
         }
+    }
+
+    public function print_coe($id)
+    {
+        $payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->get();
+        $payroll = Payroll::with("psgc")->find($id);
+     
+        if ($payroll) {
+
+            abort_unless($payroll_clients->count(), 204);
+
+            $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+
+            $pdf = Pdf::loadView('pdf.coe', 
+                ["clients" => $payroll_clients,
+                "payroll"=>$payroll, 
+                "in_words" => strtoupper( $f->format(sizeof($payroll_clients))),              
+            ]);
+
+            $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . ".pdf";      
+
+            return $pdf->setPaper('portrait')->download($export_file_name);
+
+            //return view('pdf.payrollv2', ["data" => $payroll]);
+        }
+
     }
 }

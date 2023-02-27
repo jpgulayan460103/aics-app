@@ -14,10 +14,10 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Str;
-
 use App\Models\DirtyList;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class AicsClientController extends Controller
@@ -100,7 +100,6 @@ class AicsClientController extends Controller
                     $count  = AicsClient::where("payroll_insert_at", "<=", $aics_client->payroll_insert_at)
                         ->where("payroll_id", "=", $aics_client->payroll_id)->count();
                     $aics_client->sequence =  $count + 1;
-                  
                 }
 
                 if ($request->payroll_id != $payroll_id_before) {   #MOVED TO DIFF PAYROLL                    
@@ -115,7 +114,7 @@ class AicsClientController extends Controller
 
                 $aics_client->save();
 
-              
+
 
                 return ["message" => "Saved", "client" => $aics_client];
             }
@@ -221,5 +220,16 @@ class AicsClientController extends Controller
                 }
             ])
             ->get();
+    }
+
+    public function gis($id)
+    {
+        $client =  AicsClient::with("psgc","aics_type","payroll:id,amount,source_of_fund","category","subcategory")->findOrFail($id);
+        if ($client) {
+           
+            //return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
+            $pdf = Pdf::loadView('pdf.gis',["aics_beneficiary" =>  $client->toArray()]);
+            return $pdf->stream('invoice.pdf');
+        }
     }
 }

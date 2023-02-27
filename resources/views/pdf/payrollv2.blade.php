@@ -64,6 +64,7 @@
             border-bottom: solid 1px #000;
             display: inline-block;
             margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -104,13 +105,13 @@
             @foreach ($clients as $key => $client)
                 <tr>
                     <!-- PAGINATOR DEFAULT INDEXING-->
-                    <!--  <td style="text-align:center; width:20px;">
-                        { ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
-                    </td>-->
-
-                    <td style="text-align:center; width:20px;">
-                        {{ $client->sequence }}
+                     <td style="text-align:center; width:20px;">
+                        {{ ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
                     </td>
+
+                    <!--<td style="text-align:center; width:20px;">
+                        { $client->sequence }}
+                    </td>-->
 
                     <td>{{ $client->last_name }} {{ $client->ext_name }}</td>
                     <td>{{ $client->first_name }}</td>
@@ -139,7 +140,37 @@
 
         @if (isset($_GET['gt']) && $_GET['gt'] == 1)
             <footer>
-                <table style="table-layout:fixed; font-size:8pt;">
+                <table style="text-align:center;" cellpadding="10">
+                    <tr>
+                        <td style="width:10%;"></td>
+                        <td>Recommending Approval:</td>
+                        <td>Approved By:</td>
+                        <td style="width:10%;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="sig">	DAHLIA S. PADILLO</div>
+                            <br>OIC-ARD for Operations
+                        </td>
+                        <td>
+                            <div class="sig">ATTY. VANESSA B. GOC-ONG		</div><br>
+                            Regional Director	
+                        </td>
+                        <td>
+                         	
+                        </td>
+                        
+
+                    </tr>
+                </table>
+                <!--<table style="table-layout:fixed; font-size:8pt;">
                     <tr>
                         <td>
                             <p>I hereby certify that each person whose names appear on this roll are entitled to each
@@ -171,20 +202,20 @@
                     </tr>
                     <tr style="text-align: center;">
                         <td>
-                            <div class="sig">{{ $payroll->certified_by1 }} </div>
+                            <div class="sig">{ $payroll->certified_by1 }} </div>
                         </td>
                         <td>
-                            <div class="sig">{{ $payroll->certified_by2 }}</div>
+                            <div class="sig">{ $payroll->certified_by2 }}</div>
                         </td>
                         <td>
-                            <div class="sig">{{ $payroll->approved_by }}</div>
+                            <div class="sig">{ $payroll->approved_by }}</div>
                         </td>
                         <td>
-                            <div class="sig">{{ $payroll->sdo }}</div>
+                            <div class="sig">{ $payroll->sdo }}</div>
                             <br> SDO
                         </td>
                     </tr>
-                </table>
+                </table>-->
             </footer>
         @endif
 

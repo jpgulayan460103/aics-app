@@ -39,6 +39,7 @@ Route::group(['prefix' => '/aics'], function () {
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
 Route::get('pdf/{uuid}', [\App\Http\Controllers\AicsAssistanceController::class, 'pdf'])->name("api.pdf.gis");
+Route::get('gis/{id}', [\App\Http\Controllers\AicsClientController::class, 'gis'])->name("api.pdf.gis2");
 
 Route::get('dirty_list', [\App\Http\Controllers\DirtyListClientsController::class, 'index'])->name("api.dirty_list.index");
 
@@ -55,3 +56,4 @@ Route::get('uploaded-files', [\App\Http\Controllers\DirtyListController::class,'
 Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController::class,'destroy'])->name("api.dirty-list.delete");
 
 Route::get('payrolls/printv2/{id}', [\App\Http\Controllers\PayrollController::class,'printv2'])->name("api.payroll.printv2");
+Route::get('payrolls/print_coe/{id}', [\App\Http\Controllers\PayrollController::class,'print_coe'])->name("api.payroll.print_coe");
