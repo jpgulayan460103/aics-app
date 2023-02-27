@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\AicsClient;
+use App\Models\Payroll;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -14,6 +15,12 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class ClientExport implements FromCollection, WithHeadings, WithMapping
 {
     use Exportable, RemembersRowNumber;
+
+    private $payroll;
+    public function  __construct(Payroll $payroll)
+    {
+        $this->payroll = $payroll;
+    }
 
     // public function query()
     // {
@@ -28,7 +35,9 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'aics_type',
             'subcategory',
             'category',
-        ])->whereNotNull('payroll_id')
+        ])
+        ->where('payroll_id', $this->payroll->id)
+        ->where('status', 'claimed')
         ->orderBy('payroll_insert_at',"asc")
         ->get();
         return $collection->map(function ($item, $key) {

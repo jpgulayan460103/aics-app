@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AicsClient;
 use App\Models\DirtyList;
 use Illuminate\Http\Request;
 
@@ -81,5 +82,6 @@ class DirtyListController extends Controller
     public function destroy($id)
     {
         DirtyList::findOrFail($id)->delete();
+        AicsClient::whereNull('payroll_id')->delete();
     }
 }

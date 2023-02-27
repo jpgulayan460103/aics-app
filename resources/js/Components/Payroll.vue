@@ -4,19 +4,9 @@
       <v-card>
         <v-card-title>New Payroll</v-card-title>
         <v-card-text>
-          <form
-            @submit.prevent="submit"
-            enctype="multipart/form-data"
-            action=""
-          >
+          <form @submit.prevent="submit" enctype="multipart/form-data" action="">
             <label for=""> Title</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.title"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.title" id="" class="form-control" />
 
             <!--<label for="">Region</label>
             <input
@@ -56,53 +46,33 @@
 
             <div class="row mt-2">
               <div class="col-md-3">
-                <label
-                  >Region <small>(Ex. NCR)</small>
+                <label>Region <small>(Ex. NCR)</small>
                   <span color="red">*</span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="region_selector"
-                  v-if="regions"
-                  class="form-control"
-                  @change="getPsgc"
-                >
+                <select id="psgc_id" name="" v-model="region_selector" v-if="regions" class="form-control"
+                  @change="getPsgc">
                   <option value=""></option>
                   <option :value="e" v-for="(e, i) in regions" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label
-                  >Province/District <small>(Ex. Dis. III)</small>
+                <label>Province/District <small>(Ex. Dis. III)</small>
                   <span color="red">*</span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="province_selector"
-                  v-if="provinces"
-                  class="form-control"
-                >
+                <select id="psgc_id" name="" v-model="province_selector" v-if="provinces" class="form-control">
                   <option :value="e" v-for="(e, i) in provinces" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
@@ -113,123 +83,57 @@
                   <span color="red">*</span>
                 </label>
 
-                <select
-                  name=""
-                  v-model="city_selector"
-                  v-if="cities"
-                  class="form-control"
-                >
+                <select name="" v-model="city_selector" v-if="cities" class="form-control">
                   <option :value="e" v-for="(e, i) in cities" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
 
               <div class="col-md-3">
-                <label
-                  >Barangay
+                <label>Barangay
                   <small>(Ex. Batasan Hills)</small>
                   <span color="red">*</span>
                 </label>
-                <select
-                  id="psgc_id"
-                  name=""
-                  v-model="formData.psgc_id"
-                  v-if="cities"
-                  class="form-control"
-                >
+                <select id="psgc_id" name="" v-model="formData.psgc_id" v-if="cities" class="form-control">
                   <option :value="e[0].id" v-for="(e, i) in barangays" :key="i">
                     {{ i }}
                   </option>
                 </select>
 
-                <div
-                  v-if="validationErrors && validationErrors.psgc_id"
-                  style="color: red"
-                >
+                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
                   {{ validationErrors.psgc_id[0] }}
                 </div>
               </div>
             </div>
 
             <label for="">Schedule</label>
-            <input
-              type="date"
-              name=""
-              v-model="formData.schedule"
-              id=""
-              class="form-control"
-            />
+            <input type="date" name="" v-model="formData.schedule" id="" class="form-control" />
 
             <label for="">Amount</label>
-            <input
-              type="number"
-              name=""
-              v-model="formData.amount"
-              id=""
-              class="form-control"
-            />
+            <input type="number" name="" v-model="formData.amount" id="" class="form-control" />
 
             <label for="">Certified By (1)</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.certified_by1"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.certified_by1" id="" class="form-control" />
 
             <label for="">Certified By (2)</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.certified_by2"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.certified_by2" id="" class="form-control" />
 
             <label for="">Approved By</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.approved_by"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />
 
             <label for="">SDO</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.sdo"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.sdo" id="" class="form-control" />
 
             <label for="">Fund Source</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.source_of_fund"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.source_of_fund" id="" class="form-control" />
 
             <label for="">Charging</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.charging"
-              id=""
-              class="form-control"
-            />
+            <input type="text" name="" v-model="formData.charging" id="" class="form-control" />
 
             <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
@@ -240,32 +144,12 @@
     </v-dialog>
 
     <v-card flat>
-      <v-card-title
-        >Payroll <v-spacer />
+      <v-card-title>Payroll <v-spacer />
         <v-btn @click="NewPayroll()" dark class="m-1">New Payroll</v-btn>
-        
-        <v-btn        
-          
-          @click="exportClients"
-          :disabled="isExporting"
-          :loading="isExporting"
-          dark
-        >
-          Export (CRIMS)
-        </v-btn>
-
-       
-
       </v-card-title>
       <v-card-text>
-        <v-data-table
-          :headers="headers"
-          :items="payrolls"
-          :items-per-page="50"
-          :loading="isBusy"
-          loading-text="Loading... Please wait"
-          :search="search"
-        >
+        <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
+          loading-text="Loading... Please wait" :search="search">
           <template v-slot:item.province="{ item }">
             {{ item.psgc.province_name }}
           </template>
@@ -279,6 +163,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
+            <!--<v-icon small class="mr-5" @click="DownloadPayroll(item)"  :disabled="isExporting">
+              mdi-download
+            </v-icon>-->
+
             <v-icon small class="mr-5" @click="ViewList(item.id)">
               mdi-format-list-text
             </v-icon>
@@ -286,9 +174,28 @@
             <v-icon small class="mr-5" @click="EditItem(item)">
               mdi-pencil
             </v-icon>
-            <v-btn @click="exportCoe(item.id)" dark>
+            <!--<v-btn @click="exportCoe(item.id)" dark>
               Export (COE)
-            </v-btn>
+            </v-btn>-->
+
+            <v-menu bottom left>
+              <template v-slot:activator="{ on, attrs }">
+
+                <v-icon v-bind="attrs" v-on="on">mdi-download</v-icon>
+
+              </template>
+
+              <v-list>
+                <v-list-item link>
+                  <v-list-item-title @click="DownloadPayroll(item)" :disabled="isExporting">Export
+                    (CRIMS)</v-list-item-title>
+                </v-list-item>
+                <v-list-item link>
+                  <v-list-item-title @click="exportCoe(item.id)">Export (COE)</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+
             <!--<v-icon small class="mr-5" @click="DeleteItem(item)">
               mdi-delete
             </v-icon>-->
@@ -316,11 +223,11 @@ export default {
         { value: "id", text: "ID", sortable: true },
         { value: "title", text: "Title", sortable: true },
         { value: "sdo", text: "SDO", sortable: true },
-        
+
         { value: "province", text: "Province", sortable: true },
         { value: "muni_city", text: "City/Municipality", sortable: true },
         { value: "barangay", text: "Barangay", sortable: true },
-       
+
         { value: "amount", text: "AMOUNT", sortable: true },
         { value: "actions", text: "Actions", sortable: true },
       ],
@@ -407,7 +314,7 @@ export default {
         axios
           .post(route("api.payrolls.delete", e.id))
           .then((response) => {
-           // console.log(response.data);
+            // console.log(response.data);
             if (response.data.Message == "Deleted") {
               alert(response.data.Message);
               this.getPayrolls();
@@ -420,6 +327,18 @@ export default {
         alert("Cancelled");
       }
     },
+    DownloadPayroll: debounce(function (payroll) {
+      this.isExporting = true;
+      axios.post(route('api.payroll.export', payroll.id))
+        .then((res) => {
+          this.isExporting = false;
+          window.location.href = res.data.file;
+        })
+        .catch(err => {
+          console.warn(err);
+          this.isExporting = false;
+        });
+    }, 250),
     ViewList(id) {
       //this.$router.push("payroll/" + id);
       this.$router.push({ name: "payroll_list", params: { id: id } });
@@ -445,24 +364,9 @@ export default {
         });
       }, {});
     },
-    exportClients: debounce(function () {
-      this.isExporting = true;
-      axios
-        .post(route("api.client.export"))
-        .then((res) => {
-          this.isExporting = false;
-          window.location.href = res.data.file;
-        })
-        .catch((err) => {
-          this.isExporting = false;
-        });
-    }, 500),
-
-    exportCoe(id)
-    {
+    exportCoe(id) {
       window.open(route("api.payroll.print_coe", id));
     },
-
   },
   mounted() {
     this.getPayrolls();
@@ -474,5 +378,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

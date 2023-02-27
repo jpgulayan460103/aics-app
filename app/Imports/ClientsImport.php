@@ -107,6 +107,21 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
                     break;
             }
         }
+        $pattern = '/[^\pL\pM_ _-_-]/';
+
+        if(isset($data['first_name'])){
+            $data['first_name'] = preg_replace($pattern, '', $data['first_name']);
+        }
+        if(isset($data['middle_name'])){
+            $data['middle_name'] = preg_replace($pattern, '', $data['middle_name']);
+        }
+        if(isset($data['last_name'])){
+            $data['last_name'] = preg_replace($pattern, '', $data['last_name']);
+        }
+        if(isset($data['ext_name'])){
+            $data['ext_name'] = preg_replace($pattern, '', $data['ext_name']);
+        }
+
         if(empty($data['psgc'])){
             unset($data['psgc']);
         }
