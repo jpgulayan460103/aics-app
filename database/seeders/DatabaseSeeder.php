@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory(10)->create();
         $this->call(PsgcSeeder::class);
         $this->call(AicsTypeSeeder::class);
-        $this->call(AicsRequirementSeeder::class);
+        // $this->call(AicsRequirementSeeder::class);
         $this->call(CategoriesSeeder::class);
         $this->call(SubcategoriesSeeder::class);
+        $this->call(RoleSeeder::class);
     }
 }
