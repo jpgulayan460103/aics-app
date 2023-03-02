@@ -59,7 +59,7 @@
             class="mr-4"
             @click="submitForm"
             :disabled="submit"
-            v-if="userData.role == 'admin'"
+            v-if="userData.role == 'Super-Admin'"
           >
             <span>{{ formType }} User</span>
           </v-btn>
@@ -98,10 +98,10 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'admin'">
+            <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'Super-Admin'">
               mdi-pencil
             </v-icon>
-            <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'admin'">
+            <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'Super-Admin'">
               mdi-delete
             </v-icon>
           </template>

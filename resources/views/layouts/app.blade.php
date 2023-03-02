@@ -16,15 +16,17 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <!-- Styles -->
+    <!-- Styles
     <style>
         @import url('node_modules/material-design-icons-iconfont/dist/material-design-icons.css');
-      </style>
+      </style> -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
     @routes()
 </head>
 <body>
-    <div id="app" data-app>
+    <div id="app" data-app >
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none" >
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
