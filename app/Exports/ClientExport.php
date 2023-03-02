@@ -110,7 +110,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
         return [
             $aics_client->created_at->format("m/d/Y h:i:s"),
             env('COMPUTERNAME'),
-            $aics_client->key + 1,
+            $aics_client->sequence,
             $aics_client->updated_at->format("m/d/Y h:i:s"),
             $aics_client->psgc ? $aics_client->psgc->region_name."/".$aics_client->psgc->region_psgc : "",
             $aics_client->psgc ? $aics_client->psgc->province_name."/".$aics_client->psgc->province_psgc : "",

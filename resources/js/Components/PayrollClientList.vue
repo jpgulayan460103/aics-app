@@ -101,7 +101,9 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash';
+import { debounce } from "lodash";
+
 export default {
   props: ["id"],
   data() {
@@ -109,15 +111,15 @@ export default {
       data: [],
       isBusy: false,
       headers: [
-        { value: "sequence", text: "No.", sortable: false },
-        { value: "last_name", text: "Last Name", sortable: false },
+        { value: "sequence", text: "No.", sortable: false, width: "20px;" },
+        { value: "last_name", text: "Last Name", sortable: false, width: "100px;" },
         { value: "ext_name", text: "Ext", sortable: false, width: "20px;" },
         { value: "first_name", text: "First Name", sortable: false },
         { value: "middle_name", text: "Middle Name", sortable: false },
 
         { value: "amount", text: "Amount", sortable: false },
 
-        { value: "status", text: "Status", sortable: false },
+        { value: "status", text: "Status", sortable: false,  width: "50px;" },
       ],
       search: "",
       page: 1,
@@ -161,7 +163,7 @@ export default {
     },
     save(e) {
       // console.log("in save");
-      console.log(e);
+      //console.log(e);
       axios
         .post(route("api.client.update", e.id), e)
         .then((response) => {
@@ -180,22 +182,22 @@ export default {
     isEmpty(value) {
       return isEmpty(value);
     },
-    MarkAsClaimed() {
+    MarkAsClaimed: debounce(function () {
       //let ids = this.selected.map(item => item.id);
       this.selected.forEach(item => {
         item.status = "claimed";
         this.save(item);
       });
       this.getClients();
-    },
-    MarkAsUnClaimed() {
+    }, 250),
+    MarkAsUnClaimed: debounce(function () {
       //let ids = this.selected.map(item => item.id);
       this.selected.forEach(item => {
         item.status = "";
         this.save(item);
       });
       this.getClients();
-    },
+    }, 250),
 
   },
   mounted() {

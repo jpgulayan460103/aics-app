@@ -104,14 +104,14 @@
             <span style="display:none;">{{ $sum = 0 }}</span>
             @foreach ($clients as $key => $client)
                 <tr>
-                    <!-- PAGINATOR DEFAULT INDEXING-->
+                    <!-- PAGINATOR DEFAULT INDEXING-
                      <td style="text-align:center; width:20px;">
-                        {{ ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
-                    </td>
-
-                    <!--<td style="text-align:center; width:20px;">
-                        { $client->sequence }}
+                        { ($clients->currentPage() - 1) * $clients->links()->paginator->perPage() + $loop->iteration }}
                     </td>-->
+
+                    <td style="text-align:center; width:20px;">
+                        {{ $client->sequence }}
+                    </td>
 
                     <td>{{ $client->last_name }} {{ $client->ext_name }}</td>
                     <td>{{ $client->first_name }}</td>

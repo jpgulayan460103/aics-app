@@ -264,7 +264,7 @@
 
 
     <div id="aics-type-name" class="data-textbox">{{ strtoupper($aics_beneficiary['aics_type']['name']) }}</div>
-    <div  class="data-textbox" style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: solid 1px; border-radius:50%;"> {{$aics_beneficiary['sequence'] }}</div>
+    <div  class="data-textbox" style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: dotted 1px; border-radius:50%; ">{{$aics_beneficiary['sequence'] }}</div>
     <div  class="data-textbox" style="top:86pt;right:20pt;">{{ date_format(date_create($aics_beneficiary['payroll_insert_at']),"m-d-Y") }}</div>
     <div  class="data-textbox" style="top:103pt;right:20pt;">{{ date_format(date_create($aics_beneficiary['payroll_insert_at']),"H:i a") }}</div>
 
@@ -303,9 +303,14 @@
     <div class="data-textbox" style=" top:420pt; left:20pt; text-align:left; height:80pt; ">
         {{ $aics_beneficiary['category']['category']}}
      </div>
+     @endif
 
+     @if(isset( $aics_beneficiary['subcategory'] ))  
      <div class="data-textbox" style=" top:420pt; left:110pt;  text-align:left; height:80pt; ">
         {{ $aics_beneficiary['subcategory']['subcategory']}}
+        @if($aics_beneficiary['subcategory_others'])
+      <br> {{ $aics_beneficiary['subcategory_others']}}
+        @endif
      </div>
      @endif
      
