@@ -44,6 +44,6 @@ class PayrollClient extends Model
 
     public function new_payroll_client()
     {
-        return $this->belongsTo(PayrollClient::class);
+        return $this->belongsTo(PayrollClient::class)->withTrashed();
     }
 }
