@@ -12,6 +12,7 @@
              size: 8.5in 13in; 
             font-size: 8pt;
             margin: 5%;
+            margin-bottom: 10%;
             opacity: 0.75;
             padding: 0 !important;
             /* background: url("{{ public_path('images/watermark.png') }}") no-repeat 0 0; */
@@ -113,7 +114,8 @@
                 <tr>
                    
                     <td style="text-align:center; width:20px;">
-                        {{ $client->sequence }}
+                       <!-- { $client->sequence }-->
+                       {{$key+1}}
                     </td>
                     <td>
                         {{ isset($client->psgc->brgy_name)  ? $client->psgc->brgy_name : "" }}

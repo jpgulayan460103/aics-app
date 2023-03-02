@@ -189,7 +189,7 @@ class PayrollController extends Controller
 
     public function print_coe($id)
     {
-        $payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->get();
+        $payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->where("status","=","claimed")->get();
         $payroll = Payroll::with("psgc")->find($id);
      
         if ($payroll) {
