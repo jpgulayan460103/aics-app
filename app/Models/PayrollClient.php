@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,6 +29,13 @@ class PayrollClient extends Model
                 $model->sequence = $latest_count->sequence + 1;
             }else{
                 $model->sequence = 1;
+            }
+        });
+        self::updating(function($model) {
+            if($model->status == "claimed"){
+                $model->date_claimed = Carbon::now();
+            }else{
+                $model->date_claimed = null;
             }
         });
     }

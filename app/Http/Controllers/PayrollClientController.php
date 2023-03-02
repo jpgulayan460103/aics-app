@@ -67,9 +67,10 @@ class PayrollClientController extends Controller
      * @param  \App\Models\PayrollClient  $payrollClient
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PayrollClient $payrollClient)
+    public function update(Request $request, $id)
     {
-        //
+        $payroll_client = PayrollClient::findOrFail($id);
+        $payroll_client->update($request->all());
     }
 
     /**

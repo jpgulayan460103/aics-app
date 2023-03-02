@@ -177,17 +177,10 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    save(e) {
+    async save(e) {
       // console.log("in save");
       //console.log(e);
-      axios
-        .post(route("api.client.update", e.id), e)
-        .then((response) => {
-          // console.log(response.data);
-          // console.log("response save");
-
-        })
-        .catch((error) => console.log(error));
+      return axios.put(route("api.payroll-clients.update", e.id), e);
     },
     cancel(e) {
       e;
@@ -198,20 +191,26 @@ export default {
     isEmpty(value) {
       return isEmpty(value);
     },
-    MarkAsClaimed: debounce(function () {
+    MarkAsClaimed: debounce(async function () {
       //let ids = this.selected.map(item => item.id);
-      this.selected.forEach(item => {
+      let promises = [];
+      for (let index = 0; index < this.selected.length; index++) {
+        const item = this.selected[index];
         item.status = "claimed";
-        this.save(item);
-      });
+        promises.push(this.save(item)); 
+      }
+      await Promise.all(promises);
       this.getClients();
     }, 250),
-    MarkAsUnClaimed: debounce(function () {
+    MarkAsUnClaimed: debounce(async function () {
       //let ids = this.selected.map(item => item.id);
-      this.selected.forEach(item => {
+      let promises = [];
+      for (let index = 0; index < this.selected.length; index++) {
+        const item = this.selected[index];
         item.status = "";
-        this.save(item);
-      });
+        promises.push(this.save(item)); 
+      }
+      await Promise.all(promises);
       this.getClients();
     }, 250),
 
