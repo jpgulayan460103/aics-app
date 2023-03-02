@@ -171,7 +171,7 @@
               mdi-eye
             </v-icon>
 
-            <v-icon small class="mr-5" @click="EditItem(item)">
+            <v-icon small class="mr-5" @click="EditItem(item)" v-if="userData.role == 'admin'">
               mdi-pencil
             </v-icon>
            
@@ -205,9 +205,11 @@
 
 <script>
 import { debounce } from "lodash";
-
+import userMixin from './../Mixin/userMixin.js'
 
 export default {
+  mixins: [userMixin],
+  props: ['user'],
   data() {
     return {
       openModal: false,

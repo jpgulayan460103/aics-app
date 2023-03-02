@@ -35,7 +35,7 @@
        
       </div>
       <div class="col-md-10">
-        <router-view></router-view>
+        <router-view :user="user"></router-view>
       </div>
     </div>
   </div>
@@ -44,6 +44,7 @@
 
 <script>
 export default {
+  props: ['user'],
   data() {
     return {
       selectedItem: 1,

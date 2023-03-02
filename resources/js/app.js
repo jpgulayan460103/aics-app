@@ -83,11 +83,8 @@ const router = new VueRouter({
             path: "/users/:id?",
             name: "users",
             component: Users,
-            props: true
-
+            props: true,
         }
-
-
     ],
 });
 

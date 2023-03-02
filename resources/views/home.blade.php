@@ -3,7 +3,7 @@
 @section('content')
 
 <div id="app">
-    <app><app/>
+    <app :user="{{ $user }}"><app/>
 </div>
 <!--<div class="container">
     <div class="row justify-content-center">
