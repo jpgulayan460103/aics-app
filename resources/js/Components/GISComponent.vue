@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit" enctype="multipart/form-data">
+  <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
       <!--<div class="row">
         <div class="col-md-4 text-center">
@@ -357,7 +357,7 @@
       <div class="card">
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
-          <select name="" id="" v-model="form.payroll_id" class="form-control">
+          <select name="" id="" v-model="form.payroll_id" class="form-control" :disabled="dialog_data.payroll_client && userData.role == 'user'">
             
             <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
               {{ p.title }} | {{ p.amount }}
@@ -411,7 +411,7 @@
       </div>-->
 
       <div class="text-center col-md-12" style="padding: 10px 0px">
-        <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block">
+        <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
           SUBMIT
         </button>
       </div>
@@ -428,8 +428,9 @@
 </style>
 
 <script>
+import { debounce, cloneDeep } from 'lodash'
 export default {
-  props: ["dialog_data", "getList"],
+  props: ["dialog_data", "getList", "userData"],
   data() {
     return {
       form: {
@@ -464,6 +465,7 @@ export default {
       categories: [],
       subcategories: [],
       payrolls: [],
+      submit: false,
     };
   },
   watch: {
@@ -540,11 +542,13 @@ export default {
   },
 
   methods: {
-    submit() {
+    submitForm: debounce(function() {
+      this.submit = true;
       if (this.form.payroll_id) {
         axios
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
+            this.submit = false;
             console.log(response.data);
             alert(response.data.message);
             this.getList();
@@ -556,6 +560,7 @@ export default {
             }*/
           })
           .catch((error) => {
+            this.submit = false;
             if (error.response.status == 422) {
               alert("Kumpletohin ang form. \nPlease complete the form.");
               this.validationErrors = error.response.data.errors;
@@ -566,7 +571,7 @@ export default {
           "Pumili ng Payroll!"
         );
       }
-    },
+    }, 250),
     resetForm() {
       this.form = {
         aics_type_id: 8,
@@ -696,7 +701,10 @@ export default {
     },
   },
   mounted() {
-    this.form = this.dialog_data;
+    this.form = cloneDeep(this.dialog_data);
+    if(this.form.payroll_client){
+      this.form.payroll_id = this.form.payroll_client.payroll_id;
+    }
     this.form.aics_type_id = 8;
     this.form.mode_of_admission = "Referral";
     this.calculateAge();

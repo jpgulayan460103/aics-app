@@ -65,7 +65,10 @@ class PayrollController extends Controller
      */
     public function show($id)
     {
-        $payroll = Payroll::with("clients", "psgc")->find($id);
+        $payroll = Payroll::with([
+            "psgc",
+            "clients.aics_client"
+        ])->find($id);
 
         if ($payroll) {
             return $payroll;
@@ -167,19 +170,22 @@ class PayrollController extends Controller
     
     public function printv2($id)
     {
-        $payroll_clients = Payroll::find($id)->clients()->paginate(10);
-        $payroll = Payroll::with("psgc")->find($id);
-       
-       
-        if ($payroll) {
+        $payroll_clients = Payroll::find($id)->clients()->withTrashed()->paginate(10);
+        $payroll_clients->load('new_payroll_client.payroll');
 
+        $payroll = Payroll::with("psgc")->find($id);
+        
+        if ($payroll) {
+            
+            $total_clients = Payroll::find($id)->clients()->count();
+            
             abort_unless($payroll_clients->count(), 204);
 
 
             $pdf = Pdf::loadView('pdf.payrollv2', 
                 ["clients" => $payroll_clients,
                 "payroll"=>$payroll,
-                "grand_total"=>$payroll_clients->total() * $payroll->amount,
+                "grand_total"=> $total_clients * $payroll->amount,
             ]);
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
 

@@ -28,10 +28,7 @@ class AicsClient extends Model
         'gender',
         'occupation',
         'monthly_salary',
-        'payroll_id',
         'aics_type_id',
-        'status',
-        'date_claimed',
         'civil_status',
         'mode_of_admission',
         'dirty_list_id',
@@ -57,10 +54,6 @@ class AicsClient extends Model
     {
         return $this->belongsTo(Psgc::class);
     }
-    public function payroll()
-    {
-        return $this->belongsTo(Payroll::class, "payroll_id");
-    }
 
     public function aics_type()
     {
@@ -83,6 +76,11 @@ class AicsClient extends Model
     public function aics_assistances()
     {
         return $this->hasMany(AicsAssistance::class);
+    }
+
+    public function payroll_client()
+    {
+        return $this->hasOne(PayrollClient::class, 'aics_client_id');
     }
     
 }

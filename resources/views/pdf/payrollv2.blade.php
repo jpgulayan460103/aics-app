@@ -113,13 +113,15 @@
                         {{ $client->sequence }}
                     </td>
 
-                    <td>{{ $client->last_name }} {{ $client->ext_name }}</td>
-                    <td>{{ $client->first_name }}</td>
-                    <td>{{ $client->middle_name }}</td>
-                    <td style="width:100px; text-align:right;">{{ number_format($payroll->amount) }}</td>
-                    <td style="width:200px"></td>
+                    <td>{{ $client->aics_client->last_name }} {{ $client->aics_client->ext_name }}</td>
+                    <td>{{ $client->aics_client->first_name }}</td>
+                    <td>{{ $client->aics_client->middle_name }}</td>
+                    <td style="width:100px; text-align:right;">{{ number_format(($client->deleted_at == null ? $payroll->amount : 0)) }}</td>
+                    <td style="width:200px">
+                        {{ $client->new_payroll_client ? "Moved to Payroll ".$client->new_payroll_client->payroll->amount." | Client No:".$client->new_payroll_client->sequence : "" }}
+                    </td>
                     <td style="width:100px;"></td>
-                    <span style="display:none;">{{ $sum += $payroll->amount }}</span>
+                    <span style="display:none;">{{ $sum += ( $client->deleted_at == null ? $payroll->amount : 0) }}</span>
                 </tr>
             @endforeach
             <tr style="font-weight:bold;">

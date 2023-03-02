@@ -12,13 +12,14 @@ class Payroll extends Model
 
     public function clients()
     {
-        return $this->hasMany(AicsClient::class, "payroll_id")->orderBy('payroll_insert_at',"asc");;
+        return $this->hasMany(PayrollClient::class);
     }
 
     public function psgc()
     {
         return $this->belongsTo(Psgc::class);
     }
+    
 
    
 }

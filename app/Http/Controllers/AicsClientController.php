@@ -29,7 +29,7 @@ class AicsClientController extends Controller
     public function index()
     {
         // return AicsClient::paginate(10);
-        return AicsClient::with("psgc", "payroll")->get();
+        return AicsClient::with("psgc", "payroll_client.payroll")->get();
     }
 
     /**
@@ -84,41 +84,39 @@ class AicsClientController extends Controller
      */
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
             $aics_client = AicsClient::findOrFail($id);
 
             if ($aics_client) {
-                $payroll_id_before =  $aics_client->payroll_id;
                 $aics_client->update($request->all());
 
-                if ($request->payroll_id &&  !$aics_client->payroll_insert_at) {
-                    #NEW TO PAYROLL
-                    $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
-                    $aics_client->status = null;
+                if ($request->payroll_id) {
+                    if($aics_client->payroll_client){
+                        if($aics_client->payroll_client->payroll_id != $request->payroll_id){
 
-                    $count  = AicsClient::where("payroll_insert_at", "<=", $aics_client->payroll_insert_at)
-                        ->where("payroll_id", "=", $aics_client->payroll_id)->count();
-                    $aics_client->sequence =  $count + 1;
+                            $new_payroll_client = $aics_client->payroll_client()->create([
+                                'payroll_id' => $request->payroll_id
+                            ]);
+
+                            $aics_client->payroll_client->update([
+                                'new_payroll_client_id' => $new_payroll_client->id
+                            ]);
+                            $aics_client->payroll_client->delete();
+                        }
+                    }else{
+                        $aics_client->payroll_client()->create([
+                            'payroll_id' => $request->payroll_id
+                        ]);
+                    }
                 }
-
-                if ($request->payroll_id != $payroll_id_before) {   #MOVED TO DIFF PAYROLL                    
-                    $aics_client->payroll_insert_at = Carbon::now()->toDateTimeString();
-                    $aics_client->status = null;
-                }
-
-                /*if (!$request->payroll_id ) 
-                {   #RESET/REMOVE FROM PAYROLL
-                    $aics_client->payroll_insert_at = null;
-                    $aics_client->status = null;
-                }*/
 
                 $aics_client->save();
-
-
-
+                DB::commit();
                 return ["message" => "Saved", "client" => $aics_client];
             }
         } catch (Exception $e) {
+            DB::rollBack();
             return ["message" => $e];
         }
     }

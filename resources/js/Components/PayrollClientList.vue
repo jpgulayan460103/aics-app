@@ -55,6 +55,18 @@
         </template>
 
 
+        <template v-slot:item.last_name="{ item }">
+          {{ item.aics_client.last_name }}
+        </template>
+        <template v-slot:item.ext_name="{ item }">
+          {{ item.aics_client.ext_name }}
+        </template>
+        <template v-slot:item.first_name="{ item }">
+          {{ item.aics_client.first_name }}
+        </template>
+        <template v-slot:item.middle_name="{ item }">
+          {{ item.aics_client.middle_name }}
+        </template>
         <template v-slot:item.amount="{ item }">
           {{ data.amount }}
         </template>

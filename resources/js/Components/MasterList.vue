@@ -9,7 +9,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <GISComponent :dialog_data="dialogData_edit" :getList="getList" ></GISComponent>
+          <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"></GISComponent>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -37,10 +37,10 @@
         >
           <template v-slot:item.status="{ item }">
                        
-            <v-chip v-if="item.payroll_id && item.payroll && item.payroll.amount">
-              In Payroll {{ item.payroll.amount }}            
-              | Client No: {{ item.sequence }}
-              <span v-if="item.status">  | {{ item.status }}</span>
+            <v-chip v-if="item.payroll_client">
+              In Payroll {{ item.payroll_client.payroll.amount }}            
+              | Client No: {{ item.payroll_client.sequence }}
+              <span v-if="item.payroll_client.status">  | {{ item.payroll_client.status }}</span>
             </v-chip>
           </template>
 
@@ -78,8 +78,11 @@
  
 <script>
 import GISComponent from "./GISComponent.vue";
+import userMixin from './../Mixin/userMixin.js'
 
 export default {
+  mixins: [userMixin],
+  props: ["user"],
   components: { GISComponent },
   data() {
     return {
