@@ -94,7 +94,7 @@
                     This is to certify that the 
                     {{ $in_words }} ({{  number_format(sizeof($clients)) }}) names of Beneficiaries of
                     {{$payroll["psgc"]["province_name"]}} 
-                    listed below are eligible to receive the {{$clients[0]->aics_type->name}} from Assistance to Individuals in Crisis Situation
+                    listed below are eligible to receive the FOOD ASSISTANCE from Assistance to Individuals in Crisis Situation
                     PROGRAM.
                     
 
@@ -112,19 +112,19 @@
             <span style="display:none;">{{ $sum = 0 }}</span>
             @foreach ($clients as $key => $client)
                 <tr>
-                   
+                  
                     <td style="text-align:center; width:20px;">
                        <!-- { $client->sequence }-->
                        {{$key+1}}
                     </td>
                     <td>
-                        {{ isset($client->psgc->brgy_name)  ? $client->psgc->brgy_name : "" }}
+                        {{ isset($client->aics_client->psgc->brgy_name)  ? $client->aics_client->psgc->brgy_name : "" }}
                     </td>
 
-                    <td>{{ $client->last_name }}</td>
-                    <td>{{ $client->first_name }}</td>
-                    <td>{{ $client->middle_name }}</td>
-                    <td>{{ $client->ext_name }}</td>
+                    <td>{{ $client->aics_client->last_name }}</td>
+                    <td>{{ $client->aics_client->first_name }}</td>
+                    <td>{{ $client->aics_client->middle_name }}</td>
+                    <td>{{ $client->aics_client->ext_name }}</td>
                     <td style="width:100px; text-align:right;">{{ number_format($payroll->amount,2) }}</td>
 
                 </tr>

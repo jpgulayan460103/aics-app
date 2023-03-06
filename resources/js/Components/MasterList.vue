@@ -17,30 +17,17 @@
       <v-card-title>
         Master List
         <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
+        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table
-          dense
-          :headers="headers"
-          :items="data"
-          :items-per-page="10"
-          :loading="isBusy"
-          loading-text="Loading... Please wait"
-          :search="search"
-        >
+        <v-data-table dense :headers="headers" :items="data" :items-per-page="10" :loading="isBusy"
+          loading-text="Loading... Please wait" :search="search">
           <template v-slot:item.status="{ item }">
-                       
+
             <v-chip v-if="item.payroll_client">
-              In Payroll {{ item.payroll_client.payroll.amount }}            
+              In Payroll {{ item.payroll_client.payroll.amount }}
               | Client No: {{ item.payroll_client.sequence }}
-              <span v-if="item.payroll_client.status">  | {{ item.payroll_client.status }}</span>
+              <span v-if="item.payroll_client.status"> | {{ item.payroll_client.status }}</span>
             </v-chip>
           </template>
 
@@ -65,7 +52,8 @@
               mdi-pencil
             </v-icon>
 
-            <v-icon small class="mr-2" @click="PrintGIS(item)" v-if="item.payroll_id">
+
+            <v-icon small class="mr-2" @click="PrintGIS(item)" v-if="item.payroll_client && item.payroll_client.payroll_id">
               mdi-printer
             </v-icon>
 
@@ -127,10 +115,9 @@ export default {
       this.dialogData_edit = {};
       this.dialogData_edit = item;
     },
-    PrintGIS(item)
-    {
+    PrintGIS(item) {
       window.open(
-        route("api.pdf.gis2", { id: item.id  }),
+        route("api.pdf.gis2", { id: item.id }),
         "_blank"
       );
     }

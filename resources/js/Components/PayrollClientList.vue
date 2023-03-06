@@ -1,6 +1,6 @@
 <template>
   <v-card flat outlined>
-   
+
     <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
@@ -11,6 +11,9 @@
       <v-btn @click="print_w_gt()" color="black" dark class="m-1">
         <v-icon> mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
       </v-btn>
+
+
+
 
       <v-icon @click="print_footer()"> mdi mdi-foot-print</v-icon>
       <!--<v-icon>mdi-download</v-icon>-->
@@ -41,6 +44,10 @@
 
         <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsUnClaimed()">Mark as
           Unclaimed</v-btn>
+
+        <v-btn  v-if="selected.length > 0"  @click="print_gis_10()" color="black" dark class="m-1">
+          <v-icon> mdi-printer </v-icon> Print GIS
+        </v-btn>
 
       </div>
       <v-data-table show-select v-model="selected" v-if="data.clients" :headers="headers" :items="data.clients.map((i, index) => {
@@ -79,7 +86,8 @@
         </template>-->
 
         <template v-slot:item.status="{ item }">
-          <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin' ">
+          <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)"
+            v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
             <div>{{ item.status }}</div>
             <template v-slot:input>
               <div class="mt-4 text-h6">Claim Status</div>
@@ -135,7 +143,7 @@ export default {
 
         { value: "amount", text: "Amount", sortable: false },
 
-        { value: "status", text: "Status", sortable: false,  width: "50px;" },
+        { value: "status", text: "Status", sortable: false, width: "50px;" },
       ],
       search: "",
       page: 1,
@@ -197,7 +205,7 @@ export default {
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
         item.status = "claimed";
-        promises.push(this.save(item)); 
+        promises.push(this.save(item));
       }
       await Promise.all(promises);
       this.getClients();
@@ -208,11 +216,17 @@ export default {
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
         item.status = "";
-        promises.push(this.save(item)); 
+        promises.push(this.save(item));
       }
       await Promise.all(promises);
       this.getClients();
     }, 250),
+    print_gis_10() {
+      let ids = this.selected.map(item => item.id);
+      console.log(ids);
+      
+    }
+
 
   },
   mounted() {

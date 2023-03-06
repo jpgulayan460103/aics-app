@@ -258,15 +258,20 @@
 </head>
 
 <body>
+    
     <div style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; text-align: center;z-index: -1000; ">
         <img src="{{ public_path('images/gis-min-2.jpg') }}" style="width: 95%;">
     </div>
 
 
     <div id="aics-type-name" class="data-textbox">{{ strtoupper($aics_beneficiary['aics_type']['name']) }}</div>
-    <div  class="data-textbox" style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: dotted 1px; border-radius:50%; ">{{$aics_beneficiary['sequence'] }}</div>
-    <div  class="data-textbox" style="top:86pt;right:20pt;">{{ date_format(date_create($aics_beneficiary['payroll_insert_at']),"m-d-Y") }}</div>
-    <div  class="data-textbox" style="top:103pt;right:20pt;">{{ date_format(date_create($aics_beneficiary['payroll_insert_at']),"H:i a") }}</div>
+    <div class="data-textbox"
+        style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: dotted 1px; border-radius:50%; ">
+        {{ $aics_beneficiary['payroll_client']['sequence'] }}</div>
+    <div class="data-textbox" style="top:86pt;right:20pt;">
+        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'm-d-Y') }}</div>
+    <div class="data-textbox" style="top:103pt;right:20pt;">
+        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'H:i a') }}</div>
 
 
     <div id="aics-beneficiary-last-name" class="data-textbox">{{ strtoupper($aics_beneficiary['last_name']) }}</div>
@@ -297,35 +302,35 @@
 
     <div id="aics-beneficiary-gender" class="data-textbox">{{ strtoupper($aics_beneficiary['gender']) }}</div>
     <div id="aics-beneficiary-occupation" class="data-textbox">{{ strtoupper($aics_beneficiary['occupation']) }}</div>
-    <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ ($aics_beneficiary['monthly_salary']) }}</div>
+    <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ $aics_beneficiary['monthly_salary'] }}</div>
 
-      @if(isset( $aics_beneficiary['category'] ))  
-    <div class="data-textbox" style=" top:420pt; left:20pt; text-align:left; height:80pt; ">
-        {{ $aics_beneficiary['category']['category']}}
-     </div>
-     @endif
+    @if (isset($aics_beneficiary['category']))
+        <div class="data-textbox" style=" top:420pt; left:20pt; text-align:left; height:80pt; ">
+            {{ $aics_beneficiary['category']['category'] }}
+        </div>
+    @endif
 
-     @if(isset( $aics_beneficiary['subcategory'] ))  
-     <div class="data-textbox" style=" top:420pt; left:110pt;  text-align:left; height:80pt; ">
-        {{ $aics_beneficiary['subcategory']['subcategory']}}
-        @if($aics_beneficiary['subcategory_others'])
-      <br> {{ $aics_beneficiary['subcategory_others']}}
-        @endif
-     </div>
-     @endif
-     
-     
+    @if (isset($aics_beneficiary['subcategory']))
+        <div class="data-textbox" style=" top:420pt; left:110pt;  text-align:left; height:80pt; ">
+            {{ $aics_beneficiary['subcategory']['subcategory'] }}
+            @if ($aics_beneficiary['subcategory_others'])
+                <br> {{ $aics_beneficiary['subcategory_others'] }}
+            @endif
+        </div>
+    @endif
+
+
     <div class="data-textbox" style=" top:415pt; left:219pt; width: 300pt; text-align:left; height:80pt; ">
-       {{ $aics_beneficiary['assessment']}}
+        {{ $aics_beneficiary['assessment'] }}
     </div>
     <div id="payroll-amount" class="data-textbox" style=" right:150pt; bottom:100pt">
-        {{ number_format($aics_beneficiary['payroll']['amount'], 2) }}
+        {{ number_format($aics_beneficiary['payroll_client']['payroll']['amount'], 2) }}
     </div>
 
 
     <div id="payroll-amount" class="data-textbox"
         style=" right:13pt; bottom:100pt; width: 69px; font-size:5pt; text-align:center;">
-        {{ $aics_beneficiary['payroll']['source_of_fund'] }}
+        {{ $aics_beneficiary['payroll_client']['payroll']['source_of_fund'] }}
     </div>
 
     <div id="bene-full-name" class="data-textbox"
@@ -339,7 +344,7 @@
     <div id="bene-full-name" class="data-textbox"
         style="width: 125pt;text-align:center; bottom:30pt; right:143pt; font-size:6pt; ">
         {{ strtoupper($aics_beneficiary['interviewed_by']) }}
-       
+
     </div>
 
 

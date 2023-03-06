@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-
+use App\Models\PayrollClient;
 
 class PayrollController extends Controller
 {
@@ -133,9 +133,9 @@ class PayrollController extends Controller
 
     public function print($id)
     {
-        $payroll = Payroll::with("psgc","clients")->find($id);
+        $payroll = Payroll::with("psgc", "clients")->find($id);
         if ($payroll) {
-            return view('pdf.payroll', ["data" => $payroll,  "grand_total"=> ($payroll->clients()->count() * $payroll->amount)]);
+            return view('pdf.payroll', ["data" => $payroll,  "grand_total" => ($payroll->clients()->count() * $payroll->amount)]);
 
             /*$pdf = Pdf::loadView('pdf.payroll', 
                 ["data" => $payroll,  
@@ -143,7 +143,7 @@ class PayrollController extends Controller
             ]);
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');*/
         };
-        
+
         /*$payroll = Payroll::with("psgc","clients")->find($id);
         if ($payroll) {
             #return view('pdf.payroll', ["data" => $payroll]);
@@ -167,26 +167,29 @@ class PayrollController extends Controller
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
         };
     }
-    
+
     public function printv2($id)
     {
         $payroll_clients = Payroll::find($id)->clients()->withTrashed()->paginate(10);
         $payroll_clients->load('new_payroll_client.payroll');
 
         $payroll = Payroll::with("psgc")->find($id);
-        
+
         if ($payroll) {
-            
+
             $total_clients = Payroll::find($id)->clients()->count();
-            
+
             abort_unless($payroll_clients->count(), 204);
 
 
-            $pdf = Pdf::loadView('pdf.payrollv2', 
-                ["clients" => $payroll_clients,
-                "payroll"=>$payroll,
-                "grand_total"=> $total_clients * $payroll->amount,
-            ]);
+            $pdf = Pdf::loadView(
+                'pdf.payrollv2',
+                [
+                    "clients" => $payroll_clients,
+                    "payroll" => $payroll,
+                    "grand_total" => $total_clients * $payroll->amount,
+                ]
+            );
             return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
 
             //return view('pdf.payrollv2', ["data" => $payroll]);
@@ -195,42 +198,63 @@ class PayrollController extends Controller
 
     public function print_coe($id)
     {
-        $payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->where("status","=","claimed")->get();
+        //$payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->where("status","=","claimed")->get();
+
+        $payroll_clients = PayrollClient::query()->with([
+            'aics_client',
+            'aics_client.psgc',
+            'aics_client.aics_type',
+            'aics_client.subcategory',
+            'aics_client.category',
+        ])
+            ->where('payroll_id', $id)
+            ->where('status', 'claimed')
+            ->orderBy('sequence', "asc")
+            ->get();
+
+
         $payroll = Payroll::with("psgc")->find($id);
-     
+
         if ($payroll) {
 
             abort_unless($payroll_clients->count(), 204);
 
             $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
 
-            $pdf = Pdf::loadView('pdf.coe', 
-                ["clients" => $payroll_clients,
-                "payroll"=>$payroll, 
-                "in_words" => strtoupper( $f->format(sizeof($payroll_clients))),              
-            ]);
+          
 
-            $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . ".pdf";      
+            $pdf = Pdf::loadView(
+                'pdf.coe',
+                [
+                    "clients" => $payroll_clients,
+                    "payroll" => $payroll,
+                    "in_words" => strtoupper($f->format($payroll_clients->count())),
+                ]
+            );
+
+            $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . ".pdf";
 
             return $pdf->setPaper('portrait')->download($export_file_name);
-
-            //return view('pdf.payrollv2', ["data" => $payroll]);
         }
     }
 
-    public function export($payroll_id) 
+    public function export($payroll_id)
     {
         $payroll = Payroll::findOrFail($payroll_id);
         $filename = "";
-        $filename .= Str::slug($payroll->title)."-";
-        $filename .= Str::slug($payroll->charging)."-";
-        $filename .= Str::slug($payroll->sdo)."-";
-        $filename .= Str::slug($payroll->amount)."-";
+        $filename .= Str::slug($payroll->title) . "-";
+        $filename .= Str::slug($payroll->charging) . "-";
+        $filename .= Str::slug($payroll->sdo) . "-";
+        $filename .= Str::slug($payroll->amount) . "-";
         $filename .= Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
         Excel::store(new ClientExport($payroll), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];
+    }
+
+    public function print_gis_10(request $request)
+    {
     }
 }

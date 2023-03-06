@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\AicsClient;
 use App\Models\Payroll;
+use App\Models\PayrollClient;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -29,7 +30,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $collection = AicsClient::query()->with([
+        /*$collection = AicsClient::query()->with([
             'psgc',
             'payroll',
             'aics_type',
@@ -39,7 +40,20 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
         ->where('payroll_id', $this->payroll->id)
         ->where('status', 'claimed')
         ->orderBy('payroll_insert_at',"asc")
+        ->get();*/
+
+        $collection = PayrollClient::query()->with([
+            'aics_client',
+            'aics_client.psgc',
+            'aics_client.aics_type',
+            'aics_client.subcategory',
+            'aics_client.category',
+        ])
+        ->where('payroll_id', $this->payroll->id)
+        ->where('status', 'claimed')
+        ->orderBy('sequence',"asc")
         ->get();
+
         return $collection->map(function ($item, $key) {
             $item->key = $key;
             return $item;
@@ -105,30 +119,31 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-    public function map($aics_client): array
+    public function map($payroll_client): array
     {
+        //dd($payroll_client);
         return [
-            $aics_client->created_at->format("m/d/Y h:i:s"),
+            $payroll_client->created_at->format("m/d/Y h:i:s"),
             env('COMPUTERNAME'),
-            $aics_client->sequence,
-            $aics_client->updated_at->format("m/d/Y h:i:s"),
-            $aics_client->psgc ? $aics_client->psgc->region_name."/".$aics_client->psgc->region_psgc : "",
-            $aics_client->psgc ? $aics_client->psgc->province_name."/".$aics_client->psgc->province_psgc : "",
-            $aics_client->psgc ? $aics_client->psgc->city_name."/".$aics_client->psgc->city_name_psgc : "",
-            $aics_client->psgc ? $aics_client->psgc->brgy_name."/".$aics_client->psgc->brgy_psgc : "",
-            $aics_client->psgc ? $aics_client->psgc->subdistrict : "",
+            $payroll_client->sequence,
+            $payroll_client->updated_at->format("m/d/Y h:i:s"),
+            $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->region_name."/".$payroll_client->aics_client->psgc->region_psgc : "",
+            $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->province_name."/".$payroll_client->aics_client->psgc->province_psgc : "",
+            $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->city_name."/".$payroll_client->aics_client->psgc->city_name_psgc : "",
+            $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->brgy_name."/".$payroll_client->aics_client->psgc->brgy_psgc : "",
+            $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->subdistrict : "",
            
-            $aics_client->last_name,
-            $aics_client->first_name,
-            $aics_client->middle_name,
-            $aics_client->ext_name,
-            $aics_client->gender == "Lalake" ? "Male" : "Female",
-            $aics_client->civil_status,
-            Carbon::parse($aics_client->birth_date)->format("m/d/Y"),
-            $aics_client->age,
-            $aics_client->mode_of_admission,
-            $aics_client->aics_type ? $aics_client->aics_type->name : "",
-            $aics_client->payroll ?  $aics_client->payroll->amount: "",
+            $payroll_client->aics_client->last_name,
+            $payroll_client->aics_client->first_name,
+            $payroll_client->aics_client->middle_name,
+            $payroll_client->aics_client->ext_name,
+            $payroll_client->aics_client->gender == "Lalake" ? "Male" : "Female",
+            $payroll_client->aics_client->civil_status,
+            Carbon::parse($payroll_client->aics_client->birth_date)->format("m/d/Y"),
+            $payroll_client->aics_client->age,
+            $payroll_client->aics_client->mode_of_admission,
+            $payroll_client->aics_client->aics_type ? $payroll_client->aics_client->aics_type->name : "",
+            $payroll_client->payroll ?  $payroll_client->payroll->amount: "",
             "",
             "",
             "",
@@ -139,19 +154,19 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             "",
             "",
             "",
-            $aics_client->category ? $aics_client->category->category : "",
+            $payroll_client->aics_client->category ? $payroll_client->aics_client->category->category : "",
             "All",
             "1",
             "1",
             "1",
             "1",
             "1",
-            $aics_client->payroll ? $aics_client->payroll->charging : "",
+            $payroll_client->payroll ? $payroll_client->payroll->charging : "",
             "CAV",
             "",
-            $aics_client->last_name,
-            $aics_client->first_name,
-            $aics_client->middle_name,
+            $payroll_client->aics_client->last_name,
+            $payroll_client->aics_client->first_name,
+            $payroll_client->aics_client->middle_name,
             "",
             "",
             "",

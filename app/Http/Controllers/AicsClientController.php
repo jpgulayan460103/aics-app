@@ -213,10 +213,10 @@ class AicsClientController extends Controller
 
     public function gis($id)
     {
-        $client =  AicsClient::with("psgc", "aics_type", "payroll:id,amount,source_of_fund", "category", "subcategory")->findOrFail($id);
+        $client =  AicsClient::with("psgc", "aics_type", "payroll_client.payroll", "category", "subcategory")->findOrFail($id);
         if ($client) {
 
-            //return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
+           #return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
             $pdf = Pdf::loadView('pdf.gis', ["aics_beneficiary" =>  $client->toArray()]);
             return $pdf->stream('invoice.pdf');
         }

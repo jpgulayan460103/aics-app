@@ -71,6 +71,7 @@ class PayrollClientController extends Controller
     {
         $payroll_client = PayrollClient::findOrFail($id);
         $payroll_client->update($request->all());
+      
     }
 
     /**

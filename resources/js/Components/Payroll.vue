@@ -144,8 +144,12 @@
     </v-dialog>
 
     <v-card flat>
+
       <v-card-title>Payroll <v-spacer />
-        <v-btn @click="NewPayroll()" dark class="m-1" v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">New Payroll</v-btn>
+        <v-progress-circular :width="3" indeterminate color="primary" v-if="isExporting"></v-progress-circular>
+
+        <v-btn @click="NewPayroll()" dark class="m-1"
+          v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">New Payroll</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
@@ -171,10 +175,11 @@
               mdi-eye
             </v-icon>
 
-            <v-icon small class="mr-5" @click="EditItem(item)" v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
+            <v-icon small class="mr-5" @click="EditItem(item)"
+              v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
               mdi-pencil
             </v-icon>
-           
+
             <v-menu bottom left>
               <template v-slot:activator="{ on, attrs }">
 
@@ -185,7 +190,8 @@
               <v-list>
                 <v-list-item link>
                   <v-list-item-title @click="DownloadPayroll(item)" :disabled="isExporting">Export
-                    (CRIMS)</v-list-item-title>
+                    (CRIMS)
+                  </v-list-item-title>
                 </v-list-item>
                 <v-list-item link>
                   <v-list-item-title @click="exportCoe(item.id)">Export (COE)</v-list-item-title>
@@ -219,8 +225,8 @@ export default {
       search: "",
       isBusy: false,
       headers: [
-      { value: "schedule", text: "Schedule", sortable: true },
-     
+        { value: "schedule", text: "Schedule", sortable: true },
+
         { value: "title", text: "Title", sortable: true },
         { value: "sdo", text: "SDO", sortable: true },
 
