@@ -45,7 +45,7 @@
         <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsUnClaimed()">Mark as
           Unclaimed</v-btn>
 
-        <v-btn  v-if="selected.length > 0"  @click="print_gis_10()" color="black" dark class="m-1">
+        <v-btn v-if="selected.length > 0" @click="PrintGISMany()" color="black" dark class="m-1">
           <v-icon> mdi-printer </v-icon> Print GIS
         </v-btn>
 
@@ -118,6 +118,9 @@
       </v-card>
     </v-dialog>-->
 
+    <iframe :src="url" title="description" style="height:200px;width:300px;"></iframe>
+
+
   </v-card>
 </template>
 
@@ -149,6 +152,7 @@ export default {
       page: 1,
       print_options: false,
       selected: [],
+      url: "",
     };
   },
   computed: {
@@ -221,10 +225,25 @@ export default {
       await Promise.all(promises);
       this.getClients();
     }, 250),
-    print_gis_10() {
-      let ids = this.selected.map(item => item.id);
-      console.log(ids);
-      
+    PrintGISMany() {
+      console.log(this.selected);
+      let ids = this.selected.map(item => item.aics_client_id);
+
+      ids.forEach(id => {
+
+        window.open(
+          route("api.pdf.gis2", { id: id }),
+          "_blank"
+        );
+
+      });
+
+      /*window.open(
+        route("api.pdf.gis2", { id: item.id }),
+        "_blank"
+      );*/
+
+
     }
 
 

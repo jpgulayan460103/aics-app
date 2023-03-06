@@ -92,8 +92,8 @@ class AicsClientController extends Controller
                 $aics_client->update($request->all());
 
                 if ($request->payroll_id) {
-                    if($aics_client->payroll_client){
-                        if($aics_client->payroll_client->payroll_id != $request->payroll_id){
+                    if ($aics_client->payroll_client) {
+                        if ($aics_client->payroll_client->payroll_id != $request->payroll_id) {
 
                             $new_payroll_client = $aics_client->payroll_client()->create([
                                 'payroll_id' => $request->payroll_id
@@ -104,7 +104,7 @@ class AicsClientController extends Controller
                             ]);
                             $aics_client->payroll_client->delete();
                         }
-                    }else{
+                    } else {
                         $aics_client->payroll_client()->create([
                             'payroll_id' => $request->payroll_id
                         ]);
@@ -216,9 +216,21 @@ class AicsClientController extends Controller
         $client =  AicsClient::with("psgc", "aics_type", "payroll_client.payroll", "category", "subcategory")->findOrFail($id);
         if ($client) {
 
-           #return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
+            #return view('pdf.gis', ["aics_beneficiary" => $client->toArray()]);
             $pdf = Pdf::loadView('pdf.gis', ["aics_beneficiary" =>  $client->toArray()]);
-            return $pdf->stream('invoice.pdf');
+            return $pdf->stream('gis.pdf');
+        }
+    }
+
+    public function gis_many(Request $request)
+    {
+        $client =  AicsClient::with("psgc", "aics_type", "payroll_client.payroll", "category", "subcategory")
+            ->whereIn("id", $request->ids)
+            ->get();
+        if ($client) {
+            return view('pdf.gis_many', ["aics_beneficiaries" => $client->toArray()]);
+            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);
+            return $pdf->stream('gis.pdf');
         }
     }
 }

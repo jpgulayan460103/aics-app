@@ -198,8 +198,6 @@ class PayrollController extends Controller
 
     public function print_coe($id)
     {
-        //$payroll_clients = Payroll::find($id)->clients("psgc","aics_type")->orderBy("sequence","asc")->where("status","=","claimed")->get();
-
         $payroll_clients = PayrollClient::query()->with([
             'aics_client',
             'aics_client.psgc',
@@ -218,11 +216,7 @@ class PayrollController extends Controller
         if ($payroll) {
 
             abort_unless($payroll_clients->count(), 204);
-
             $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-
-          
-
             $pdf = Pdf::loadView(
                 'pdf.coe',
                 [
@@ -233,7 +227,6 @@ class PayrollController extends Controller
             );
 
             $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . ".pdf";
-
             return $pdf->setPaper('portrait')->download($export_file_name);
         }
     }
