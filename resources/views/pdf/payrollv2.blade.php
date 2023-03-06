@@ -73,7 +73,7 @@
     <main>
         <div style="text-align: right; font-size:8pt">{{ $clients->currentPage() }}</div>
 
-        <table id="payroll" cellpadding=8 cellspacing=0>
+        <table id="payroll" cellpadding=10 cellspacing=0>
             <tr>
                 <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
                     DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>

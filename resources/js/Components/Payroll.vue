@@ -145,7 +145,7 @@
 
     <v-card flat>
       <v-card-title>Payroll <v-spacer />
-        <v-btn @click="NewPayroll()" dark class="m-1">New Payroll</v-btn>
+        <v-btn @click="NewPayroll()" dark class="m-1" v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">New Payroll</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
@@ -171,7 +171,7 @@
               mdi-eye
             </v-icon>
 
-            <v-icon small class="mr-5" @click="EditItem(item)" v-if="userData.role == 'admin'">
+            <v-icon small class="mr-5" @click="EditItem(item)" v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
               mdi-pencil
             </v-icon>
            
@@ -219,7 +219,8 @@ export default {
       search: "",
       isBusy: false,
       headers: [
-        { value: "id", text: "ID", sortable: true },
+      { value: "schedule", text: "Schedule", sortable: true },
+     
         { value: "title", text: "Title", sortable: true },
         { value: "sdo", text: "SDO", sortable: true },
 

@@ -357,7 +357,7 @@
       <div class="card">
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
-          <select name="" id="" v-model="form.payroll_id" class="form-control" :disabled="dialog_data.payroll_client && userData.role == 'user'">
+          <select name="" id="" v-model="form.payroll_id" class="form-control" :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
             
             <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
               {{ p.title }} | {{ p.amount }}

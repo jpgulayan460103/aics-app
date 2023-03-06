@@ -7,8 +7,8 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
-//import '@mdi/font/css/materialdesignicons.css'
-//import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import Vuetify from 'vuetify';
 import VueRouter from "vue-router";

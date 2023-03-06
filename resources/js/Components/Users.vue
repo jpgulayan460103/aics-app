@@ -132,8 +132,8 @@ export default {
           value: "admin",
         },
         {
-          role: "User",
-          value: "user",
+          role: "Encoder",
+          value: "Encoder",
         },
       ],
       showPassword: false,
