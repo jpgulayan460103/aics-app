@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,13 @@ class PayrollClient extends Model
                 $model->sequence = 1;
             }
         });
+        self::updating(function($model) {
+            if($model->status == "claimed"){
+                $model->date_claimed = Carbon::now();
+            }else{
+                $model->date_claimed = null;
+            }
+        });
     }
 
     public function aics_client()
@@ -44,6 +52,6 @@ class PayrollClient extends Model
 
     public function new_payroll_client()
     {
-        return $this->belongsTo(PayrollClient::class);
+        return $this->belongsTo(PayrollClient::class)->withTrashed();
     }
 }
