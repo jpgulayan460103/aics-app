@@ -8,11 +8,11 @@
         </div>
         <div class="col-md-8 text-md-end text-center">
           <h1 style="
-                          font-size: 2rem;
-                          font-family: arial;
-                          font-weight: bold;
-                          margin-bottom: 0px;
-                        ">
+                            font-size: 2rem;
+                            font-family: arial;
+                            font-weight: bold;
+                            margin-bottom: 0px;
+                          ">
             CRISIS INTERVENTION DIVISION
           </h1>
           <p>
@@ -364,24 +364,20 @@
           </div>
           <div v-else>
 
-            <div class="col-md-6">
-              <pre>
-                    {{ form.payroll_id }}
-                  </pre>
-            </div>
 
-            <div class="col-md-6">
-              <pre>
-                      {{ payrolls }}
-                  </pre>
-            </div>
-            <select name="" id="" v-model="form.payroll_id" class="form-control"
-              :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
+            <div v-if="payrolls.length > 0">
 
-              <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
-                {{ p.title }} | {{ p.amount }}
-              </option>
-            </select>
+              <select name="" id="" v-model="form.payroll_id" class="form-control"
+                :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
+
+                <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
+                  {{ p.title }} | {{ p.amount }}
+                </option>
+              </select>
+            </div>
+            <div v-else>
+              NO ACTIVE PAYROLLS
+            </div>
 
           </div>
 
@@ -734,7 +730,7 @@ export default {
     this.getRegions();
     this.getCategories();
     this.getPayrolls();
-   
+
   },
 };
 </script>
