@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\DirtyList;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -90,6 +92,7 @@ class AicsClientController extends Controller
 
             if ($aics_client) {
                 $aics_client->update($request->all());
+                $aics_client->user_id = Auth::check() ? Auth::user()->id : null     ;
 
                 if ($request->payroll_id) {
                     if ($aics_client->payroll_client) {
