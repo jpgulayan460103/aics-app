@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
+      
       <!--<div class="row">
         <div class="col-md-4 text-center">
          <img
@@ -672,13 +673,14 @@ export default {
 
     groupByKey(array, key) {
 
-      return array.reduce((hash, obj) => {
-        if (obj[key] === undefined) return hash;
-        return Object.assign(hash, {
-          [obj[key]]: (hash[obj[key]] || []).concat(obj),
-        });
-      }, {});
-
+      if (Array.isArray(array)) {
+        return array.reduce((hash, obj) => {
+          if (obj[key] === undefined) return hash;
+          return Object.assign(hash, {
+            [obj[key]]: (hash[obj[key]] || []).concat(obj),
+          });
+        }, {});
+      }
     },
 
     isEmpty(value) {
