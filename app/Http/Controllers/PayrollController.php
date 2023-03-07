@@ -247,7 +247,10 @@ class PayrollController extends Controller
         ];
     }
 
-    public function print_gis_10(request $request)
+    public function active_payrolls()
     {
+        return Payroll::whereNull("status")
+            ->orWhere("status", "active")
+            ->get();
     }
 }

@@ -18,6 +18,7 @@ class PayrollClient extends Model
         'new_payroll_client_id',
         'status',
         'date_claimed',
+        
     ];
 
     public static function boot()

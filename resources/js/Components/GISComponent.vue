@@ -357,12 +357,27 @@
       <div class="card">
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
-          <select name="" id="" v-model="form.payroll_id" class="form-control" :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
-            
-            <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
-              {{ p.title }} | {{ p.amount }}
-            </option>
-          </select>
+          <div v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed'">
+            <b>
+              IN
+              {{ dialog_data.payroll_client.payroll.title }} |
+              Client No: {{ dialog_data.payroll_client.sequence }} |
+              {{ dialog_data.payroll_client.payroll.amount }} |
+              {{ dialog_data.payroll_client.payroll.status }}</b>
+
+
+          </div>
+          <div v-else>
+            <select name="" id="" v-model="form.payroll_id" class="form-control"
+              :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
+
+              <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
+                {{ p.title }} | {{ p.amount }}
+              </option>
+            </select>
+
+          </div>
+
         </div>
       </div>
 
@@ -542,7 +557,7 @@ export default {
   },
 
   methods: {
-    submitForm: debounce(function() {
+    submitForm: debounce(function () {
       this.submit = true;
       if (this.form.payroll_id) {
         axios
@@ -693,7 +708,7 @@ export default {
     },
     getPayrolls() {
       axios
-        .get(route("api.payroll.index"))
+        .get(route("api.active_payrolls"))
         .then((response) => {
           this.payrolls = response.data;
         })
@@ -702,7 +717,7 @@ export default {
   },
   mounted() {
     this.form = cloneDeep(this.dialog_data);
-    if(this.form.payroll_client){
+    if (this.form.payroll_client) {
       this.form.payroll_id = this.form.payroll_client.payroll_id;
     }
     this.form.aics_type_id = 8;

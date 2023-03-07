@@ -135,6 +135,11 @@
             <label for="">Charging</label>
             <input type="text" name="" v-model="formData.charging" id="" class="form-control" />
 
+            <label for="">Status</label>
+            <select name="" id="" v-model="formData.status" class="form-control">
+              <option :value="e" v-for="(e,i) in ['active','closed']" :key="i">{{ e }}</option>
+            </select>
+
             <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
             </button>
@@ -235,6 +240,7 @@ export default {
         { value: "barangay", text: "Barangay", sortable: true },
 
         { value: "amount", text: "AMOUNT", sortable: true },
+        { value: "status", text: "STATUS", sortable: true },
         { value: "actions", text: "Actions", sortable: true },
       ],
       payrolls: [],

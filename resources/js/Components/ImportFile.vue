@@ -13,7 +13,7 @@
           class="ma-2 white--text"
           :disabled="isBusy"
           type="submit"
-          v-if="userData.role == 'admin'"
+          v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'"
         >
           SUBMIT
         </v-btn>
@@ -40,7 +40,7 @@
           <a :href="item.file_directory">{{ item.file_directory }}</a>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="deleteFile(item)" v-if="userData.role == 'admin'">
+          <v-icon small class="mr-2" @click="deleteFile(item)" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
             mdi-delete
           </v-icon>
         </template>
