@@ -7,6 +7,7 @@ use App\Models\DirtyList;
 use App\Models\DirtyListClients;
 use App\Models\Psgc;
 use App\Rules\AllowedStringName;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
@@ -59,6 +60,7 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'ext_name'      => mb_strtoupper(trim($row['ext_name'] ?? null)),
             'street_number' => mb_strtoupper(trim($row['street_number'] ?? null)),
             'birth_date'    => $birth_date,
+            'gender'        => $row['gender'],
             'psgc_id'       => $psgc_id,
         ]);
     }
@@ -106,8 +108,18 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
                     $data['birth_date'] = null;
                     break;
             }
+
+            try {
+                $data['birth_date'] = Carbon::parse($data['birth_date'])->toDateString();
+            } catch (\Exception $e) {
+                $data['birth_date'] = null;
+            }
         }
         $pattern = '/[^\pL\pM_ _-_-]/';
+
+        if(isset($data['gender'])){
+            $data['gender'] = strtoupper($data['gender'][0]) == "M" ? "Lalake" : "Babae";
+        }
 
         if(isset($data['first_name'])){
             $data['first_name'] = preg_replace($pattern, '', $data['first_name']);
