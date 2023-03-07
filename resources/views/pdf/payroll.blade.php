@@ -110,7 +110,7 @@
       
       
               
-        <table id="payroll" cellpadding=9 cellspacing=0>
+        <table id="payroll" cellpadding=7 cellspacing=0>
             @foreach ($data->clients as $key => $item)
             <span style="display:none;">{{ $index = $key + 1 }}</span>
            

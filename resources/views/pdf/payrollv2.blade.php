@@ -66,16 +66,19 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        h3 {margin: 0px; margin-top:5px;}
     </style>
 </head>
 
 <body>
     <main>
-        <div style="text-align: right; font-size:8pt">{{ $clients->currentPage() }}</div>
+      
 
-        <table id="payroll" cellpadding=10 cellspacing=0>
+        <table id="payroll" cellpadding=9 cellspacing=0>
             <tr>
-                <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
+                <td style="text-align:center; border: 0px;" colspan="7">
+                    <div style="float: right;text-align: right; font-size:8pt;">{{ $clients->currentPage() }}</div>
+                    Republic of the Philippines <br />
                     DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
                     Field Office XI, Davao City
                     <h3> {{ $payroll->title }} </h3>
@@ -149,12 +152,7 @@
                         <td>Approved By:</td>
                         <td style="width:10%;"></td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    
                     <tr>
                         <td></td>
                         <td>

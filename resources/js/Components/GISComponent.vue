@@ -2,7 +2,7 @@
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
       
-      <!--<div class="row">
+     <div class="row">
         <div class="col-md-4 text-center">
          <img
             max-height="64"
@@ -26,7 +26,7 @@
             IBP Road, Batasan Pambansa Complex Constitution Hills, Quezon City
           </p>
         </div>
-      </div>-->
+      </div>
       <div class="row text-center">
         <div class="col-md-12">
           <img src="" />

@@ -137,7 +137,7 @@
 
             <label for="">Status</label>
             <select name="" id="" v-model="formData.status" class="form-control">
-              <option :value="e" v-for="(e,i) in ['active','closed']" :key="i">{{ e }}</option>
+              <option :value="e" v-for="(e, i) in ['active', 'closed']" :key="i">{{ e }}</option>
             </select>
 
             <button type="submit" class="btn btn-primary btn-block">
@@ -188,7 +188,8 @@
             <v-menu bottom left>
               <template v-slot:activator="{ on, attrs }">
 
-                <v-icon small v-bind="attrs" v-on="on">mdi-download</v-icon>
+                <v-icon small v-bind="attrs" v-on="on"
+                  v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">mdi-download</v-icon>
 
               </template>
 
@@ -204,7 +205,7 @@
               </v-list>
             </v-menu>
 
-            <!--<v-icon small class="mr-5" @click="DeleteItem(item)">
+           <!-- <v-icon small class="mr-5" @click="DeleteItem(item)"  v-if="userData.role == 'Super-Admin'">
               mdi-delete
             </v-icon>-->
           </template>
