@@ -1,25 +1,18 @@
 <template>
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
-      
-     <div class="row">
+
+      <div class="row">
         <div class="col-md-4 text-center">
-         <img
-            max-height="64"
-            max-width="250px"
-            src="/images/DSWD-DVO-LOGO.png"
-            class="img-fluid"
-          />
+          <img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" class="img-fluid" />
         </div>
         <div class="col-md-8 text-md-end text-center">
-          <h1
-            style="
-              font-size: 2rem;
-              font-family: arial;
-              font-weight: bold;
-              margin-bottom: 0px;
-            "
-          >
+          <h1 style="
+                          font-size: 2rem;
+                          font-family: arial;
+                          font-weight: bold;
+                          margin-bottom: 0px;
+                        ">
             CRISIS INTERVENTION DIVISION
           </h1>
           <p>
@@ -358,6 +351,7 @@
       <div class="card">
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
+
           <div v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed'">
             <b>
               IN
@@ -369,6 +363,18 @@
 
           </div>
           <div v-else>
+
+            <div class="col-md-6">
+              <pre>
+                    {{ form.payroll_id }}
+                  </pre>
+            </div>
+
+            <div class="col-md-6">
+              <pre>
+                      {{ payrolls }}
+                  </pre>
+            </div>
             <select name="" id="" v-model="form.payroll_id" class="form-control"
               :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
 
@@ -500,13 +506,12 @@ export default {
       this.form = e;
       this.form.aics_type_id = 8;
       this.form.mode_of_admission = "Referral";
-
+      if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
-      this.beneficiary_region_selector =
-        this.regions[this.dialog_data.psgc.region_name];
+      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name];
       this.getBeneficiaryPsgc();
-      this.beneficiary_province_selector =
-        this.beneficiary_provinces[this.dialog_data.psgc.province_name];
+      this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name];
+
     },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
@@ -673,14 +678,14 @@ export default {
 
     groupByKey(array, key) {
 
-      if (Array.isArray(array)) {
-        return array.reduce((hash, obj) => {
-          if (obj[key] === undefined) return hash;
-          return Object.assign(hash, {
-            [obj[key]]: (hash[obj[key]] || []).concat(obj),
-          });
-        }, {});
-      }
+
+      return array.reduce((hash, obj) => {
+        if (obj[key] === undefined) return hash;
+        return Object.assign(hash, {
+          [obj[key]]: (hash[obj[key]] || []).concat(obj),
+        });
+      }, {});
+
     },
 
     isEmpty(value) {
@@ -729,14 +734,7 @@ export default {
     this.getRegions();
     this.getCategories();
     this.getPayrolls();
-
-    /*console.log( this.regions);
-      if(this.regions.length > 0 && this.dialog_data.psgc)
-      {
-        this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name];
-        this.getBeneficiaryPsgc();
-       
-      }*/
+   
   },
 };
 </script>
