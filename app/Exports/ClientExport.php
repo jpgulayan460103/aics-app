@@ -48,6 +48,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'aics_client.aics_type',
             'aics_client.subcategory',
             'aics_client.category',
+            'aics_client.user'
         ])
         ->where('payroll_id', $this->payroll->id)
         ->where('status', 'claimed')
@@ -122,9 +123,11 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
     public function map($payroll_client): array
     {
         //dd($payroll_client);
+      
         return [
             $payroll_client->created_at->format("m/d/Y h:i:s"),
-            env('COMPUTERNAME'),
+            //env('COMPUTERNAME'),
+            $payroll_client->aics_client->user?  $payroll_client->aics_client->user->name :env('COMPUTERNAME'),
             $payroll_client->sequence,
             $payroll_client->updated_at->format("m/d/Y h:i:s"),
             $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->region_name."/".$payroll_client->aics_client->psgc->region_psgc : "",

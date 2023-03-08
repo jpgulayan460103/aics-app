@@ -152,7 +152,7 @@
                     </tr>
                     <tr style="text-align: center;">
                         <td>
-                            <div class="sig"> </div><br>
+                            <div class="sig">{{$payroll->sdo}} </div><br>SDO
                         </td>
                         <td>
                             <div class="sig"></div><br>

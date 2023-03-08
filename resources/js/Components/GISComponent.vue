@@ -454,6 +454,7 @@ export default {
       form: {
         aics_type_id: 8,
         mode_of_admission: "Referral",
+        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention."
       },
       assistance_types: {},
       psgc: {},
@@ -502,6 +503,7 @@ export default {
       this.form = e;
       this.form.aics_type_id = 8;
       this.form.mode_of_admission = "Referral";
+      this.form.assessment = this.form.assessment? this.form.assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
       this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name];
@@ -593,6 +595,8 @@ export default {
       this.form = {
         aics_type_id: 8,
         mode_of_admission: "Referral",
+        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention."
+    
       };
       this.beneficiary_provinces = {};
       this.beneficiary_cities = {};
@@ -725,6 +729,7 @@ export default {
     }
     this.form.aics_type_id = 8;
     this.form.mode_of_admission = "Referral";
+    this.form.assessment = this.form.assessment? this.form.assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
     this.calculateAge();
     this.getAssistanceTypes();
     this.getRegions();
