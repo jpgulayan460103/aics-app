@@ -231,7 +231,7 @@
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
                   <span color="red"></span></label>
                 <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
-                  @input="calculateAge" />
+                  @input="calculateAge" required />
 
                 <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
                   {{ validationErrors.birth_date[0] }}
