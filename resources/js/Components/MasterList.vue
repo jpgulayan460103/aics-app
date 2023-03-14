@@ -9,7 +9,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"></GISComponent>
+          <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData" :set-dialog-create="setDialogCreate"></GISComponent>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -120,6 +120,9 @@ export default {
         route("api.pdf.gis2", { id: item.id }),
         "_blank"
       );
+    },
+    setDialogCreate(value){
+      this.dialog_create = value;
     }
   },
   mounted() {
