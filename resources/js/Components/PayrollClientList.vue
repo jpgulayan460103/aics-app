@@ -1,6 +1,7 @@
 <template>
   <v-card flat outlined>
 
+
     <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
@@ -57,7 +58,23 @@
         @update:page="currentPage" :footer-props="{
           'items-per-page-options': [10],
           'disable-items-per-page': true,
-        }">
+          'showFirstLastPage': true,
+
+        }" :page="page">
+
+        <template v-slot:footer.page-text="{ pageStart, pageStop, itemsLength }">
+          <v-row align="center" no-gutters >
+            <v-col> 
+              <label for="">Page No.</label>
+              <input type="text" name="" id="" class="form-control" v-model="page">
+            </v-col>
+            <v-col>
+              {{ pageStart }} of {{ itemsLength }}
+            </v-col>
+          </v-row>
+
+        </template>
+
         <template v-slot:item.key="{ item }">
           {{ item.key }}
         </template>
@@ -118,7 +135,9 @@
       </v-card>
     </v-dialog>-->
 
-    <iframe :src="url" title="description" style="height:200px;width:300px;"></iframe>
+
+
+
 
 
   </v-card>

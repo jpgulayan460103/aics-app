@@ -22,8 +22,9 @@
             border: solid 1px #a0a0a0;
         }
 
-
-
+        #payroll th{
+            padding: 2px !important;
+        }
         table tr.page {
             page-break-before: always
         }
@@ -66,15 +67,24 @@
             margin-top: 10px;
             font-weight: bold;
         }
-        h3 {margin: 0px; margin-top:5px;}
+
+        h3 {
+            margin: 0px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
 <body>
     <main>
-      
+        <div style="display:none;">
+            {{ $padding = 18 }}
+            @if (isset($_GET['gt']))
+                {{ $padding = 14 }}
+            @endif
+        </div>
 
-        <table id="payroll" cellpadding=9 cellspacing=0>
+        <table id="payroll" cellpadding=0 cellspacing=0>
             <tr>
                 <td style="text-align:center; border: 0px;" colspan="7">
                     <div style="float: right;text-align: right; font-size:8pt;">{{ $clients->currentPage() }}</div>
@@ -95,6 +105,8 @@
 
                 </td>
             </tr>
+        </table>
+        <table id="payroll" cellpadding='{{ $padding }}' cellspacing=0>
             <tr>
                 <th>No. </th>
                 <th>Last Name</th>
@@ -119,12 +131,14 @@
                     <td>{{ $client->aics_client->last_name }} {{ $client->aics_client->ext_name }}</td>
                     <td>{{ $client->aics_client->first_name }}</td>
                     <td>{{ $client->aics_client->middle_name }}</td>
-                    <td style="width:100px; text-align:right;">{{ number_format(($client->deleted_at == null ? $payroll->amount : 0)) }}</td>
+                    <td style="width:100px; text-align:right;">
+                        {{ number_format($client->deleted_at == null ? $payroll->amount : 0) }}</td>
                     <td style="width:200px">
-                        {{ $client->new_payroll_client ? "Moved to Payroll ".$client->new_payroll_client->payroll->amount." | Client No:".$client->new_payroll_client->sequence : "" }}
+                        {{ $client->new_payroll_client ? 'Moved to Payroll ' . $client->new_payroll_client->payroll->amount . ' | Client No:' . $client->new_payroll_client->sequence : '' }}
                     </td>
                     <td style="width:100px;"></td>
-                    <span style="display:none;">{{ $sum += ( $client->deleted_at == null ? $payroll->amount : 0) }}</span>
+                    <span
+                        style="display:none;">{{ $sum += $client->deleted_at == null ? $payroll->amount : 0 }}</span>
                 </tr>
             @endforeach
             <tr style="font-weight:bold;">
@@ -152,21 +166,21 @@
                         <td>Approved By:</td>
                         <td style="width:10%;"></td>
                     </tr>
-                    
+
                     <tr>
                         <td></td>
                         <td>
-                            <div class="sig">	DAHLIA S. PADILLO</div>
+                            <div class="sig"> DAHLIA S. PADILLO</div>
                             <br>OIC-ARD for Operations
                         </td>
                         <td>
-                            <div class="sig">ATTY. VANESSA B. GOC-ONG		</div><br>
-                            Regional Director	
+                            <div class="sig">ATTY. VANESSA B. GOC-ONG </div><br>
+                            Regional Director
                         </td>
                         <td>
-                         	
+
                         </td>
-                        
+
 
                     </tr>
                 </table>
