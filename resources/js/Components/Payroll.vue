@@ -195,12 +195,19 @@
 
               <v-list>
                 <v-list-item link>
-                  <v-list-item-title @click="DownloadPayroll(item)" :disabled="isExporting">Export
-                    (CRIMS)
+                  <v-list-item-title @click="DownloadPayroll(item, 'unclaimed')" :disabled="isExporting">
+                    Export (Unclaimed)
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item link>
-                  <v-list-item-title @click="exportCoe(item.id)">Export (COE)</v-list-item-title>
+                  <v-list-item-title @click="DownloadPayroll(item)" :disabled="isExporting">
+                    Export (CRIMS)
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item link>
+                  <v-list-item-title @click="exportCoe(item.id)">
+                    Export (COE)
+                  </v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -340,9 +347,9 @@ export default {
         alert("Cancelled");
       }
     },
-    DownloadPayroll: debounce(function (payroll) {
+    DownloadPayroll: debounce(function (payroll, status = "claimed") {
       this.isExporting = true;
-      axios.post(route('api.payroll.export', payroll.id))
+      axios.post(route('api.payroll.export', payroll.id), {status})
         .then((res) => {
           this.isExporting = false;
           window.location.href = res.data.file;

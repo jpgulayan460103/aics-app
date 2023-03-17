@@ -18,29 +18,15 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
     use Exportable, RemembersRowNumber;
 
     private $payroll;
-    public function  __construct(Payroll $payroll)
+    private $claim_status;
+    public function  __construct(Payroll $payroll, $claim_status = "claimed")
     {
         $this->payroll = $payroll;
+        $this->claim_status = $claim_status;
     }
-
-    // public function query()
-    // {
-    //     return AicsClient::query()->with(['psgc', 'payroll', 'aics_type'])->whereNotNull('payroll_id');
-    // }
 
     public function collection()
     {
-        /*$collection = AicsClient::query()->with([
-            'psgc',
-            'payroll',
-            'aics_type',
-            'subcategory',
-            'category',
-        ])
-        ->where('payroll_id', $this->payroll->id)
-        ->where('status', 'claimed')
-        ->orderBy('payroll_insert_at',"asc")
-        ->get();*/
 
         $collection = PayrollClient::query()->with([
             'aics_client',
@@ -49,11 +35,15 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'aics_client.subcategory',
             'aics_client.category',
             'aics_client.user'
-        ])
-        ->where('payroll_id', $this->payroll->id)
-        ->where('status', 'claimed')
-        ->orderBy('sequence',"asc")
-        ->get();
+        ]);
+        $collection->where('payroll_id', $this->payroll->id);
+        if($this->claim_status == "unclaimed"){
+            $collection->whereNull('status');
+        }else{
+            $collection->where('status', 'claimed');
+        }
+        $collection->orderBy('sequence',"asc");
+        $collection = $collection->get();
 
         return $collection->map(function ($item, $key) {
             $item->key = $key;
@@ -126,8 +116,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
       
         return [
             $payroll_client->created_at->format("m/d/Y h:i:s"),
-            //env('COMPUTERNAME'),
-            $payroll_client->aics_client->user?  $payroll_client->aics_client->user->name :env('COMPUTERNAME'),
+            $this->claim_status == "claimed" ? ( $payroll_client->aics_client->user?  $payroll_client->aics_client->user->name :env('COMPUTERNAME')) : "UNCLAIMED",
             $payroll_client->sequence,
             $payroll_client->updated_at->format("m/d/Y h:i:s"),
             $payroll_client->aics_client->psgc ? $payroll_client->aics_client->psgc->region_name."/".$payroll_client->aics_client->psgc->region_psgc : "",

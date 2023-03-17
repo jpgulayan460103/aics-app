@@ -116,7 +116,7 @@ class AicsClientController extends Controller
 
                 $aics_client->save();
                 DB::commit();
-                return ["message" => "Saved", "client" => $aics_client];
+                return ["message" => "Saved", "client" => $aics_client->load('payroll_client')];
             }
         } catch (Exception $e) {
             DB::rollBack();

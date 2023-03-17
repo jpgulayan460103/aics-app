@@ -224,7 +224,7 @@
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
                   <span color="red"></span></label>
                 <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
-                  @input="calculateAge" />
+                  @input="calculateAge" required />
 
                 <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
                   {{ validationErrors.birth_date[0] }}
@@ -448,7 +448,7 @@
 <script>
 import { debounce, cloneDeep } from 'lodash'
 export default {
-  props: ["dialog_data", "getList", "userData"],
+  props: ["dialog_data", "getList", "userData", "setDialogCreate"],
   data() {
     return {
       form: {
@@ -569,7 +569,8 @@ export default {
           .then((response) => {
             this.submit = false;
             console.log(response.data);
-            alert(response.data.message);
+            this.setDialogCreate(false);
+            alert(`${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`);
             this.getList();
             /*if (response.data.aics_beneficiary_id) {
               alert(
@@ -580,7 +581,8 @@ export default {
           })
           .catch((error) => {
             this.submit = false;
-            if (error.response.status == 422) {
+            console.log(error);
+            if (error.response && error.response.status == 422) {
               alert("Kumpletohin ang form. \nPlease complete the form.");
               this.validationErrors = error.response.data.errors;
             }

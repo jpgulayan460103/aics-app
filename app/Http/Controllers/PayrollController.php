@@ -231,7 +231,7 @@ class PayrollController extends Controller
         }
     }
 
-    public function export($payroll_id)
+    public function export(Request $request, $payroll_id)
     {
         $payroll = Payroll::findOrFail($payroll_id);
         $filename = "";
@@ -241,7 +241,7 @@ class PayrollController extends Controller
         $filename .= Str::slug($payroll->amount) . "-";
         $filename .= Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
-        Excel::store(new ClientExport($payroll), "public/$export_file_name", 'local');
+        Excel::store(new ClientExport($payroll, $request->status), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];
