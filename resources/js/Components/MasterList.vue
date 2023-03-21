@@ -59,6 +59,7 @@
 
           </template>
         </v-data-table>
+        <button @click="downloadClient()">Download</button>
       </v-card-text>
     </v-card>
   </div>
@@ -67,6 +68,7 @@
 <script>
 import GISComponent from "./GISComponent.vue";
 import userMixin from './../Mixin/userMixin.js'
+import { debounce } from "lodash";
 
 export default {
   mixins: [userMixin],
@@ -96,6 +98,8 @@ export default {
         { value: "status", text: "Status", sortable: true },
         { value: "actions", text: "Actions" },
       ],
+      isExporting: false,
+
     };
   },
 
@@ -123,7 +127,19 @@ export default {
     },
     setDialogCreate(value){
       this.dialog_create = value;
-    }
+    },
+    downloadClient: debounce(function (status = "unclaimed") {
+      this.isExporting = true;
+      axios.post(route('api.client.export'), {status})
+        .then((res) => {
+          this.isExporting = false;
+          window.location.href = res.data.file;
+        })
+        .catch(err => {
+          console.warn(err);
+          this.isExporting = false;
+        });
+    }, 250),
   },
   mounted() {
     this.getList();

@@ -82,6 +82,5 @@ class DirtyListController extends Controller
     public function destroy($id)
     {
         DirtyList::findOrFail($id)->delete();
-        AicsClient::whereNull('payroll_id')->delete();
     }
 }

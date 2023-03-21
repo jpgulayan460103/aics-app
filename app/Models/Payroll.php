@@ -12,7 +12,7 @@ class Payroll extends Model
 
     public function clients()
     {
-        return $this->hasMany(PayrollClient::class);
+        return $this->hasMany(PayrollClient::class)->withTrashed();
     }
 
     public function psgc()

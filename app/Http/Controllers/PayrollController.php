@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ClientExport;
+use App\Exports\PayrollExport;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -67,7 +67,8 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with([
             "psgc",
-            "clients.aics_client"
+            "clients.aics_client",
+            "clients.new_payroll_client.payroll"
         ])->find($id);
 
         if ($payroll) {
@@ -241,7 +242,7 @@ class PayrollController extends Controller
         $filename .= Str::slug($payroll->amount) . "-";
         $filename .= Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
-        Excel::store(new ClientExport($payroll, $request->status), "public/$export_file_name", 'local');
+        Excel::store(new PayrollExport($payroll, $request->status), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];

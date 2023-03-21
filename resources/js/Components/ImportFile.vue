@@ -119,6 +119,7 @@ export default {
      // console.log(this.formData);
     },
     getUploadedFiles(){
+      this.uploadedFiles = [];
       axios.get(route('api.dirty-list.index'))
       .then(res => {
         this.uploadedFiles = res.data;

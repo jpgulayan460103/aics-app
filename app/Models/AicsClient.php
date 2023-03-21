@@ -33,18 +33,7 @@ class AicsClient extends Model
         'mode_of_admission',
         'dirty_list_id',
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-        self::updating(function($model) {
-            if($model->payroll_id){
-                $model->dirty_list_id = null;
-            }
-        });
-    }
-
-
+    
     public function user()
     {
         return $this->belongsTo(User::class,);

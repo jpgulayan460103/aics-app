@@ -60,8 +60,18 @@
           'disable-items-per-page': true,
           'showFirstLastPage': true,
 
-        }" :page="page">
+        }"
+        @toggle-select-all="selectAllToggle"
+        :page="page">
 
+        <template v-slot:item.data-table-select="{ item, isSelected, select }">
+        <v-simple-checkbox
+          :value="isSelected"
+          :readonly="item.deleted_at != null"
+          :disabled="item.deleted_at != null"
+          @input="select($event)"
+        ></v-simple-checkbox>
+      </template>
         <template v-slot:footer.page-text="{ pageStart, pageStop, itemsLength }">
           <v-row align="center" no-gutters >
             <v-col> 
@@ -103,19 +113,29 @@
         </template>-->
 
         <template v-slot:item.status="{ item }">
-          <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)"
-            v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
-            <div>{{ item.status }}</div>
-            <template v-slot:input>
-              <div class="mt-4 text-h6">Claim Status</div>
-              <select class="form-control" v-model="item.status">
+          <span v-if="item.deleted_at == null">
+            <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)"
+              v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+              <div>{{ item.status }}</div>
+              <template v-slot:input>
+                <div class="mt-4 text-h6">Claim Status</div>
+                <select class="form-control" v-model="item.status">
 
-                <option value="claimed">Claimed</option>
-                <option value="">Unclaimed</option>
-                <option value="cancelled-revalidate">Cancelled (Revalidate)</option>
-              </select>
-            </template>
-          </v-edit-dialog>
+                  <option value="claimed">Claimed</option>
+                  <option value="">Unclaimed</option>
+                  <option value="cancelled-revalidate">Cancelled (Revalidate)</option>
+                </select>
+              </template>
+            </v-edit-dialog>
+          </span>
+          <span v-else>
+            <span v-if="item.new_payroll_client">
+              Moved to {{ item.new_payroll_client.payroll.title }} Client #: {{ item.new_payroll_client.sequence }}
+            </span>
+            <span v-else>
+              Removed from Payroll List
+            </span>
+          </span>
         </template>
       </v-data-table>
     </v-card-text>
@@ -156,6 +176,7 @@ export default {
     return {
       data: [],
       isBusy: false,
+      disabledCount: 0,
       headers: [
         { value: "sequence", text: "No.", sortable: false, width: "20px;" },
         { value: "last_name", text: "Last Name", sortable: false, width: "100px;" },
@@ -227,8 +248,10 @@ export default {
       let promises = [];
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
-        item.status = "claimed";
-        promises.push(this.save(item));
+        if(!item.deleted_at){
+          item.status = "claimed";
+          promises.push(this.save(item));
+        }
       }
       await Promise.all(promises);
       this.getClients();
@@ -263,7 +286,18 @@ export default {
       );*/
 
 
-    }
+    },
+    selectAllToggle(props) {
+       if(this.selected.length != this.data.length - this.disabledCount) {
+         this.selected = [];
+         const self = this;
+         props.items.forEach(item => {
+           if(!item.deleted_at) {
+             self.selected.push(item);
+           } 
+         });
+       } else this.selected = [];
+     }
 
 
   },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ClientExport;
 use App\Exports\ImportErrors;
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
@@ -235,5 +236,17 @@ class AicsClientController extends Controller
             $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);
             return $pdf->stream('gis.pdf');
         }
+    }
+
+    public function export(Request $request)
+    {
+        $filename = "";
+        $filename .= "aics-masterlist-";
+        $filename .= Str::slug(Carbon::now());
+        $export_file_name = "$filename.xlsx";
+        Excel::store(new ClientExport(), "public/$export_file_name", 'local');
+        return [
+            "file" => url(Storage::url("public/$export_file_name")),
+        ];
     }
 }
