@@ -68,7 +68,7 @@
 <script>
 import GISComponent from "./GISComponent.vue";
 import userMixin from './../Mixin/userMixin.js'
-import { debounce } from "lodash";
+import { debounce, cloneDeep } from "lodash";
 
 export default {
   mixins: [userMixin],
@@ -117,7 +117,7 @@ export default {
     EditItem(item) {
       this.dialog_create = true;
       this.dialogData_edit = {};
-      this.dialogData_edit = item;
+      this.dialogData_edit = cloneDeep(item);
     },
     PrintGIS(item) {
       window.open(
@@ -140,6 +140,13 @@ export default {
           this.isExporting = false;
         });
     }, 250),
+  },
+  watch: {
+    dialog_create(newVal, oldVal){
+      if(!newVal){
+        this.dialogData_edit = {};
+      }
+    }
   },
   mounted() {
     this.getList();

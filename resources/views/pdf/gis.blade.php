@@ -269,9 +269,9 @@
         style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: dotted 1px; border-radius:50%; ">
         {{ $aics_beneficiary['payroll_client']['sequence'] }}</div>
     <div class="data-textbox" style="top:86pt;right:20pt;">
-        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'm-d-Y') }}</div>
+        {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('m-d-Y') }}</div>
     <div class="data-textbox" style="top:103pt;right:20pt;">
-        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'H:i a') }}</div>
+        {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('h:i a')}}</div>
 
 
     <div id="aics-beneficiary-last-name" class="data-textbox">{{ strtoupper($aics_beneficiary['last_name']) }}</div>

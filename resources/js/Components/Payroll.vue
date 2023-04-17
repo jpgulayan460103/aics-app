@@ -212,9 +212,9 @@
               </v-list>
             </v-menu>
 
-           <!-- <v-icon small class="mr-5" @click="DeleteItem(item)"  v-if="userData.role == 'Super-Admin'">
+           <v-icon small class="mr-5" @click="DeleteItem(item)"  v-if="userData.role == 'Super-Admin'">
               mdi-delete
-            </v-icon>-->
+            </v-icon>
           </template>
         </v-data-table>
       </v-card-text>
