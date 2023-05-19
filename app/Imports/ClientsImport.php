@@ -52,16 +52,22 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             $psgc = Psgc::where('brgy_psgc', $row['psgc'])->first();
             $psgc_id = $psgc->id;
         }
+        $first_name = mb_strtoupper(trim($row['first_name'] ?? null));
+        $middle_name = mb_strtoupper(trim($row['middle_name'] ?? null));
+        $last_name = mb_strtoupper(trim($row['last_name'] ?? null));
+        $ext_name = mb_strtoupper(trim($row['ext_name'] ?? null));
         return new AicsClient([
             'dirty_list_id' => $this->dirtyList->id,
-            'first_name'    => mb_strtoupper(trim($row['first_name'] ?? null)),
-            'middle_name'   => mb_strtoupper(trim($row['middle_name'] ?? null)),
-            'last_name'     => mb_strtoupper(trim($row['last_name'] ?? null)),
-            'ext_name'      => mb_strtoupper(trim($row['ext_name'] ?? null)),
+            'first_name'    => $first_name,
+            'middle_name'   => $middle_name,
+            'last_name'     => $last_name,
+            'ext_name'      => $ext_name,
             'street_number' => mb_strtoupper(trim($row['street_number'] ?? null)),
+            'meta_full_name' => metaphone($first_name).metaphone($middle_name).metaphone($last_name),
             'birth_date'    => $birth_date,
             'gender'        => $row['gender'],
             'psgc_id'       => $psgc_id,
+            'full_name'     => "$first_name $middle_name $last_name $ext_name",
         ]);
     }
 

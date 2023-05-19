@@ -32,7 +32,21 @@ class AicsClient extends Model
         'civil_status',
         'mode_of_admission',
         'dirty_list_id',
+        'meta_full_name',
+        'full_name'
     ];
+    
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function($model) {
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+        });
+        self::updating(function($model) {
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+        });
+    }
+
     
     public function user()
     {

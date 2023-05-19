@@ -29,10 +29,29 @@ class AicsClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // return AicsClient::paginate(10);
-        return AicsClient::with("psgc", "payroll_client.payroll")->get();
+        $clients = AicsClient::with("psgc", "payroll_client.payroll");
+        DB::enableQueryLog();
+        if($request->search){
+            $search = $request->search;
+            $keywords = explode(" ", $search);
+            // $clients->where("full_name" , "like", "%$search%");
+            // $clients->orWhere("meta_full_name" , "like", "%".metaphone($search)."%");
+            $clients->where(function($query) use ($keywords){
+                foreach ($keywords as $keyword) {
+                    $query->where("full_name" , "like", "%$keyword%");
+                }
+            });
+            $clients->orWhere(function($query) use ($keywords){
+                foreach ($keywords as $keyword) {
+                    $query->where("meta_full_name" , "like", "%".metaphone($keyword)."%");
+                }
+            });
+        }
+        $clients = $clients->paginate(20);
+        // return DB::getQueryLog();
+        return $clients;
     }
 
     /**
@@ -232,7 +251,7 @@ class AicsClientController extends Controller
             ->whereIn("id", $request->ids)
             ->get();
         if ($client) {
-            return view('pdf.gis_many', ["aics_beneficiaries" => $client->toArray()]);
+            // return view('pdf.gis_many', ["aics_beneficiaries" => $client->toArray()]);
             $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);
             return $pdf->stream('gis.pdf');
         }

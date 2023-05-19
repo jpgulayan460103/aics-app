@@ -257,8 +257,8 @@
     </style>
 </head>
 
+@foreach ($aics_beneficiaries as $aics_beneficiary)
 <body>
-   @foreach ($aics_beneficiaries as $aics_beneficiary)
        
    
     <div style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; text-align: center;z-index: -1000; ">
@@ -373,9 +373,9 @@ endif;-->
 
     </div>
 
-    <div style="page-break-after: always;"></div>
-
-    @endforeach
+    
+    <!-- <div style="page-break-after: always;"></div> -->
 </body>
+@endforeach
 
 </html>

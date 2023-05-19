@@ -17,11 +17,20 @@
       <v-card-title>
         Master List
         <v-spacer></v-spacer>
-        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+        <v-text-field @keyup="searchClient" v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table dense :headers="headers" :items="data" :items-per-page="10" :loading="isBusy"
-          loading-text="Loading... Please wait" :search="search">
+        <v-container class="bg-surface-variant" :fluid="true">
+          <v-row no-gutters>
+          <v-col cols="12" sm="12">
+        <v-data-table
+          :headers="headers"
+          :items="data"
+          :loading="isBusy"
+          dense
+          loading-text="Loading... Please wait"
+          :hide-default-footer="true"
+        >
           <template v-slot:item.status="{ item }">
 
             <v-chip v-if="item.payroll_client">
@@ -59,7 +68,22 @@
 
           </template>
         </v-data-table>
-        <button @click="downloadClient()">Download</button>
+        </v-col>
+        </v-row>
+        
+        <v-row no-gutters>
+          <v-col cols="12" sm="12" md="8" lg="4">
+            <v-pagination
+              v-model="currentPage"
+              :length="lastPage"
+            ></v-pagination>
+            Go to Page: 
+          </v-col>
+        </v-row>
+      </v-container>
+        <div>
+          <button @click="downloadClient()">Download</button>
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -80,8 +104,9 @@ export default {
       data: [],
       isBusy: true,
 
-      perPage: 100,
+      perPage: 20,
       currentPage: 1,
+      lastPage: 1,
       dialog_create: false,
       dialogData_edit: {},
       headers: [
@@ -107,10 +132,17 @@ export default {
     getList() {
       this.isBusy = true;
       axios
-        .get(route("api.clients"))
+        .get(route("api.clients"), {
+          params: {
+            search: this.search
+          }
+        })
         .then((response) => {
           this.isBusy = false;
-          this.data = response.data;
+          this.data = response.data.data;
+          this.perPage = response.data.per_page;
+          this.currentPage = response.data.current_page;
+          this.lastPage = response.data.last_page;
         })
         .catch((error) => console.log(error));
     },
@@ -140,6 +172,9 @@ export default {
           this.isExporting = false;
         });
     }, 250),
+    searchClient: debounce(function() {
+      this.getList();
+    }, 500)
   },
   watch: {
     dialog_create(newVal, oldVal){

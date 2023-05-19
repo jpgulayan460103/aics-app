@@ -12,12 +12,9 @@
       <v-btn @click="print_w_gt()" color="black" dark class="m-1">
         <v-icon> mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
       </v-btn>
-
-
-
-
-      <v-icon @click="print_footer()"> mdi mdi-foot-print</v-icon>
-      <!--<v-icon>mdi-download</v-icon>-->
+      <v-btn @click="print_footer()" color="black" dark class="m-1">
+        <v-icon> mdi mdi-foot-print</v-icon> Print Footer
+      </v-btn>
 
     </v-card-title>
     <v-card-text>
@@ -270,15 +267,22 @@ export default {
     PrintGISMany() {
       console.log(this.selected);
       let ids = this.selected.map(item => item.aics_client_id);
-
-      ids.forEach(id => {
-
-        window.open(
-          route("api.pdf.gis2", { id: id }),
+      console.log(ids);;
+      window.open(
+          route("api.pdf.gis_many", {
+            ids
+          }),
           "_blank"
-        );
+      );
 
-      });
+      // ids.forEach(id => {
+
+      //   window.open(
+      //     route("api.pdf.gis2", { id: id }),
+      //     "_blank"
+      //   );
+
+      // });
 
       /*window.open(
         route("api.pdf.gis2", { id: item.id }),

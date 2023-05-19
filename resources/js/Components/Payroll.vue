@@ -152,9 +152,14 @@
 
       <v-card-title>Payroll <v-spacer />
         <v-progress-circular :width="3" indeterminate color="primary" v-if="isExporting"></v-progress-circular>
-
-        <v-btn @click="NewPayroll()" dark class="m-1"
-          v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">New Payroll</v-btn>
+        <v-btn
+          class="m-1"
+          @click="NewPayroll()"
+          dark
+          v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'"
+        >
+          New Payroll
+        </v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
