@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class AicsClient extends Model
 {
@@ -41,9 +42,11 @@ class AicsClient extends Model
         parent::boot();
         self::creating(function($model) {
             $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+            $model->uuid = Str::uuid();
         });
         self::updating(function($model) {
             $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
         });
     }
 

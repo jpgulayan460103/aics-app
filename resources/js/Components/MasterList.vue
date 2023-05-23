@@ -20,9 +20,6 @@
         <v-text-field @keyup="searchClient" v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-container class="bg-surface-variant" :fluid="true">
-          <v-row no-gutters>
-          <v-col cols="12" sm="12">
         <v-data-table
           :headers="headers"
           :items="data"
@@ -68,22 +65,19 @@
 
           </template>
         </v-data-table>
+
+        <v-col cols="12" sm="12" md="8" lg="4">
+          <v-pagination
+            v-model="currentPage"
+            :length="lastPage"
+            @input="getList"
+          ></v-pagination>
         </v-col>
-        </v-row>
-        
-        <v-row no-gutters>
-          <v-col cols="12" sm="12" md="8" lg="4">
-            <v-pagination
-              v-model="currentPage"
-              :length="lastPage"
-            ></v-pagination>
-            Go to Page: 
-          </v-col>
-        </v-row>
-      </v-container>
+
         <div>
-          <button @click="downloadClient()">Download</button>
+          <v-btn :loading="isExporting" @click="downloadClient()" >Download</v-btn>
         </div>
+
       </v-card-text>
     </v-card>
   </div>
@@ -134,7 +128,8 @@ export default {
       axios
         .get(route("api.clients"), {
           params: {
-            search: this.search
+            search: this.search,
+            page: this.currentPage,
           }
         })
         .then((response) => {
@@ -173,6 +168,7 @@ export default {
         });
     }, 250),
     searchClient: debounce(function() {
+      this.currentPage = 1;
       this.getList();
     }, 500)
   },

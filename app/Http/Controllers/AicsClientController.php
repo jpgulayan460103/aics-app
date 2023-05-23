@@ -247,11 +247,19 @@ class AicsClientController extends Controller
 
     public function gis_many(Request $request)
     {
-        $client =  AicsClient::with("psgc", "aics_type", "payroll_client.payroll", "category", "subcategory")
-            ->whereIn("id", $request->ids)
+        $client =  AicsClient::with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $request->ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->leftJoin("payroll_clients", "aics_clients.id", "=","payroll_clients.aics_client_id")
             ->get();
         if ($client) {
-            // return view('pdf.gis_many', ["aics_beneficiaries" => $client->toArray()]);
             $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);
             return $pdf->stream('gis.pdf');
         }

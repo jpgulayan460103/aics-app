@@ -25,12 +25,8 @@ class PayrollClient extends Model
     {
         parent::boot();
         self::creating(function($model) {
-            $latest_count = self::query()->where('payroll_id', $model->payroll_id)->orderBy('sequence', 'desc')->first();
-            if($latest_count){
-                $model->sequence = $latest_count->sequence + 1;
-            }else{
-                $model->sequence = 1;
-            }
+            $latest_count = self::query()->withTrashed()->where('payroll_id', $model->payroll_id)->count();
+            $model->sequence = $latest_count + 1;
         });
         self::updating(function($model) {
             if($model->status == "claimed"){

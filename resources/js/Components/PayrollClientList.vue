@@ -5,16 +5,76 @@
     <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
+      
 
-      <v-btn @click="print()" color="black" dark class="m-1">
-        <v-icon> mdi-printer </v-icon> Print Current Page:{{ page }}</v-btn>
+      <div style="margin-right: 1em;">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon> mdi-printer </v-icon> Print
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="print_gis_page()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> GIS of Page: {{ page }}
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="print_payroll()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Payroll of Page: {{ page }}
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="print_payroll_w_gt()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="print_payroll_footer()">
+              <v-list-item-title>
+                <v-icon> mdi mdi-foot-print</v-icon> Footer Only
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
 
-      <v-btn @click="print_w_gt()" color="black" dark class="m-1">
-        <v-icon> mdi-printer </v-icon> Print last Page w/ Footer & Grand Total
-      </v-btn>
-      <v-btn @click="print_footer()" color="black" dark class="m-1">
-        <v-icon> mdi mdi-foot-print</v-icon> Print Footer
-      </v-btn>
+      <div>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="default"
+              dark
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon> mdi-cog </v-icon> Actions
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="getClients()">
+              <v-list-item-title>
+                <v-icon> mdi-refresh </v-icon> Refresh Payroll
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="markAllAsClaimed()">
+              <v-list-item-title>
+                <v-icon> mdi-check-bold </v-icon> Tag all as claimed status
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="uploadToCrims()">
+              <v-list-item-title>
+                <v-icon> mdi-cloud-upload </v-icon> Upload to Database
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
 
     </v-card-title>
     <v-card-text>
@@ -190,6 +250,7 @@ export default {
       print_options: false,
       selected: [],
       url: "",
+      clientListPerPage: 10,
     };
   },
   computed: {
@@ -202,29 +263,39 @@ export default {
     }
   },
   methods: {
-    print() {
+    print_gis_page() {
+      window.open(
+        route("api.payroll_client.printv2", { id: this.id, page: this.page }),
+        "_blank"
+      );
+    },
+    print_payroll() {
       window.open(
         route("api.payroll.printv2", { id: this.id, page: this.page }),
         "_blank"
       );
     },
-    print_w_gt() {
+    print_payroll_w_gt() {
       window.open(
         route("api.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1 }),
         "_blank"
       );
     },
-    print_footer() {
+    print_payroll_footer() {
       window.open(route("api.payroll.print_footer", this.id), "_blank");
     },
     getClients() {
+      this.isBusy = true;
       axios
         .get(route("api.payroll.show", this.id))
         .then((res) => {
           this.data = res.data;
           this.isBusy = false;
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+          this.isBusy = false;
+        });
     },
     async save(e) {
       // console.log("in save");
@@ -240,6 +311,22 @@ export default {
     isEmpty(value) {
       return isEmpty(value);
     },
+    uploadToCrims: debounce(async function () {
+
+    }, 250),
+    markAllAsClaimed: debounce(async function () {
+      //let ids = this.selected.map(item => item.id);
+      if(confirm("Are you sure you want to tag all clients as claimed?")){
+        axios.post(route('api.payroll.set_claimed', this.id))
+        .then(res => {
+          alert("All clients has been tagged as claimed.");
+          this.getClients();
+        })
+        .catch(res => {
+          console.error(res);
+        });
+      }
+    }, 250),
     MarkAsClaimed: debounce(async function () {
       //let ids = this.selected.map(item => item.id);
       let promises = [];
@@ -292,15 +379,21 @@ export default {
 
     },
     selectAllToggle(props) {
-       if(this.selected.length != this.data.length - this.disabledCount) {
+       if(this.selected.length != (this.clientListPerPage - this.disabledCount)) {
          this.selected = [];
+         this.disabledCount = 0;
          const self = this;
          props.items.forEach(item => {
            if(!item.deleted_at) {
              self.selected.push(item);
-           } 
+            }else{  
+              this.disabledCount++;
+           }
          });
-       } else this.selected = [];
+       }else{
+          console.log("remove all");
+          this.selected = [];
+       }
      }
 
 

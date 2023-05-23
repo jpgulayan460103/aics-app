@@ -62,3 +62,6 @@ Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController:
 
 Route::get('payrolls/printv2/{id}', [\App\Http\Controllers\PayrollController::class, 'printv2'])->name("api.payroll.printv2");
 Route::get('payrolls/print_coe/{id}', [\App\Http\Controllers\PayrollController::class, 'print_coe'])->name("api.payroll.print_coe");
+Route::get('gis/printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("api.payroll_client.printv2");
+Route::get('gis/printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("api.payroll_client.printv2");
+Route::post('payrolls/{id}/claimed', [\App\Http\Controllers\PayrollClientController::class, 'setAllClaimed'])->name("api.payroll.set_claimed");

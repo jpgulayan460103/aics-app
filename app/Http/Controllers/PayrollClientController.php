@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AicsClient;
+use App\Models\Payroll;
 use App\Models\PayrollClient;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class PayrollClientController extends Controller
 {
@@ -83,5 +87,41 @@ class PayrollClientController extends Controller
     public function destroy(PayrollClient $payrollClient)
     {
         //
+    }
+
+    public function printv2(Request $request, $id)
+    {
+        $page = $request->page ? $request->page : 1;
+        $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
+
+
+        $clients =  AicsClient::with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $aics_client_ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->leftJoin("payroll_clients", "aics_clients.id", "=","payroll_clients.aics_client_id")
+            ->get();
+        if ($clients) {
+            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+                return $client->payroll_client;
+            })->toArray()]);
+            return $pdf->stream('gis.pdf');
+        }
+        return $clients;
+    }
+
+    public function setAllClaimed(Request $request, $id)
+    {
+        $payroll = Payroll::findOrFail($id);
+        $payroll->clients()->update([
+            'status' => 'claimed',
+            'date_claimed' => Carbon::now()->toDateString(),
+        ]);
     }
 }

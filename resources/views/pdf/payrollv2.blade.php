@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> -->
     <meta http-equiv="Content-Type" content="charset=utf-8" />
-    <title>Document</title>
+    <title>Payroll</title>
     <style>
         body {
             font-size: 9pt;
