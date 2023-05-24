@@ -34,6 +34,7 @@
         "v-viewer": "^1.6.4",
         "vue-moment": "^4.1.0",
         "vue-router": "^3.5.3",
+        "vue-shortkey": "^3.1.7",
         "vuetify": "^2.6.14"
     }
 }

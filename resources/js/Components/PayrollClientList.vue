@@ -22,17 +22,17 @@
           <v-list>
             <v-list-item @click="print_gis_page()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> GIS of Page: {{ page }}
+                <v-icon> mdi-printer </v-icon> GIS of Page: {{ page }} <v-chip label small>CTLR + SHIFT + P</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> Payroll of Page: {{ page }}
+                <v-icon> mdi-printer </v-icon> Payroll of Page: {{ page }} <v-chip label small>CTLR + P</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll_w_gt()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total
+                <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total <v-chip label small>CTLR + ALT + P</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll_footer()">
@@ -59,7 +59,7 @@
           <v-list>
             <v-list-item @click="getClients()">
               <v-list-item-title>
-                <v-icon> mdi-refresh </v-icon> Refresh Payroll
+                <v-icon> mdi-refresh </v-icon> Refresh Payroll <v-chip label small>CTLR + R</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="markAllAsClaimed()">
@@ -98,13 +98,15 @@
       <div class="col-md-12 text-end" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
 
         <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsClaimed()">Mark as
-          Claimed</v-btn>
+          Claimed <span style="margin-left: 0.5em;"><v-chip label x-small>ALT + C</v-chip></span>
+        </v-btn>
 
         <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsUnClaimed()">Mark as
-          Unclaimed</v-btn>
+          Unclaimed <span style="margin-left: 0.5em;"><v-chip label x-small>ALT + Z</v-chip></span>
+        </v-btn>
 
         <v-btn v-if="selected.length > 0" @click="PrintGISMany()" color="black" dark class="m-1">
-          <v-icon> mdi-printer </v-icon> Print GIS
+          <v-icon> mdi-printer </v-icon> Print GIS <span style="margin-left: 0.5em;"><v-chip label x-small>CTLR + SPACE</v-chip></span>
         </v-btn>
 
       </div>
@@ -216,7 +218,13 @@
 
 
 
-
+    <span v-shortkey="['ctrl', 'r']" @shortkey="getClients()"></span>
+    <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="print_gis_page()"></span>
+    <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
+    <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span>
+    <span v-shortkey="['ctrl', 'space']" @shortkey="PrintGISMany()"></span>
+    <span v-shortkey="['alt', 'c']" @shortkey="MarkAsClaimed()"></span>
+    <span v-shortkey="['alt', 'z']" @shortkey="MarkAsUnClaimed()"></span>
   </v-card>
 </template>
 
@@ -352,31 +360,16 @@ export default {
       this.getClients();
     }, 250),
     PrintGISMany() {
-      console.log(this.selected);
-      let ids = this.selected.map(item => item.aics_client_id);
-      console.log(ids);;
-      window.open(
-          route("api.pdf.gis_many", {
-            ids
-          }),
-          "_blank"
-      );
+      if(!isEmpty(this.selected)){
+        let ids = this.selected.map(item => item.aics_client_id);
+        window.open(
 
-      // ids.forEach(id => {
-
-      //   window.open(
-      //     route("api.pdf.gis2", { id: id }),
-      //     "_blank"
-      //   );
-
-      // });
-
-      /*window.open(
-        route("api.pdf.gis2", { id: item.id }),
-        "_blank"
-      );*/
-
-
+            route("api.pdf.gis_many", {
+              ids
+            }),
+            "_blank"
+        );
+      }
     },
     selectAllToggle(props) {
        if(this.selected.length != (this.clientListPerPage - this.disabledCount)) {
