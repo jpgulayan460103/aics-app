@@ -237,6 +237,9 @@
                 </label>
 
                 <input id="age" type="text" class="form-control" :value="form.age" readonly />
+                <div v-if="validationErrors && validationErrors.age" style="color: red">
+                  {{ validationErrors.age[0] }}
+                </div>
               </div>
 
               <div class="col-md-3">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ClientExport;
 use App\Exports\ImportErrors;
+use App\Http\Requests\AicsClientUpdateRequest;
 use App\Models\AicsClient;
 use Illuminate\Http\Request;
 use App\Models\Payroll;
@@ -104,7 +105,7 @@ class AicsClientController extends Controller
      * @param  \App\Models\AicsClient  $aicsClient
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AicsClientUpdateRequest $request, $id)
     {
         DB::beginTransaction();
         try {
@@ -245,7 +246,7 @@ class AicsClientController extends Controller
         }
     }
 
-    public function gis_many(Request $request)
+    public function batchGis(Request $request)
     {
         $client =  AicsClient::with([
             "psgc",

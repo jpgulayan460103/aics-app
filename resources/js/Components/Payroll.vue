@@ -390,7 +390,7 @@ export default {
       }, {});
     },
     exportCoe(id) {
-      window.open(route("api.payroll.print_coe", id));
+      window.open(route("pdf.payroll.print_coe", id));
     },
   },
   mounted() {

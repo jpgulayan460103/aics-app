@@ -20,14 +20,19 @@
             </v-btn>
           </template>
           <v-list>
+            <v-list-item @click="PrintGISMany()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Selected GIS <v-chip label small>CTLR + SPACE</v-chip>
+              </v-list-item-title>
+            </v-list-item>
             <v-list-item @click="print_gis_page()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> GIS of Page: {{ page }} <v-chip label small>CTLR + SHIFT + P</v-chip>
+                <v-icon> mdi-printer </v-icon> All GIS of page {{ page }} <v-chip label small>CTLR + SHIFT + P</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> Payroll of Page: {{ page }} <v-chip label small>CTLR + P</v-chip>
+                <v-icon> mdi-printer </v-icon> Payroll of page {{ page }} <v-chip label small>CTLR + P</v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll_w_gt()">
@@ -62,9 +67,19 @@
                 <v-icon> mdi-refresh </v-icon> Refresh Payroll <v-chip label small>CTLR + R</v-chip>
               </v-list-item-title>
             </v-list-item>
+            <v-list-item @click="MarkAsClaimed()">
+              <v-list-item-title @click="MarkAsClaimed()">
+                <v-icon> mdi-account-check </v-icon> Tag selected as claimed <v-chip label small>ALT + C</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="MarkAsUnClaimed()">
+              <v-list-item-title @click="MarkAsUnClaimed()">
+                <v-icon> mdi-account-remove </v-icon> Tag selected as unclaimed <v-chip label small>ALT + Z</v-chip>
+              </v-list-item-title>
+            </v-list-item>
             <v-list-item @click="markAllAsClaimed()">
               <v-list-item-title>
-                <v-icon> mdi-check-bold </v-icon> Tag all as claimed status
+                <v-icon> mdi-check-all </v-icon> Tag all as claimed status
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="uploadToCrims()">
@@ -85,30 +100,17 @@
       </div>
       <div class="row">
         <div class="col-md-6" v-if="data.psgc">
-          CITY/MUNICIPALITY : {{ data.psgc.city_name }}<br />
-          BARANGAY : {{ data.psgc.brgy_name }} <br />
-          SCHEDULE : {{ data.schedule }}
+          CITY/MUNICIPALITY : <b>{{ data.psgc.city_name }}</b><br />
+          BARANGAY : <b>{{ data.psgc.brgy_name }}</b> <br />
+          SCHEDULE : <b>{{ data.schedule }}</b> <br />
+          NO. OF BENEFICIARIES: <b>{{ data.clients.length }}</b> <br />
+          NO. OF CLAIMED: <b>{{ data.clients.filter(i => i.status == "claimed").length }}</b> <br />
         </div>
         <div class="col-md-6 text-end">
           <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
             class="d-print-none"></v-text-field>
         </div>
-      </div>
-      <div class="col-md-12 text-end" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
-
-        <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsClaimed()">Mark as
-          Claimed <span style="margin-left: 0.5em;"><v-chip label x-small>ALT + C</v-chip></span>
-        </v-btn>
-
-        <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsUnClaimed()">Mark as
-          Unclaimed <span style="margin-left: 0.5em;"><v-chip label x-small>ALT + Z</v-chip></span>
-        </v-btn>
-
-        <v-btn v-if="selected.length > 0" @click="PrintGISMany()" color="black" dark class="m-1">
-          <v-icon> mdi-printer </v-icon> Print GIS <span style="margin-left: 0.5em;"><v-chip label x-small>CTLR + SPACE</v-chip></span>
-        </v-btn>
-
       </div>
       <v-data-table show-select v-model="selected" v-if="data.clients" :headers="headers" :items="data.clients.map((i, index) => {
         i.key = index + 1
@@ -273,19 +275,19 @@ export default {
   methods: {
     print_gis_page() {
       window.open(
-        route("api.payroll_client.printv2", { id: this.id, page: this.page }),
+        route("pdf.payroll_client.printv2", { id: this.id, page: this.page }),
         "_blank"
       );
     },
     print_payroll() {
       window.open(
-        route("api.payroll.printv2", { id: this.id, page: this.page }),
+        route("pdf.payroll.printv2", { id: this.id, page: this.page }),
         "_blank"
       );
     },
     print_payroll_w_gt() {
       window.open(
-        route("api.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1 }),
+        route("pdf.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1 }),
         "_blank"
       );
     },
@@ -364,7 +366,7 @@ export default {
         let ids = this.selected.map(item => item.aics_client_id);
         window.open(
 
-            route("api.pdf.gis_many", {
+            route("pdf.batch-gis", {
               ids
             }),
             "_blank"
