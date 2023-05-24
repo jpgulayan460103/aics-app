@@ -15,7 +15,7 @@ class AddUuidAicsClient extends Migration
     public function up()
     {
         Schema::table('aics_clients', function (Blueprint $table) {
-            $table->string('uuid');
+            $table->string('uuid')->nullable();
             $table->index('uuid');
         });
 
