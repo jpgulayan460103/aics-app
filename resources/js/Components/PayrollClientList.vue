@@ -366,8 +366,11 @@ export default {
         let ids = this.selected.map(item => item.aics_client_id);
         window.open(
 
-            route("pdf.batch-gis", {
-              ids
+            route(`pdf.batch-gis`, {
+              id: this.id,
+              _query: {
+                ids
+              }
             }),
             "_blank"
         );

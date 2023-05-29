@@ -49,7 +49,7 @@ Route::group(['prefix' => '/pdf'], function () {
 
     Route::group(['prefix' => '/gis'], function () {
         Route::get('printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("pdf.payroll_client.printv2");
-        Route::get('batch', [\App\Http\Controllers\AicsClientController::class, 'batchGis'])->name("pdf.batch-gis");
+        Route::get('batch/{id}', [\App\Http\Controllers\AicsClientController::class, 'batchGis'])->name("pdf.batch-gis");
     });
 
 });

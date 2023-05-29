@@ -246,7 +246,7 @@ class AicsClientController extends Controller
         }
     }
 
-    public function batchGis(Request $request)
+    public function batchGis(Request $request, $payroll_id)
     {
         $client =  AicsClient::with([
             "psgc",
@@ -258,7 +258,9 @@ class AicsClientController extends Controller
             ->whereIn("aics_clients.id", $request->ids)
             ->select("aics_clients.*")
             ->orderBy('payroll_clients.sequence')
-            ->leftJoin("payroll_clients", "aics_clients.id", "=","payroll_clients.aics_client_id")
+            ->join('payroll_clients', function ($join) use ($payroll_id) {
+                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $payroll_id);
+            })
             ->get();
         if ($client) {
             $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);

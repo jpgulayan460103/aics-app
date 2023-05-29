@@ -94,6 +94,8 @@ class PayrollClientController extends Controller
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
 
+        // dd($aics_client_ids);
+
 
         $clients =  AicsClient::with([
             "psgc",
@@ -105,7 +107,9 @@ class PayrollClientController extends Controller
             ->whereIn("aics_clients.id", $aics_client_ids)
             ->select("aics_clients.*")
             ->orderBy('payroll_clients.sequence')
-            ->leftJoin("payroll_clients", "aics_clients.id", "=","payroll_clients.aics_client_id")
+            ->join('payroll_clients', function ($join) use ($id) {
+                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $id);
+            })
             ->get();
         if ($clients) {
             $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
