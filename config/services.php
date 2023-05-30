@@ -31,7 +31,7 @@ return [
     ],
 
     'aics' => [
-        'database' => env('AICS_DATABASE_URL', "https://fo11apps.dswd.gov.ph/aics-database/api/clients"),
+        'database' => env('AICS_DATABASE_URL', "https://fo11apps.dswd.gov.ph/aics-database"),
     ],
 
 ];

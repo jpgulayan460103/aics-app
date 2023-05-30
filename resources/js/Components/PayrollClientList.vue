@@ -227,7 +227,12 @@
         </v-card-title>
         <v-card-text>
           Database status: <b>{{ crimsUploads.connectionStatus }}</b><br>
-          <span v-if="crimsUploads.isConnected">Uploading status: <b>{{ Math.round(uploadProgress, 2)  }}%</b></span>
+          <span v-if="crimsUploads.isConnected">
+            Uploading status: <b>{{ Math.round(uploadProgress, 2)  }}%</b>
+          </span>
+          <span v-else>
+            Please check connection to server <a :href="uploadConfig.globalUrl">{{ uploadConfig.globalUrl }}</a>
+          </span>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -361,9 +366,9 @@ export default {
     uploadToCrims: debounce(async function () {
       this.uploadDialog = true;
       this.crimsUploads.connectionStatus = "Connecting...";
-      const { databaseUrl, serverName } = this.uploadConfig;
+      const { globalUrl, localUrl, serverName } = this.uploadConfig;
       try {
-        await axios.get(databaseUrl);
+        await axios.get(`${globalUrl}/api/clients`);
         this.crimsUploads.connectionStatus = "Connected";
         this.crimsUploads.isConnected = true;
         const claimedClients = this.data.clients.filter(i => i.status == "claimed");
@@ -375,19 +380,13 @@ export default {
         
         for (let index = 0; index < this.crimsUploads.lastBatch; index++) {
           this.crimsUploads.clients = claimedClients.slice((this.crimsUploads.perClient * this.crimsUploads.currentBatch), ((this.crimsUploads.currentBatch + 1) * this.crimsUploads.perClient));
-          await axios.post(databaseUrl, {
-            'aics_clients': this.crimsUploads.clients.map(client => {
+          const aics_clients =  this.crimsUploads.clients.map(client => {
               let newClient = {
                 entered_datetime: client.created_at,
                 entered_by: serverName,
                 client_number: client.sequence,
                 accomplished_datetime: client.updated_at,
                 psgc: client.aics_client.psgc.brgy_psgc,
-                region_name: client.aics_client.psgc.region_name,
-                province_name: client.aics_client.psgc.province_name,
-                city_name: client.aics_client.psgc.city_name,
-                brgy_name: client.aics_client.psgc.brgy_name,
-                district_name: client.aics_client.psgc.district,
                 last_name: client.aics_client.last_name,
                 first_name: client.aics_client.first_name,
                 middle_name: client.aics_client.middle_name,
@@ -407,8 +406,9 @@ export default {
                 uuid: client.aics_client.uuid,
               };
               return newClient
-            })
-          });
+            });
+          await axios.post(`${globalUrl}/api/clients`, {aics_clients});
+          await axios.post(`${localUrl}/api/clients`, {aics_clients});
           this.crimsUploads.currentBatch++;
         }
 

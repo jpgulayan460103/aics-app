@@ -59,3 +59,6 @@ Route::get('uploaded-files', [\App\Http\Controllers\DirtyListController::class, 
 Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController::class, 'destroy'])->name("api.dirty-list.delete");
 
 Route::post('payrolls/{id}/claimed', [\App\Http\Controllers\PayrollClientController::class, 'setAllClaimed'])->name("api.payroll.set_claimed");
+
+Route::get('clients', [\App\Http\Controllers\ServedClientController::class, 'index'])->name("api.served-clients.index");
+Route::post('clients', [\App\Http\Controllers\ServedClientController::class, 'store'])->name("api.served-clients.store");

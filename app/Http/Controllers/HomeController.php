@@ -31,7 +31,8 @@ class HomeController extends Controller
         $data = [
             'user' => $user,
             'upload_config' => [
-                'databaseUrl' => config('services.aics.database'),
+                'localUrl' => url('/'),
+                'globalUrl' => config('services.aics.database'),
                 'serverName' => env('computername'),
             ]
         ];
