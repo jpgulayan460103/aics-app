@@ -35,7 +35,7 @@
        
       </div>
       <div class="col-md-10">
-        <router-view :user="user"></router-view>
+        <router-view :user="user" :upload-config="uploadConfig"></router-view>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  props: ['user'],
+  props: ['user', 'uploadConfig'],
   data() {
     return {
       selectedItem: 1,

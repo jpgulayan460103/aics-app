@@ -30,6 +30,10 @@ class HomeController extends Controller
         ])->findOrFail(Auth::user()->id);
         $data = [
             'user' => $user,
+            'upload_config' => [
+                'databaseUrl' => config('services.aics.database'),
+                'serverName' => env('computername'),
+            ]
         ];
         return view('home', $data);
     }

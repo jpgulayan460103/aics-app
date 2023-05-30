@@ -67,7 +67,10 @@ class PayrollController extends Controller
     {
         $payroll = Payroll::with([
             "psgc",
-            "clients.aics_client",
+            "clients.aics_client.psgc",
+            "clients.aics_client.aics_type",
+            "clients.aics_client.subcategory",
+            "clients.aics_client.category",
             "clients.new_payroll_client.payroll"
         ])->withTrashed()->find($id);
 

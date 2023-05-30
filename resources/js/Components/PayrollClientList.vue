@@ -216,6 +216,34 @@
       </v-card>
     </v-dialog>-->
 
+    <v-dialog
+      v-model="uploadDialog"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Uploading to Database
+        </v-card-title>
+        <v-card-text>
+          Database status: <b>{{ crimsUploads.connectionStatus }}</b><br>
+          <span v-if="crimsUploads.isConnected">Uploading status: <b>{{ Math.round(uploadProgress, 2)  }}%</b></span>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="uploadDialog = false"
+            v-if="crimsUploads.lastBatch == crimsUploads.currentBatch"
+          >
+            Done
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 
 
 
@@ -238,12 +266,21 @@ import userMixin from './../Mixin/userMixin.js'
 
 export default {
   mixins: [userMixin],
-  props: ["id", "user"],
+  props: ["id", "user", "uploadConfig"],
   data() {
     return {
       data: [],
       isBusy: false,
       disabledCount: 0,
+      uploadDialog: false,
+      crimsUploads: {
+        perClient: 100,
+        currentBatch: 1,
+        lastBatch: 1,
+        clients: [],
+        isConnected: false,
+        connectionStatus: "",
+      },
       headers: [
         { value: "sequence", text: "No.", sortable: false, width: "20px;" },
         { value: "last_name", text: "Last Name", sortable: false, width: "100px;" },
@@ -322,7 +359,64 @@ export default {
       return isEmpty(value);
     },
     uploadToCrims: debounce(async function () {
+      this.uploadDialog = true;
+      this.crimsUploads.connectionStatus = "Connecting...";
+      const { databaseUrl, serverName } = this.uploadConfig;
+      try {
+        await axios.get(databaseUrl);
+        this.crimsUploads.connectionStatus = "Connected";
+        this.crimsUploads.isConnected = true;
+        const claimedClients = this.data.clients.filter(i => i.status == "claimed");
+        this.crimsUploads.lastBatch = ~~(claimedClients.length / this.crimsUploads.perClient);
+        if((claimedClients.length % this.crimsUploads.perClient) != 0){
+          this.crimsUploads.lastBatch++
+        }
+        this.crimsUploads.currentBatch = 0;
+        
+        for (let index = 0; index < this.crimsUploads.lastBatch; index++) {
+          this.crimsUploads.clients = claimedClients.slice((this.crimsUploads.perClient * this.crimsUploads.currentBatch), ((this.crimsUploads.currentBatch + 1) * this.crimsUploads.perClient));
+          await axios.post(databaseUrl, {
+            'aics_clients': this.crimsUploads.clients.map(client => {
+              let newClient = {
+                entered_datetime: client.created_at,
+                entered_by: serverName,
+                client_number: client.sequence,
+                accomplished_datetime: client.updated_at,
+                psgc: client.aics_client.psgc.brgy_psgc,
+                region_name: client.aics_client.psgc.region_name,
+                province_name: client.aics_client.psgc.province_name,
+                city_name: client.aics_client.psgc.city_name,
+                brgy_name: client.aics_client.psgc.brgy_name,
+                district_name: client.aics_client.psgc.district,
+                last_name: client.aics_client.last_name,
+                first_name: client.aics_client.first_name,
+                middle_name: client.aics_client.middle_name,
+                ext_name: client.aics_client.ext_name,
+                sex: client.aics_client.gender,
+                civil_status: client.aics_client.civil_status,
+                birth_date: client.aics_client.birth_date,
+                age: client.aics_client.age,
+                mode_of_admission: "Referral",
+                type_of_assistance: client.aics_client.aics_type.name,
+                amount: this.data.amount,
+                source_of_fund: this.data.source_of_fund,
+                client_category: client.category ? client.category.category : "",
+                charging: this.data.charging,
+                mode_of_assistance: "CAV",
+                date_claimed: client.date_claimed,
+                uuid: client.aics_client.uuid,
+              };
+              return newClient
+            })
+          });
+          this.crimsUploads.currentBatch++;
+        }
 
+      } catch (error) {
+        console.log(error);
+        this.crimsUploads.isConnected = false;
+        this.crimsUploads.connectionStatus = "Unable to connect to server.";
+      }
     }, 250),
     markAllAsClaimed: debounce(async function () {
       //let ids = this.selected.map(item => item.id);
@@ -377,21 +471,20 @@ export default {
       }
     },
     selectAllToggle(props) {
-       if(this.selected.length != (this.clientListPerPage - this.disabledCount)) {
-         this.selected = [];
-         this.disabledCount = 0;
-         const self = this;
-         props.items.forEach(item => {
-           if(!item.deleted_at) {
-             self.selected.push(item);
-            }else{  
-              this.disabledCount++;
-           }
-         });
-       }else{
-          console.log("remove all");
-          this.selected = [];
-       }
+      if(this.selected.length != (props.items.length - this.disabledCount)) {
+        this.selected = [];
+        this.disabledCount = 0;
+        const self = this;
+        props.items.forEach(item => {
+          if(!item.deleted_at) {
+            self.selected.push(item);
+          }else{  
+            this.disabledCount++;
+          }
+        });
+      }else{
+        this.selected = [];
+      }
      }
 
 
@@ -402,6 +495,12 @@ export default {
     this.isBusy = true;
     this.getClients();
   },
+
+  computed: {
+    uploadProgress(){
+      return (this.crimsUploads.currentBatch / this.crimsUploads.lastBatch) * 100;
+    }
+  }
 
 };
 </script>

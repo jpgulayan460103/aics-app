@@ -1,4 +1,9 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=44bd11deab0d08914e3731977321c80b",
     "/css/app.css": "/css/app.css?id=786afd6cbea62b666c0641cf74fa0228"
+=======
+    "/js/app.js": "/js/app.js?id=31753e74e84cf17839d95ae7453e8599",
+    "/css/app.css": "/css/app.css?id=4b7f97a67e769d4130e11c936ae8d6e7"
+>>>>>>> 8ecb86b (add upload to database)
 }
