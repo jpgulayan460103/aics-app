@@ -25,9 +25,11 @@ class CreateServedClientsTable extends Migration
             $table->string('first_name')->nullable();
             $table->string('middle_name')->nullable();
             $table->string('ext_name')->nullable();
+            $table->string('full_name')->nullable();
             $table->string('meta_last_name')->nullable();
             $table->string('meta_first_name')->nullable();
             $table->string('meta_middle_name')->nullable();
+            $table->string('meta_full_name')->nullable();
             $table->string('sex')->nullable();
             $table->string('civil_status')->nullable();
             $table->date('birth_date')->nullable();
@@ -47,9 +49,11 @@ class CreateServedClientsTable extends Migration
             $table->index('meta_last_name');
             $table->index('meta_first_name');
             $table->index('meta_middle_name');
+            $table->index('meta_full_name');
             $table->index('last_name');
             $table->index('first_name');
             $table->index('middle_name');
+            $table->index('full_name');
             $table->foreign('psgc_id')->references('id')->on('psgcs')->onDelete('cascade');
         });
     }

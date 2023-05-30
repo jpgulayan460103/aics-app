@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,6 +54,8 @@ class ServedClient extends Model
             $model->meta_last_name = metaphone($model->last_name);
             $model->meta_first_name = metaphone($model->first_name);
             $model->meta_middle_name = metaphone($model->middle_name);
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
         });
         self::updating(function($model) {
             $psgc = Psgc::where('brgy_psgc', $model->psgc)->first();
@@ -60,6 +63,28 @@ class ServedClient extends Model
             $model->meta_last_name = metaphone($model->last_name);
             $model->meta_first_name = metaphone($model->first_name);
             $model->meta_middle_name = metaphone($model->middle_name);
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
         });
     }
+
+    public function psgc()
+    {
+        return $this->belongsTo(Psgc::class);
+    }
+
+
+    public function getBirthDateAttribute($date)
+    {
+        return $this->attributes['birth_date'] = Carbon::parse($date)->toDateString();
+    }
+    public function getDateClaimedAttribute($date)
+    {
+        return $this->attributes['date_claimed'] = Carbon::parse($date)->toDateString();
+    }
+    public function getAmountAttribute($amount)
+    {
+        return $this->attributes['amount'] = number_format($amount, 2);
+    }
+
 }

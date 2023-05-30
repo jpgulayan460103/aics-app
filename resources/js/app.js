@@ -23,6 +23,7 @@ import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 import ImportFile from './Components/ImportFile.vue'
 import MasterList from "./Components/MasterList"
+import ServedClient from "./Components/ServedClient"
 import GISComponent from "./Components/GISComponent.vue"
 import Payroll from "./Components/Payroll"
 import PayrollClientList from "./Components/PayrollClientList"
@@ -86,7 +87,13 @@ const router = new VueRouter({
             name: "users",
             component: Users,
             props: true,
-        }
+        },
+        {
+            path: "/served_client_list",
+            name: "served_client_list",
+            component: ServedClient,
+
+        },
     ],
 });
 

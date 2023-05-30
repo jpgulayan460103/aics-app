@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServedClient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServedClientController extends Controller
 {
@@ -12,9 +14,43 @@ class ServedClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        DB::enableQueryLog();
+        $date_from = Carbon::now()->clone()->subMonth(3);
+        $date_to = Carbon::now()->clone();
+        $clients = ServedClient::with("psgc");
+        if($request->search){
+            $search = $request->search;
+            $keywords = explode(" ", $search);
+            $clients->where(function ($main_query) use ($keywords){
+                $main_query->where(function($sub_query) use ($keywords){
+                    foreach ($keywords as $keyword) {
+                        $sub_query->where("full_name" , "like", "%$keyword%");
+                    }
+                });
+                $main_query->orWhere(function($sub_query) use ($keywords){
+                    foreach ($keywords as $keyword) {
+                        $sub_query->where("meta_full_name" , "like", "%".metaphone($keyword)."%");
+                    }
+                });
+            });
+
+        }
+        $clients->whereBetween('date_claimed', [
+            $date_from,
+            $date_to->addDay()->subSecond(),
+        ]);
+        $clients->orderBy('first_name');
+        $clients->orderBy('middle_name');
+        $clients->orderBy('last_name');
+        $clients = $clients->paginate(20);
+        return [
+            'clients' => $clients,
+            'date_from' => $date_from->format("F d, Y"),
+            'date_to' => $date_to->format("F d, Y"),
+            'query' => DB::getQueryLog()
+        ];
     }
 
     /**
