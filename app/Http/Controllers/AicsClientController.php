@@ -178,7 +178,7 @@ class AicsClientController extends Controller
                 'file_name' => $filename,
             ]);
 
-            Excel::import(new ClientsImport($dirtylist),  $file);
+            Excel::import(new ClientsImport($dirtylist),  $file, 'UTF-8');
             DB::commit();
             return [
                 "success" => "All good!",
