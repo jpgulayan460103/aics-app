@@ -16,6 +16,8 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\RemembersRowNumber;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use app\Models\Category;
+use App\Models\Subcategory;
 
 class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithValidation
 {
@@ -47,7 +49,8 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
                     break;
             }
         }
-        $psgc_id = null;
+
+       $psgc_id = null;
         if(isset($row['psgc'])){
             $psgc = Psgc::where('brgy_psgc', $row['psgc'])->first();
             $psgc_id = $psgc->id;
@@ -56,6 +59,28 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
         $middle_name = mb_strtoupper(trim($row['middle_name'] ?? null));
         $last_name = mb_strtoupper(trim($row['last_name'] ?? null));
         $ext_name = mb_strtoupper(trim($row['ext_name'] ?? null));
+       
+        #FHONA,WEDC,YOUTH,PWD,SC,PLHIV
+        $category_id = 1;
+        if(isset($row["category"]))
+        {
+            $category = Category::where("category","=",strtoupper(trim($row["category"])))->first();
+            if($category)
+            {
+                $category_id = $category->id;
+            }
+        }
+
+        $subcategory_id = null;
+        if(isset($row["subcategory"]))
+        {
+            $subcategory = Subcategory::where("subcategory","=",strtoupper(trim($row["category"])))->first();
+            if($subcategory)
+            {
+                $subcategory_id = $subcategory->id;
+            }
+        }
+
         return new AicsClient([
             'dirty_list_id' => $this->dirtyList->id,
             'first_name'    => $first_name,
@@ -68,6 +93,17 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'gender'        => $row['gender'],
             'psgc_id'       => $psgc_id,
             'full_name'     => "$first_name $middle_name $last_name $ext_name",
+            'mobile_number' => isset($row['mobile_number']) ? $row['mobile_number'] : null,
+            'occupation' => isset($row['occupation']) ? $row['occupation'] : null,
+            'monthly_salary' => isset($row['monthly_salary']) ? $row['monthly_salary'] : null,
+            'civil_status' => isset($row['civil_status']) ? ucwords(strtolower($row['civil_status'])) : null,
+            'mode_of_admission' => "Referral",
+            'aics_type_id' => "8",
+            'category_id' => $category_id,
+            'subcategory_id' => $subcategory_id,
+
+            
+            
         ]);
     }
 

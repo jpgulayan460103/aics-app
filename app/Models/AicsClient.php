@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 class AicsClient extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    protected $dates = ['deleted_at'];
+
     
     protected $fillable = [
         'last_name',
@@ -86,7 +90,12 @@ class AicsClient extends Model
 
     public function payroll_client()
     {
-        return $this->hasOne(PayrollClient::class, 'aics_client_id');
+        return $this->hasOne(PayrollClient::class, 'aics_client_id')->withTrashed();
+    }
+
+    public function dirty_list()
+    {
+        return $this->belongsTo(DirtyList::class, 'dirty_list_id');
     }
     
 }

@@ -39,7 +39,7 @@ class PayrollClient extends Model
 
     public function aics_client()
     {
-        return $this->belongsTo(AicsClient::class);
+        return $this->belongsTo(AicsClient::class)->withTrashed();
     }
 
     public function payroll()

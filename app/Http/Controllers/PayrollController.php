@@ -69,7 +69,7 @@ class PayrollController extends Controller
             "psgc",
             "clients.aics_client",
             "clients.new_payroll_client.payroll"
-        ])->find($id);
+        ])->withTrashed()->find($id);
 
         if ($payroll) {
             return $payroll;
