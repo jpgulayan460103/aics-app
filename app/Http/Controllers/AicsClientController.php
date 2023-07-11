@@ -274,7 +274,7 @@ class AicsClientController extends Controller
         $filename .= "aics-masterlist-";
         $filename .= Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
-        Excel::store(new ClientExport(), "public/$export_file_name", 'local');
+    Excel::store(new ClientExport(), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];

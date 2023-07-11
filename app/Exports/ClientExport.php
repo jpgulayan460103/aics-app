@@ -25,7 +25,8 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'subcategory',
             'category',
             'user',
-            'payroll_client.payroll'
+            'payroll_client.payroll',
+            'dirty_list',
         ]);
 
         $collection = $collection->get();
@@ -54,12 +55,13 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'Payroll',
             'Sequence',
             'Claim Status',
+            'ImportFileName'
         ];
     }
 
     public function map($payroll_client): array
     {
-        //dd($payroll_client);
+        //dd( $payroll_client->dirty_list->file_name);
       
         return [
             $payroll_client->psgc ? $payroll_client->psgc->region_name."/".$payroll_client->psgc->region_psgc : "",
@@ -78,6 +80,9 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             $payroll_client->payroll_client ? $payroll_client->payroll_client->payroll->title : "No Payroll",
             $payroll_client->payroll_client ? $payroll_client->payroll_client->sequence : "No Payroll",
             $payroll_client->payroll_client ? $payroll_client->payroll_client->status : "No Payroll",
+            $payroll_client->payroll_client ? $payroll_client->dirty_list->file_name : "",
+
+            
         ];
     }
     
