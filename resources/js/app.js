@@ -88,12 +88,12 @@ const router = new VueRouter({
             component: Users,
             props: true,
         },
-        {
-            path: "/served_client_list",
-            name: "served_client_list",
-            component: ServedClient,
+        // {
+        //     path: "/served_client_list",
+        //     name: "served_client_list",
+        //     component: ServedClient,
 
-        },
+        // },
     ],
 });
 

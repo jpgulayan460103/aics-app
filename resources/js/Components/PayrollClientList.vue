@@ -82,11 +82,11 @@
                 <v-icon> mdi-check-all </v-icon> Tag all as claimed status
               </v-list-item-title>
             </v-list-item>
-            <v-list-item @click="uploadToCrims()">
+            <!-- <v-list-item @click="uploadToCrims()">
               <v-list-item-title>
                 <v-icon> mdi-cloud-upload </v-icon> Upload to Database
               </v-list-item-title>
-            </v-list-item>
+            </v-list-item> -->
           </v-list>
         </v-menu>
       </div>

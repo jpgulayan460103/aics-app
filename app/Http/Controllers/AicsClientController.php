@@ -33,25 +33,18 @@ class AicsClientController extends Controller
     public function index(Request $request)
     {
         $clients = AicsClient::with("psgc", "payroll_client.payroll");
-        DB::enableQueryLog();
         if($request->search){
             $search = $request->search;
             $keywords = explode(" ", $search);
-            // $clients->where("full_name" , "like", "%$search%");
-            // $clients->orWhere("meta_full_name" , "like", "%".metaphone($search)."%");
             $clients->where(function($query) use ($keywords){
                 foreach ($keywords as $keyword) {
                     $query->where("full_name" , "like", "%$keyword%");
                 }
             });
-            $clients->orWhere(function($query) use ($keywords){
-                foreach ($keywords as $keyword) {
-                    $query->where("meta_full_name" , "like", "%".metaphone($keyword)."%");
-                }
-            });
+            $clients->orWhere(fn($q) => $q->where("meta_full_name" , "like", "%".metaphone($search)."%"));
         }
+        $clients->orderBy("full_name");
         $clients = $clients->paginate(20);
-        // return DB::getQueryLog();
         return $clients;
     }
 
