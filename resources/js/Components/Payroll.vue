@@ -210,8 +210,13 @@
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item link>
-                  <v-list-item-title @click="exportCoe(item.id)">
-                    Export (COE)
+                  <v-list-item-title @click="exportCoe(item.id, 'pdf')">
+                    Export (COE PDF)
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item link>
+                  <v-list-item-title @click="exportCoe(item.id, 'xlsx')">
+                    Export (COE EXCEL)
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -389,8 +394,8 @@ export default {
         });
       }, {});
     },
-    exportCoe(id) {
-      window.open(route("pdf.payroll.print_coe", id));
+    exportCoe(id, ext) {
+      window.open(route("pdf.payroll.print_coe", {id, _query: { ext } }));
     },
   },
   mounted() {

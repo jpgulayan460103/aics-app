@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CoeExport;
 use App\Exports\PayrollExport;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -200,7 +201,7 @@ class PayrollController extends Controller
         }
     }
 
-    public function print_coe($id)
+    public function print_coe(Request $request, $id)
     {
         $payroll_clients = PayrollClient::query()->with([
             'aics_client',
@@ -221,17 +222,21 @@ class PayrollController extends Controller
 
             abort_unless($payroll_clients->count(), 204);
             $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-            $pdf = Pdf::loadView(
-                'pdf.coe',
-                [
-                    "clients" => $payroll_clients,
-                    "payroll" => $payroll,
-                    "in_words" => strtoupper($f->format($payroll_clients->count())),
-                ]
-            );
-
-            $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . ".pdf";
-            return $pdf->setPaper('portrait')->download($export_file_name);
+            $data = [
+                "clients" => $payroll_clients,
+                "payroll" => $payroll,
+                "in_words" => strtoupper($f->format($payroll_clients->count())),
+            ];
+            if($request->ext && $request->ext == "xlsx"){
+                $file_ext = ".xlsx";
+                $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . $file_ext;
+                return Excel::download(new CoeExport($data), $export_file_name);
+            }else{
+                $file_ext = ".pdf";
+                $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . $file_ext;
+                $pdf = Pdf::loadView('pdf.coe', $data);
+                return $pdf->setPaper('portrait')->download($export_file_name);
+            }
         }
     }
 

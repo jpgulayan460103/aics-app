@@ -3,19 +3,16 @@
 
 <head>
     <meta charset="utf-8">
-    <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> -->
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <title>Document</title>
     <style>
          @page {
-           /* size: 8.27in 11.69in;*/
              size: 8.5in 13in; 
             font-size: 8pt;
             margin: 5%;
             margin-bottom: 10%;
             opacity: 0.75;
             padding: 0 !important;
-            /* background: url("{{ public_path('images/watermark.png') }}") no-repeat 0 0; */
         }
         body {
             font-size: 8pt;
@@ -76,9 +73,6 @@
 </head>
 
 <body>
-    <main>
-        <!-- <div style="text-align: right; font-size:8pt">{ $clients->currentPage() }}</div>-->
-
         <table id="payroll" cellpadding=3 cellspacing=0>
             <tr>
                 <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
@@ -114,7 +108,6 @@
                 <tr>
                   
                     <td style="text-align:center; width:20px;">
-                       <!-- { $client->sequence }-->
                        {{$key+1}}
                     </td>
                     <td>
@@ -135,10 +128,8 @@
                 <td colspan="7" style="text-align:center; font-size:8pt;">********** NOTHING FOLLOWS **********</td>
             </tr>
         </table>
-        <!--<div style="text-align: right; font-size:8pt">{ $clients->currentPage() }</div>-->
 
         @if ($key == sizeof($clients)-1)
-            <!--<footer>-->
                 <table style="table-layout:fixed; font-size:8pt;" cellpadding=8>
                     <tr>
                         <td>Prepared by:  </td>
@@ -164,16 +155,7 @@
 
                     </tr>
                 </table>
-           <!-- </footer>-->
         @endif
-
-
-
-    </main>
-
-
-
-
 </body>
 
 </html>
