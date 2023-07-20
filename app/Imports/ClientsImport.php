@@ -90,7 +90,7 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'street_number' => mb_strtoupper(trim($row['street_number'] ?? null)),
             'meta_full_name' => metaphone($first_name).metaphone($middle_name).metaphone($last_name),
             'birth_date'    => $birth_date,
-            'gender'        => $row['gender'],
+            'gender'        => isset($row['gender']) ? $row['gender'] : null,
             'psgc_id'       => $psgc_id,
             'full_name'     => "$first_name $middle_name $last_name $ext_name",
             'mobile_number' => isset($row['mobile_number']) ? $row['mobile_number'] : null,
