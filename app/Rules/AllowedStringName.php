@@ -28,6 +28,9 @@ class AllowedStringName implements Rule
         if(trim($value)=="" || $value==null){
             return true;
         }
+        $value = str_replace("ñ", "n", $value);
+        $value = str_replace("Ñ", "N", $value);
+        $value = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
         return preg_match('/^[\pL\pM_ _-_-_.]+$/u', $value) > 0;
     }
 
