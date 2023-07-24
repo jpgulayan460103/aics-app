@@ -80,7 +80,8 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             $payroll_client->payroll_client ? $payroll_client->payroll_client->payroll->title : "No Payroll",
             $payroll_client->payroll_client ? $payroll_client->payroll_client->sequence : "No Payroll",
             $payroll_client->payroll_client ? $payroll_client->payroll_client->status : "No Payroll",
-            $payroll_client->payroll_client ? $payroll_client->dirty_list->file_name : "",
+            $payroll_client->dirty_list->file_name,
+            //$payroll_client->payroll_client ? $payroll_client->dirty_list->file_name : "",
 
             
         ];
