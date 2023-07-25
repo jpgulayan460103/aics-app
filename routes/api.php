@@ -62,3 +62,5 @@ Route::post('payrolls/{id}/claimed', [\App\Http\Controllers\PayrollClientControl
 
 Route::get('clients', [\App\Http\Controllers\ServedClientController::class, 'index'])->name("api.served-clients.index");
 Route::post('clients', [\App\Http\Controllers\ServedClientController::class, 'store'])->name("api.served-clients.store");
+
+Route::get('logs', [\App\Http\Controllers\AicsClientController::class, 'logs'])->name("clients.logs");

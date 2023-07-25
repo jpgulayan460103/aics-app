@@ -109,7 +109,7 @@
                   'is-invalid':
                     validationErrors.ext_name && validationErrors.ext_name,
                 }">
-                  <option value=""></option>
+                  <option value=" "> </option>
                   <option value="JR">JR</option>
                   <option value="SR">SR</option>
                   <option value="I">I</option>

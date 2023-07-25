@@ -71,6 +71,10 @@ export default {
           to: "/users",
           text: "Users",
         },
+        {
+          to: "/logs",
+          text: "Logs",
+        },
         // {
         //   to: "/served_client_list",
         //   text: "Served Client List",

@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use App\Models\DirtyList;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 
 
@@ -105,7 +106,12 @@ class AicsClientController extends Controller
             $aics_client = AicsClient::findOrFail($id);
 
             if ($aics_client) {
-                $aics_client->update($request->all());
+                //activity()->disableLogging();
+                
+               
+             
+                $aics_client->fill($request->all());
+                $request->ext_name = is_null($request->ext_name) ? "" : $request->ext_name ;
                 $aics_client->user_id = Auth::check() ? Auth::user()->id : null     ;
 
                 if ($request->payroll_id) {
@@ -128,8 +134,10 @@ class AicsClientController extends Controller
                     }
                 }
 
+               // activity()->enableLogging();    
                 $aics_client->save();
                 DB::commit();
+                
                 return ["message" => "Saved", "client" => $aics_client->load('payroll_client')];
             }
         } catch (Exception $e) {
@@ -271,5 +279,13 @@ class AicsClientController extends Controller
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];
+    }
+
+    public function logs()
+    {
+       $activity = Activity::paginate(10);
+
+       
+       return $activity;
     }
 }

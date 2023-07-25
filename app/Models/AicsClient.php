@@ -7,13 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class AicsClient extends Model
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
-    protected $dates = ['deleted_at'];
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, LogsActivity;
+    protected static $logOnlyDirty = true;
+    //protected static $logFillable = true;
+    protected static $submitEmptyLogs = false;
 
-    
+    protected $dates = ['deleted_at'];
+    protected static $recordEvents = ['updated', 'deleted'];
+    protected static $logAttributesToIgnore = ['*'];
+    protected static $logAttributes = [
+        'last_name',
+        'first_name',
+        'middle_name',    
+        'full_name'   
+    ];
+
+
     protected $fillable = [
         'last_name',
         'first_name',
@@ -25,7 +39,7 @@ class AicsClient extends Model
         'birth_date',
         'rel_beneficiary',
         'assessment',
-        'interviewed_by',        
+        'interviewed_by',
         'subcategory_others',
         'category_id',
         'subcategory_id',
@@ -40,21 +54,28 @@ class AicsClient extends Model
         'meta_full_name',
         'full_name'
     ];
-    
+
     public static function boot()
     {
         parent::boot();
-        self::creating(function($model) {
-            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
+        self::creating(function ($model) {
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " " . $model->ext_name;
             $model->uuid = Str::uuid();
         });
-        self::updating(function($model) {
-            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
-            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
+        self::updating(function ($model) {
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " " . $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name) . metaphone($model->middle_name) . metaphone($model->last_name);
         });
     }
 
-    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
+
     public function user()
     {
         return $this->belongsTo(User::class,);
@@ -97,5 +118,4 @@ class AicsClient extends Model
     {
         return $this->belongsTo(DirtyList::class, 'dirty_list_id');
     }
-    
 }

@@ -28,6 +28,7 @@ import GISComponent from "./Components/GISComponent.vue"
 import Payroll from "./Components/Payroll"
 import PayrollClientList from "./Components/PayrollClientList"
 import Users from "./Components/Users"
+import ActivityLog from "./Components/ActivityLog"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -88,12 +89,12 @@ const router = new VueRouter({
             component: Users,
             props: true,
         },
-        // {
-        //     path: "/served_client_list",
-        //     name: "served_client_list",
-        //     component: ServedClient,
+         {
+             path: "/logs",
+             name: "logs",
+             component: ActivityLog,
 
-        // },
+         },
     ],
 });
 
