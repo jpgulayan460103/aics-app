@@ -100,8 +100,7 @@
       </div>
       <div class="row">
         <div class="col-md-6" v-if="data.psgc">
-          CITY/MUNICIPALITY : <b>{{ data.psgc.city_name }}</b><br />
-          BARANGAY : <b>{{ data.psgc.brgy_name }}</b> <br />
+          VENUE: <b>{{ data.psgc.brgy_name }}, {{ data.psgc.city_name }}</b><br />
           SCHEDULE : <b>{{ data.schedule }}</b> <br />
           NO. OF BENEFICIARIES: <b>{{ data.clients.length }}</b> <br />
           NO. OF CLAIMED: <b>{{ data.clients.filter(i => i.status == "claimed").length }}</b> <br />

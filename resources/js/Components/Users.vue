@@ -117,9 +117,11 @@
 <script>
 import axios from 'axios';
 import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
+
 import { debounce, cloneDeep, isEmpty } from 'lodash'
 export default {
-  mixins: [userMixin],
+  mixins: [userMixin, authMixin],
   props: ['user'],
   data() {
     return {

@@ -10817,3 +10817,20 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.col-md-3.underline {
+  border-bottom: solid 1px #000000;
+  margin: 5px;
+  padding: 5px 10px;
+  width: 24%;
+  font-size: 14pt;
+  font-weight: bold;
+  color: black;
+}
+
+label {
+  display: inline-block;
+  font-size: 12pt;
+  font-weight: normal;
+  color: black;
+  padding-bottom: 10px;
+}

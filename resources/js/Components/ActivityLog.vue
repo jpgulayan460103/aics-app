@@ -15,7 +15,13 @@
 </template>
 
 <script>
+import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
+
 export default {
+    mixins: [userMixin, authMixin],
+    props: ['user'],
+
     data() {
         return {
             data: [],
@@ -37,7 +43,7 @@ export default {
                 },
                 {
                     text: 'Updated By',
-                    value: 'causer_id',
+                    value: 'causer.name',
                 },
 
 

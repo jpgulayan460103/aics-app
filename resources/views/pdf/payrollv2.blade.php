@@ -96,9 +96,8 @@
             </tr>
             <tr>
                 <td colspan="4" style="text-align:left; border: 0px;">
-                    City/Municipality: {{ $payroll->psgc->city_name }}
-                    <br>
-                    Barangay: {{ $payroll->psgc->brgy_name }}
+                    VENUE:  {{ $payroll->psgc->brgy_name }}, {{ $payroll->psgc->city_name }}
+                    
                 </td>
                 <td colspan="3" style="text-align:right; border: 0px; text-transform:uppercase;">
                     {{ date_format(date_create($payroll->schedule), 'F Y') }}

@@ -72,7 +72,7 @@
         </div>
         <div class="card-body">
           <div class="container-fluid">
-            <div class="row">
+            <div class="row" v-if="userData.role == 'Super-Admin'">
               <div class="col-md-3">
                 <label for="last_name">
                   Apelyido <small>(Last name) <span color="red"></span></small>
@@ -124,6 +124,26 @@
                   {{ validationErrors.ext_name[0] }}
                 </div>
               </div>
+            </div>
+            <div class="row" v-else>
+
+              <div class="col-md-3 underline">
+                <label for="">Last Name</label><br>
+                 {{ form.last_name }}
+              </div>
+              <div class="col-md-3 underline">
+                <label for="">First Name</label><br>
+                {{ form.first_name }}
+              </div>
+              <div class="col-md-3 underline">
+                <label for="">Middle Name</label><br>
+                {{ form.middle_name }}
+              </div>
+              <div class="col-md-3 underline">
+                <label for="">Ext. Name</label><br>
+                {{ form.ext_name }}
+              </div>
+
             </div>
 
             <div class="row mt-2">
@@ -222,7 +242,7 @@
                 </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-md-3" v-if="userData.role == 'Super-Admin'">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
                   <span color="red"></span></label>
                 <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
@@ -231,6 +251,11 @@
                 <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
                   {{ validationErrors.birth_date[0] }}
                 </div>
+              </div>
+              <div class="col-md-3 underline" v-else> 
+                <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
+                  {{ form.birth_date }}
+
               </div>
 
               <div class="col-md-3">
@@ -500,7 +525,7 @@ export default {
     },
 
     "form.psgc_id": function (newVal, oldVal) {
-      console.log(newVal);
+      //console.log(newVal);
     },
 
     dialog_data(e) {
@@ -509,10 +534,10 @@ export default {
       this.form.aics_type_id = 8;
       this.form.mode_of_admission = "Referral";
       this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
-      this.form.interviewed_by = this.form.interviewed_by ?   this.form.interviewed_by : this.userData.name ;
+      this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
-      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name];
+      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null ;
       this.getBeneficiaryPsgc();
       this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name];
 

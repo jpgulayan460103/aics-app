@@ -9,7 +9,10 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData" :set-dialog-create="setDialogCreate"></GISComponent>
+
+
+          <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"
+            :set-dialog-create="setDialogCreate"></GISComponent>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -17,24 +20,26 @@
       <v-card-title>
         Master List
         <v-spacer></v-spacer>
-        <v-text-field @keyup="searchClient" v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+        <v-text-field @keyup="searchClient" v-model="search" append-icon="mdi-magnify" label="Search" single-line
+          hide-details></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table
-          :headers="headers"
-          :items="data"
-          :loading="isBusy"
-          dense
-          loading-text="Loading... Please wait"
-          :hide-default-footer="true"
-        >
+        <v-data-table :headers="headers" :items="data" :loading="isBusy" dense loading-text="Loading... Please wait"
+          :hide-default-footer="true">
           <template v-slot:item.status="{ item }">
-
+            
+          
             <v-chip v-if="item.payroll_client">
-              In Payroll {{ item.payroll_client.payroll.amount }}
+              In Payroll <span v-if="item.payroll_client.amount">{{ item.payroll_client.payroll.amount }}</span>
               | Client No: {{ item.payroll_client.sequence }}
               <span v-if="item.payroll_client.status"> | {{ item.payroll_client.status }}</span>
-            </v-chip>
+            </v-chip>          
+
+          </template>
+
+          <template v-slot:item.is_verified="{ item }">
+            <v-chip dark :color="item.is_verified=='verified' ? 'green' : 'red'" v-if="item.is_verified">{{ item.is_verified }} </v-chip>
+
           </template>
 
           <template v-slot:item.barangay="{ item }">
@@ -54,28 +59,46 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="EditItem(item)">
-              mdi-pencil
-            </v-icon>
+
+           
+
+            <span v-if="!item.payroll_client">
+
+              <span v-if="item.is_verified == 'verified'">
+                <v-icon small class="mr-2" @click="EditItem(item)">
+                  mdi-pencil
+                </v-icon>
+              </span>
+
+              <span v-if="!item.is_verified">
+                <v-btn dark small @click="isVerified(item.id, 'verified')"> VERIFY </v-btn>
+                <v-btn  dark small @click="isVerified(item.id, 'grievance')"> GRIEVANCE </v-btn>
+
+              </span>
 
 
-            <v-icon small class="mr-2" @click="PrintGIS(item)" v-if="item.payroll_client && item.payroll_client.payroll_id">
+
+            </span>
+
+            <span v-if="item.payroll_client || item.is_verified == 'grievance'">
+              <small> No Action Available </small>
+            </span>
+
+
+            <!--<v-icon small class="mr-2" @click="PrintGIS(item)"
+              v-if="item.payroll_client && item.payroll_client.payroll_id">
               mdi-printer
-            </v-icon>
+            </v-icon>-->
 
           </template>
         </v-data-table>
 
         <v-col cols="12" sm="12" md="8" lg="4">
-          <v-pagination
-            v-model="currentPage"
-            :length="lastPage"
-            @input="getList"
-          ></v-pagination>
+          <v-pagination v-model="currentPage" :length="lastPage" @input="getList"></v-pagination>
         </v-col>
 
-        <div>
-          <v-btn :loading="isExporting" @click="downloadClient()" >Download</v-btn>
+        <div v-if="userData.role == 'Super-Admin'">
+          <v-btn :loading="isExporting" @click="downloadClient()">Download</v-btn>
         </div>
 
       </v-card-text>
@@ -113,8 +136,9 @@ export default {
         { value: "city_muni", text: "City/Muni", sortable: true },
         { value: "province", text: "Province", sortable: true },
         //{ value: "region", text: "Region", sortable: true },
-
-        { value: "status", text: "Status", sortable: true },
+        
+        { value: "is_verified", text: "Verification Status", sortable: true },
+        { value: "status", text: "Payroll Status", sortable: true },
         { value: "actions", text: "Actions" },
       ],
       isExporting: false,
@@ -152,12 +176,12 @@ export default {
         "_blank"
       );
     },
-    setDialogCreate(value){
+    setDialogCreate(value) {
       this.dialog_create = value;
     },
     downloadClient: debounce(function (status = "unclaimed") {
       this.isExporting = true;
-      axios.post(route('api.client.export'), {status})
+      axios.post(route('api.client.export'), { status })
         .then((res) => {
           this.isExporting = false;
           window.location.href = res.data.file;
@@ -167,14 +191,21 @@ export default {
           this.isExporting = false;
         });
     }, 250),
-    searchClient: debounce(function() {
+    searchClient: debounce(function () {
       this.currentPage = 1;
       this.getList();
-    }, 500)
+    }, 500),
+    isVerified: debounce(function (id, stat) {
+      axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
+        console.log(response.data);
+      }).catch(err => console.log(err))
+      this.getList();
+
+    }, 500),
   },
   watch: {
-    dialog_create(newVal, oldVal){
-      if(!newVal){
+    dialog_create(newVal, oldVal) {
+      if (!newVal) {
         this.dialogData_edit = {};
       }
     }

@@ -125,6 +125,7 @@
                     </tr>
                     <tr>
                         <td colspan="4" style="text-align:left; border: 0px;">
+                            Venue:
                             City/Municipality: {{ $data->psgc->city_name }}
                             <br>
                             Barangay: {{ $data->psgc->brgy_name }}

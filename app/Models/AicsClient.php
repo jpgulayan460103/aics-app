@@ -24,7 +24,8 @@ class AicsClient extends Model
         'last_name',
         'first_name',
         'middle_name',    
-        'full_name'   
+        'full_name',
+        'birth_date'   
     ];
 
 
@@ -54,6 +55,9 @@ class AicsClient extends Model
         'meta_full_name',
         'full_name'
     ];
+
+    public $appends = ['name'];
+
 
     public static function boot()
     {
@@ -117,5 +121,10 @@ class AicsClient extends Model
     public function dirty_list()
     {
         return $this->belongsTo(DirtyList::class, 'dirty_list_id');
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->causer->name ?? null;
     }
 }

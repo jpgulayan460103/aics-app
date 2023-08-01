@@ -35,7 +35,7 @@
         :items="uploadedFiles"
         :items-per-page="5"
         class="elevation-1"
-          :page.sync="page"
+        
       >
         <template v-slot:item.file_directory="{ item }">
           <a :href="item.file_directory">{{ item.file_directory }}</a>
@@ -52,10 +52,11 @@
 
 <script>
 import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
 
 export default {
   name: "import",
-  mixins: [userMixin],
+  mixins: [userMixin,authMixin],
   props: ['user'],
   data() {
     return {

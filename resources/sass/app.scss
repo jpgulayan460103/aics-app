@@ -13,3 +13,20 @@
 //@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
 //@import url('https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css');
 
+.col-md-3.underline {
+    border-bottom: solid 1px #000000;
+    margin: 5px;
+    padding: 5px 10px;
+    width: 24%;
+    font-size: 14pt;
+    font-weight: bold;
+    color: black;
+}
+
+label {
+    display: inline-block;
+    font-size: 12pt;
+    font-weight: normal;
+    color: black;
+    padding-bottom: 10px;
+}

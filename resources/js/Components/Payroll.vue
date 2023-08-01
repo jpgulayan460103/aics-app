@@ -235,10 +235,12 @@
 <script>
 import { debounce } from "lodash";
 import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
 
 export default {
-  mixins: [userMixin],
+  mixins: [userMixin, authMixin],
   props: ['user'],
+
   data() {
     return {
       openModal: false,

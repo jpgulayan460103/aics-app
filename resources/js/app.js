@@ -29,6 +29,7 @@ import Payroll from "./Components/Payroll"
 import PayrollClientList from "./Components/PayrollClientList"
 import Users from "./Components/Users"
 import ActivityLog from "./Components/ActivityLog"
+import Grievance from "./Components/Grievance"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -56,7 +57,10 @@ const router = new VueRouter({
             path: "/import",
             name: "import",
             component: ImportFile,
-
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin"]
+            }
         },
         {
             path: "/gis",
@@ -74,27 +78,53 @@ const router = new VueRouter({
             path: "/payroll",
             name: "payroll",
             component: Payroll,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin"]
+            }
 
         },
         {
             path: "/payroll/:id?",
             name: "payroll_list",
             component: PayrollClientList,
-            props: true
-
+            props: true,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin"]
+            }
         },
         {
             path: "/users/:id?",
             name: "users",
             component: Users,
             props: true,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin"]
+            }
         },
-         {
-             path: "/logs",
-             name: "logs",
-             component: ActivityLog,
+        {
+            path: "/logs",
+            name: "logs",
+            component: ActivityLog,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin"]
+            }
 
-         },
+        },
+        {
+            path: "/grievance",
+            name: "grievance",
+            component: Grievance,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "admin", "grievance-officer"]
+            }
+
+        },
+        
     ],
 });
 
@@ -106,9 +136,9 @@ Vue.filter("formatDate", function (value) {
 
 export default new Vuetify({
     icons: {
-      iconfont: 'mdi', // default - only for display purposes
+        iconfont: 'mdi', // default - only for display purposes
     },
-  })
+})
 
 const app = new Vue({
     el: '#app',

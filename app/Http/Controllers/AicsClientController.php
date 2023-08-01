@@ -283,9 +283,41 @@ class AicsClientController extends Controller
 
     public function logs()
     {
-       $activity = Activity::paginate(10);
-
-       
+       $activity = Activity::with("causer:id,name")->orderBy("updated_at","desc")->paginate(10);
+      
        return $activity;
     }
+
+
+    public function verify(Request $request, $id)
+    { 
+        $client = AicsClient::findOrFail($id);
+        if($client)
+        {
+            $client->is_verified = $request->is_verified;
+            $client->save();
+        }        
+
+    }
+
+    public function grievance_list(Request $request)
+    {
+        $clients = AicsClient::with("psgc");
+        if($request->search){
+            $search = $request->search;
+            $keywords = explode(" ", $search);
+            $clients->where(function($query) use ($keywords){
+                foreach ($keywords as $keyword) {
+                    $query->where("full_name" , "like", "%$keyword%");
+                }
+            });
+            $clients->orWhere(fn($q) => $q->where("meta_full_name" , "like", "%".metaphone($search)."%"));
+        }
+        $clients->orderBy("full_name");
+        $clients->where("is_verified","=","grievance");
+        $clients = $clients->paginate(20);
+        return $clients;
+
+    }
+    
 }
