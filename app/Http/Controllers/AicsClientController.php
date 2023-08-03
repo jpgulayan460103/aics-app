@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ClientExport;
+use App\Exports\GrievanceExport;
 use App\Exports\ImportErrors;
 use App\Http\Requests\AicsClientUpdateRequest;
 use App\Models\AicsClient;
@@ -21,9 +22,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
-
-
-
 class AicsClientController extends Controller
 {
     /**
@@ -34,15 +32,15 @@ class AicsClientController extends Controller
     public function index(Request $request)
     {
         $clients = AicsClient::with("psgc", "payroll_client.payroll");
-        if($request->search){
+        if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
-            $clients->where(function($query) use ($keywords){
+            $clients->where(function ($query) use ($keywords) {
                 foreach ($keywords as $keyword) {
-                    $query->where("full_name" , "like", "%$keyword%");
+                    $query->where("full_name", "like", "%$keyword%");
                 }
             });
-            $clients->orWhere(fn($q) => $q->where("meta_full_name" , "like", "%".metaphone($search)."%"));
+            $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
         $clients->orderBy("full_name");
         $clients = $clients->paginate(20);
@@ -107,12 +105,12 @@ class AicsClientController extends Controller
 
             if ($aics_client) {
                 //activity()->disableLogging();
-                
-               
-             
+
+
+
                 $aics_client->fill($request->all());
-                $request->ext_name = is_null($request->ext_name) ? "" : $request->ext_name ;
-                $aics_client->user_id = Auth::check() ? Auth::user()->id : null     ;
+                $request->ext_name = is_null($request->ext_name) ? "" : $request->ext_name;
+                $aics_client->user_id = Auth::check() ? Auth::user()->id : null;
 
                 if ($request->payroll_id) {
                     if ($aics_client->payroll_client) {
@@ -134,10 +132,10 @@ class AicsClientController extends Controller
                     }
                 }
 
-               // activity()->enableLogging();    
+                // activity()->enableLogging();    
                 $aics_client->save();
                 DB::commit();
-                
+
                 return ["message" => "Saved", "client" => $aics_client->load('payroll_client')];
             }
         } catch (Exception $e) {
@@ -260,7 +258,7 @@ class AicsClientController extends Controller
             ->select("aics_clients.*")
             ->orderBy('payroll_clients.sequence')
             ->join('payroll_clients', function ($join) use ($payroll_id) {
-                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $payroll_id);
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $payroll_id);
             })
             ->get();
         if ($client) {
@@ -275,7 +273,7 @@ class AicsClientController extends Controller
         $filename .= "aics-masterlist-";
         $filename .= Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
-    Excel::store(new ClientExport(), "public/$export_file_name", 'local');
+        Excel::store(new ClientExport(), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];
@@ -283,41 +281,66 @@ class AicsClientController extends Controller
 
     public function logs()
     {
-       $activity = Activity::with("causer:id,name")->orderBy("updated_at","desc")->paginate(10);
-      
-       return $activity;
+        $activity = Activity::with("causer:id,name")->orderBy("updated_at", "desc")->paginate(10);
+
+        return $activity;
     }
 
 
     public function verify(Request $request, $id)
-    { 
+    {
         $client = AicsClient::findOrFail($id);
-        if($client)
-        {
+        if ($client) {
             $client->is_verified = $request->is_verified;
             $client->save();
-        }        
-
+        }
     }
 
     public function grievance_list(Request $request)
     {
         $clients = AicsClient::with("psgc");
-        if($request->search){
+        if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
-            $clients->where(function($query) use ($keywords){
+            $clients->where(function ($query) use ($keywords) {
                 foreach ($keywords as $keyword) {
-                    $query->where("full_name" , "like", "%$keyword%");
+                    $query->where("full_name", "like", "%$keyword%");
                 }
             });
-            $clients->orWhere(fn($q) => $q->where("meta_full_name" , "like", "%".metaphone($search)."%"));
+            $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
         $clients->orderBy("full_name");
-        $clients->where("is_verified","=","grievance");
+        $clients->where("is_verified", "=", "grievance");
         $clients = $clients->paginate(20);
         return $clients;
-
     }
-    
+
+    public function grievance_update(AicsClientUpdateRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $client = AicsClient::findOrFail($id);
+            if ($client) {
+                $client->fill($request->toArray());
+                $client->save();
+                DB::commit();
+                return ["message" => "Saved"];
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ["message" => $e];
+        }
+    }
+
+    public function export_grievance(Request $request)
+    {
+        $filename = "";
+        $filename .= "aics-grievance-list-";
+        $filename .= Str::slug(Carbon::now());
+        $export_file_name = "$filename.xlsx";
+        Excel::store(new GrievanceExport(), "public/$export_file_name", 'local');
+        return [
+            "file" => url(Storage::url("public/$export_file_name")),
+        ];
+    }
 }

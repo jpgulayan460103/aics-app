@@ -110,7 +110,7 @@ const router = new VueRouter({
             component: ActivityLog,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin"]
+                requiresRoles: ["Super-Admin", "admin","grievance-officer"]
             }
 
         },

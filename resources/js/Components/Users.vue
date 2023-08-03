@@ -137,6 +137,10 @@ export default {
           role: "Encoder",
           value: "Encoder",
         },
+        {
+          role: "grievance-officer",
+          value: "grievance-officer",
+        },
       ],
       showPassword: false,
       showPasswordConfirmation: false,

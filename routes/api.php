@@ -67,3 +67,6 @@ Route::get('clients', [\App\Http\Controllers\ServedClientController::class, 'ind
 Route::post('clients', [\App\Http\Controllers\ServedClientController::class, 'store'])->name("api.served-clients.store");
 
 Route::get('logs', [\App\Http\Controllers\AicsClientController::class, 'logs'])->name("clients.logs");
+
+Route::post('grievance/update/{id}', [\App\Http\Controllers\AicsClientController::class, 'grievance_update'])->name("api.grievance.update");
+Route::post('grievance/export', [\App\Http\Controllers\AicsClientController::class, 'export_grievance'])->name("api.grievance.export");

@@ -72,7 +72,7 @@
         </div>
         <div class="card-body">
           <div class="container-fluid">
-            <div class="row" v-if="userData.role == 'Super-Admin'">
+            <div class="row" v-if="userData.role == 'grievance-officer'">
               <div class="col-md-3">
                 <label for="last_name">
                   Apelyido <small>(Last name) <span color="red"></span></small>

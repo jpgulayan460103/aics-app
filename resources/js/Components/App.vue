@@ -1,15 +1,15 @@
 <template>
-  <v-app>
+ 
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-1">
-         
+      <v-row  dense>
+        <v-col cols="1">
+
 
           <v-list dense>
 
             <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
               <v-list-item v-for="(link, i) in links" :key="i" :to="link.to">
-                
+
                 <v-list-item-content>
                   <v-list-item-title v-text="link.text"></v-list-item-title>
                 </v-list-item-content>
@@ -18,14 +18,14 @@
           </v-list>
 
 
-        </div>
-        <div class="col-md-11">
+        </v-col>
+        <v-col cols="11">
           {{ this.userData.role }}
           <router-view :user="user" :upload-config="uploadConfig"></router-view>
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </div>
-  </v-app>
+  
 </template>
 
 <script>
@@ -112,6 +112,10 @@ export default {
       case "admin":
       case "Super-Admin":
         this.links = this.admin_menu
+
+        break;
+      case "grievance-officer":
+        this.links = this.grievance_menu
 
         break;
       default:

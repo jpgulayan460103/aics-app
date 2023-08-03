@@ -11,6 +11,9 @@
         <v-card-text>
 
 
+
+
+
           <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"
             :set-dialog-create="setDialogCreate"></GISComponent>
         </v-card-text>
@@ -27,20 +30,43 @@
         <v-data-table :headers="headers" :items="data" :loading="isBusy" dense loading-text="Loading... Please wait"
           :hide-default-footer="true">
           <template v-slot:item.status="{ item }">
-            
-          
+
+
             <v-chip v-if="item.payroll_client">
               In Payroll <span v-if="item.payroll_client.amount">{{ item.payroll_client.payroll.amount }}</span>
               | Client No: {{ item.payroll_client.sequence }}
               <span v-if="item.payroll_client.status"> | {{ item.payroll_client.status }}</span>
-            </v-chip>          
+            </v-chip>
 
           </template>
 
-          <template v-slot:item.is_verified="{ item }">
-            <v-chip dark :color="item.is_verified=='verified' ? 'green' : 'red'" v-if="item.is_verified">{{ item.is_verified }} </v-chip>
+          <template v-slot:item.verified="{ item }">
+            <span dark v-if="item.is_verified == 'grievance'">{{
+              item.is_verified }}
+            </span>
 
+            <span v-if="!item.is_verified">
+              <v-btn dark small @click="isVerified(item.id, 'verified')">
+                <v-icon small> mdi-check-circle </v-icon>
+                VERIFY
+              </v-btn>
+              <br>
+
+
+            </span>
           </template>
+
+          <template v-slot:item.grievance="{ item }">
+
+
+            <span v-if="!item.is_verified">
+              <v-btn dark small @click="isVerified(item.id, 'grievance')">
+                <v-icon small>mdi-close-circle </v-icon>
+                GRIEVANCE </v-btn>
+            </span>
+          </template>
+
+
 
           <template v-slot:item.barangay="{ item }">
             <span v-if="item.psgc"> {{ item.psgc.brgy_name }}</span>
@@ -60,29 +86,21 @@
 
           <template v-slot:item.actions="{ item }">
 
-           
-
-            <span v-if="!item.payroll_client">
-
+            <span
+              v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate')">
               <span v-if="item.is_verified == 'verified'">
                 <v-icon small class="mr-2" @click="EditItem(item)">
                   mdi-pencil
                 </v-icon>
               </span>
-
-              <span v-if="!item.is_verified">
-                <v-btn dark small @click="isVerified(item.id, 'verified')"> VERIFY </v-btn>
-                <v-btn  dark small @click="isVerified(item.id, 'grievance')"> GRIEVANCE </v-btn>
-
-              </span>
-
-
-
             </span>
 
-            <span v-if="item.payroll_client || item.is_verified == 'grievance'">
+            <!--<span v-if="item.payroll_client || item.is_verified == 'grievance' || !item.is_verified  ">
               <small> No Action Available </small>
-            </span>
+            </span>-->
+
+
+
 
 
             <!--<v-icon small class="mr-2" @click="PrintGIS(item)"
@@ -135,10 +153,11 @@ export default {
         { value: "barangay", text: "Barangay", sortable: true },
         { value: "city_muni", text: "City/Muni", sortable: true },
         { value: "province", text: "Province", sortable: true },
-        //{ value: "region", text: "Region", sortable: true },
-        
-        { value: "is_verified", text: "Verification Status", sortable: true },
+
         { value: "status", text: "Payroll Status", sortable: true },
+        { value: "verified", text: "Verification Status" },
+        { value: "grievance", text: "" },
+
         { value: "actions", text: "Actions" },
       ],
       isExporting: false,
@@ -201,7 +220,7 @@ export default {
       }).catch(err => console.log(err))
       this.getList();
 
-    }, 500),
+    }, 200),
   },
   watch: {
     dialog_create(newVal, oldVal) {

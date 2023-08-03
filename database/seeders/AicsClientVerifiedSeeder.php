@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AicsClient;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class AicsClientVerifiedSeeder extends Seeder
 {
@@ -26,5 +27,11 @@ class AicsClientVerifiedSeeder extends Seeder
             $aics_client->save();
             echo "client:".($key+1)." updated: ".$aics_client->full_name." status: " .$aics_client->is_verified."\n";
         }
+
+        $role = Role::create([
+            'name' => "grievance-officer"
+        ]);
+        echo "Inserted Role -> ".$role->name."\n";
+
     }
 }
