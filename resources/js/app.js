@@ -59,7 +59,7 @@ const router = new VueRouter({
             component: ImportFile,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin"]
+                requiresRoles: ["Super-Admin", "Admin"]
             }
         },
         {
@@ -72,6 +72,10 @@ const router = new VueRouter({
             path: "/master_list",
             name: "master_list",
             component: MasterList,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "Admin","encoder","Encoder"]
+            }
 
         },
         {
@@ -80,7 +84,7 @@ const router = new VueRouter({
             component: Payroll,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin"]
+                requiresRoles: ["Super-Admin", "Admin"]
             }
 
         },
@@ -91,7 +95,7 @@ const router = new VueRouter({
             props: true,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin"]
+                requiresRoles: ["Super-Admin", "Admin"]
             }
         },
         {
@@ -101,7 +105,7 @@ const router = new VueRouter({
             props: true,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin"]
+                requiresRoles: ["Super-Admin", "Admin"]
             }
         },
         {
@@ -110,7 +114,7 @@ const router = new VueRouter({
             component: ActivityLog,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin","grievance-officer"]
+                requiresRoles: ["Super-Admin", "Admin","grievance-officer"]
             }
 
         },
@@ -120,7 +124,7 @@ const router = new VueRouter({
             component: Grievance,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "admin", "grievance-officer"]
+                requiresRoles: ["Super-Admin", "Admin", "grievance-officer"]
             }
 
         },
@@ -130,7 +134,7 @@ const router = new VueRouter({
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MM-DD-YYYY");
+        return moment(String(value)).format("MM-DD-YYYY HH:mm:ss");
     }
 });
 

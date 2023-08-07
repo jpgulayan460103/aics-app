@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\RemembersRowNumber;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Carbon\Carbon;
+use Spatie\Activitylog\Models\Activity;
 
 class GrievanceExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -29,7 +30,13 @@ class GrievanceExport implements FromCollection, WithHeadings, WithMapping
             'dirty_list',
         ])->where("is_verified", "=", "grievance");
 
-        $collection = $collection->get();
+        $collection = $collection->orderBy("updated_at","desc")->get()->transform(function($client){
+            $client->activity =  Activity::forSubject($client)
+                ->select("properties")
+                ->orderBy("created_at","desc")
+                ->first();
+            return $client;
+        });
 
         return $collection->map(function ($item, $key) {
             $item->key = $key;
@@ -53,7 +60,9 @@ class GrievanceExport implements FromCollection, WithHeadings, WithMapping
             'Sex',
             'CivilStatus',
             'DOB',
-            'ImportFileName'
+            'ImportFileName',
+            'Date',
+            "Old Full Name"
         ];
     }
 
@@ -77,8 +86,8 @@ class GrievanceExport implements FromCollection, WithHeadings, WithMapping
             $grievance_client->civil_status,
             $grievance_client->birth_date ? Carbon::parse($grievance_client->birth_date)->format("m/d/Y") : "",
             $grievance_client->dirty_list->file_name,
-            //$grievance_client->grievance_client ? $grievance_client->dirty_list->file_name : "",
-
+            $grievance_client->updated_at,
+            $grievance_client->activity ? $grievance_client->activity->properties["old"]["full_name"] : "Not Updated" ,
             
         ];
     }

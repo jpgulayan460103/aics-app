@@ -2,7 +2,7 @@
  
     <div class="container-fluid">
       <v-row  dense>
-        <v-col cols="1">
+        <v-col cols="2">
 
 
           <v-list dense>
@@ -19,7 +19,7 @@
 
 
         </v-col>
-        <v-col cols="11">
+        <v-col cols="10">
           {{ this.userData.role }}
           <router-view :user="user" :upload-config="uploadConfig"></router-view>
         </v-col>
@@ -107,10 +107,10 @@ export default {
   },
   methods: {},
   mounted() {
-
-    switch (this.userData.role) {
+    
+    switch (this.userData.role.toLowerCase()) {
       case "admin":
-      case "Super-Admin":
+      case "super-admin":
         this.links = this.admin_menu
 
         break;

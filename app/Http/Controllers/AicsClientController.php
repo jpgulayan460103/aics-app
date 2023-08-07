@@ -43,7 +43,7 @@ class AicsClientController extends Controller
             $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
         $clients->orderBy("full_name");
-        $clients = $clients->paginate(20);
+        $clients = $clients->paginate(10);
         return $clients;
     }
 
@@ -299,6 +299,7 @@ class AicsClientController extends Controller
     public function grievance_list(Request $request)
     {
         $clients = AicsClient::with("psgc");
+       
         if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
@@ -311,7 +312,12 @@ class AicsClientController extends Controller
         }
         $clients->orderBy("full_name");
         $clients->where("is_verified", "=", "grievance");
-        $clients = $clients->paginate(20);
+
+    
+        $clients = $clients->paginate(10)->through(function($client){
+            $client->activity =  Activity::forSubject($client)->orderBy("created_at","desc")->get();
+            return $client;
+        });;
         return $clients;
     }
 

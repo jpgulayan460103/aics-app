@@ -34,7 +34,8 @@
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        AICS Online Application
+                        <img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" class="img-fluid"  style="height: 50px;"/>
+                        
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

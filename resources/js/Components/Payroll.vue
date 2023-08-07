@@ -117,14 +117,14 @@
             <label for="">Amount</label>
             <input type="number" name="" v-model="formData.amount" id="" class="form-control" />
 
-            <label for="">Certified By (1)</label>
+            <!-- <label for="">Certified By (1)</label>
             <input type="text" name="" v-model="formData.certified_by1" id="" class="form-control" />
 
             <label for="">Certified By (2)</label>
             <input type="text" name="" v-model="formData.certified_by2" id="" class="form-control" />
 
             <label for="">Approved By</label>
-            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />
+            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />-->
 
             <label for="">SDO</label>
             <input type="text" name="" v-model="formData.sdo" id="" class="form-control" />
@@ -152,12 +152,7 @@
 
       <v-card-title>Payroll <v-spacer />
         <v-progress-circular :width="3" indeterminate color="primary" v-if="isExporting"></v-progress-circular>
-        <v-btn
-          class="m-1"
-          @click="NewPayroll()"
-          dark
-          v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'"
-        >
+        <v-btn class="m-1" @click="NewPayroll()" dark v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
           New Payroll
         </v-btn>
       </v-card-title>
@@ -189,6 +184,11 @@
               v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
               mdi-pencil
             </v-icon>
+
+            <v-icon small class="mr-5" @click="DeleteItem(item)" v-if="userData.role == 'Super-Admin'">
+              mdi-delete
+            </v-icon>
+            
 
             <v-menu bottom left>
               <template v-slot:activator="{ on, attrs }">
@@ -222,9 +222,7 @@
               </v-list>
             </v-menu>
 
-           <v-icon small class="mr-5" @click="DeleteItem(item)"  v-if="userData.role == 'Super-Admin'">
-              mdi-delete
-            </v-icon>
+           
           </template>
         </v-data-table>
       </v-card-text>
@@ -246,6 +244,7 @@ export default {
       openModal: false,
       formData: {
         title: "",
+        source_of_fund: "AICS FUND"
       },
       search: "",
       isBusy: false,
@@ -332,7 +331,10 @@ export default {
       });
     },
     NewPayroll() {
-      this.formData = {};
+      this.formData = {
+        title: "",
+        source_of_fund: "AICS FUND"
+      };
       this.openModal = true;
     },
     EditItem(e) {
@@ -361,7 +363,7 @@ export default {
     },
     DownloadPayroll: debounce(function (payroll, status = "claimed") {
       this.isExporting = true;
-      axios.post(route('api.payroll.export', payroll.id), {status})
+      axios.post(route('api.payroll.export', payroll.id), { status })
         .then((res) => {
           this.isExporting = false;
           window.location.href = res.data.file;
@@ -397,7 +399,7 @@ export default {
       }, {});
     },
     exportCoe(id, ext) {
-      window.open(route("pdf.payroll.print_coe", {id, _query: { ext } }));
+      window.open(route("pdf.payroll.print_coe", { id, _query: { ext } }));
     },
   },
   mounted() {

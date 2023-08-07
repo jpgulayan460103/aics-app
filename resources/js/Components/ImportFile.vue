@@ -5,8 +5,6 @@
       <form @submit.prevent="submit" enctype="multipart/form-data">
         <input type="file" name="" id="" @input="onFileChange($event)" required accept=".xlsx,.xls"/>
 
-        
-
         <v-btn
           :loading="isBusy"
           color="black"
@@ -41,7 +39,7 @@
           <a :href="item.file_directory">{{ item.file_directory }}</a>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="deleteFile(item)" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+          <v-icon small class="mr-2" @click="deleteFile(item)" v-if="userData.role == 'Super-Admin'">
             mdi-delete
           </v-icon>
         </template>

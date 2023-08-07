@@ -1,8 +1,12 @@
 <template>
     <v-card flat>
-        <v-card-title>Grievance</v-card-title>
+        <v-card-title>Grievance
+            <v-spacer></v-spacer>
+            <v-text-field @keyup="searchClient" v-model="search" append-icon="mdi-magnify" label="Search" single-line
+                hide-details></v-text-field>
+        </v-card-title>
         <v-card-text>
-            <v-data-table dense flat :items="data" class="elevation-1" :headers=headers :loading="isloading">
+            <v-data-table dense flat :items="data" :headers=headers :loading="isloading" :hide-default-footer="true" :items-per-page="perPage" :page.sync="currentPage">
                 <template v-slot:item.created_at="{ item }">
                     {{ item.created_at | formatDate }}
                 </template>
@@ -28,7 +32,24 @@
                         mdi-pencil
                     </v-icon>
                 </template>
+
+                <template v-slot:item.is_verified="{ item }">
+                    <span v-if="item.activity.length > 0">
+                        Updated
+                    </span>
+                </template>
+
+                <template v-slot:item.date_updated="{ item }">
+                    <span v-if="item.activity.length > 0">
+                        {{ item.activity[0].created_at | formatDate }}
+                    </span>
+                </template>
             </v-data-table>
+
+            <v-col cols="12" sm="12" md="8" lg="4">
+                <v-pagination v-model="currentPage" :length="lastPage" @input="getGrievanceList"></v-pagination>
+            </v-col>
+
         </v-card-text>
 
         <v-dialog v-model="dialog_create" width="80%">
@@ -65,13 +86,12 @@
                                     :error-messages="formErrors.mobile_number"></v-text-field>
                             </div>
                             <div class="col-md-3">
-
                                 <v-text-field type="date" v-model="formData.birth_date" label="Birth Date"
-                                    :error-messages="formErrors.birth_date"></v-text-field>
+                                    :error-messages="formErrors.birth_date" @input="calculateAge"></v-text-field>
                             </div>
 
                             <div class="col-md-3">
-                                <v-text-field label="Age " readonly></v-text-field>
+                                <v-text-field label="Age " v-model="formData.age" readonly></v-text-field>
                             </div>
                             <div class="col-md-3">
                                 <v-select v-model="formData.gender" :items="['Lalake', 'Babae']" label="Gender"
@@ -84,7 +104,6 @@
                                     :items="['Single', 'Married', 'Common-law', 'Widowed', 'Separated']"
                                     label="Civil Status" :error-messages="formErrors.civil_status"></v-select>
                             </div>
-
                         </div>
 
                         <v-btn dark color="primary" class="mr-4" @click="submitForm" :disabled="submit"
@@ -93,6 +112,29 @@
                         </v-btn>
                     </v-form>
 
+                    <br>
+
+
+                    <table class="table table-bordered text-center" style="table-layout: fixed;" v-if="formData.activity">
+                        <thead>
+                            <tr>
+                                <th colspan="3">HISTORY</th>
+                            </tr>
+                            <tr>
+                                <th>NEW NAME</th>
+                                <th>OLD NAME</th>
+                                <th>DATE UPDATED</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="activity in formData.activity">
+
+                                <td> {{ activity.properties.attributes.full_name }}</td>
+                                <td> {{ activity.properties.old.full_name }}</td>
+                                <td> {{ activity.created_at | formatDate }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -125,7 +167,8 @@ export default {
                 { value: "barangay", text: "Barangay", sortable: true },
                 { value: "city_muni", text: "City/Muni", sortable: true },
                 { value: "province", text: "Province", sortable: true },
-                { value: "is_verified", text: "Verification Status", sortable: true },
+                { value: "is_verified", text: "Status", sortable: true },
+                { value: "date_updated", text: "Last Updated at", sortable: true },
                 { value: "actions", text: "Actions" },
             ],
             isloading: false,
@@ -134,22 +177,35 @@ export default {
             formData: {},
             submit: false,
             isExporting: false,
+            search: "",
+            perPage: 10,
+            currentPage: 1,
+            lastPage: 1,
         }
     },
     methods:
     {
         getGrievanceList() {
             this.isloading = true;
-            axios.get(route("api.grievance_list")).then(response => {
+            axios.get(route("api.grievance_list"), {
+                params: {
+                    search: this.search,
+                    page: this.currentPage,
+                }
+            }).then(response => {
                 console.log(response.data);
                 this.data = response.data.data;
                 this.isloading = false;
+                this.perPage = response.data.per_page;
+                this.currentPage = response.data.current_page;
+                this.lastPage = response.data.last_page;
             }).catch(err => console.log(err));
         },
         EditItem(item) {
             this.dialog_create = true;
             this.formData = {};
             this.formData = cloneDeep(item);
+            this.calculateAge();
         },
         submitForm() {
             this.submit = true;
@@ -159,6 +215,7 @@ export default {
                     this.submit = false;
                     this.getGrievanceList();
                     alert('Client has been updated');
+                    this.dialog_create = false;
                 })
                 .catch(err => {
                     this.submit = false;
@@ -177,6 +234,22 @@ export default {
                     this.isExporting = false;
                 });
         }, 250),
+        calculateAge: function () {
+            if (!this.formData.birth_date) {
+                this.formData.age = 0;
+            } else {
+                let currentDate = new Date();
+                let birthDate = new Date(this.formData.birth_date);
+                let difference = currentDate - birthDate;
+                let age = Math.floor(difference / 31557600000);
+                this.formData.age = age;
+            }
+        },
+        searchClient: debounce(function () {
+            this.currentPage = 1;
+            this.getGrievanceList();
+        }, 500),
+
     },
     mounted() {
         this.getGrievanceList();

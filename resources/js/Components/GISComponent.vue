@@ -72,7 +72,7 @@
         </div>
         <div class="card-body">
           <div class="container-fluid">
-            <div class="row" v-if="userData.role == 'grievance-officer'">
+            <!--<div class="row" v-if="">
               <div class="col-md-3">
                 <label for="last_name">
                   Apelyido <small>(Last name) <span color="red"></span></small>
@@ -124,8 +124,8 @@
                   {{ validationErrors.ext_name[0] }}
                 </div>
               </div>
-            </div>
-            <div class="row" v-else>
+            </div>-->
+            <div class="row">
 
               <div class="col-md-3 underline">
                 <label for="">Last Name</label><br>
@@ -242,7 +242,7 @@
                 </div>
               </div>
 
-              <div class="col-md-3" v-if="userData.role == 'Super-Admin'">
+              <!--<div class="col-md-3" v-if="userData.role == 'Super-Admin'">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
                   <span color="red"></span></label>
                 <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
@@ -251,11 +251,10 @@
                 <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
                   {{ validationErrors.birth_date[0] }}
                 </div>
-              </div>
-              <div class="col-md-3 underline" v-else> 
+              </div>-->
+              <div class="col-md-3 underline" > 
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
                   {{ form.birth_date }}
-
               </div>
 
               <div class="col-md-3">

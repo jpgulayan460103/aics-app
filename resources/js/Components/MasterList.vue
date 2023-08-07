@@ -9,11 +9,6 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-
-
-
-
-
           <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"
             :set-dialog-create="setDialogCreate"></GISComponent>
         </v-card-text>
@@ -28,45 +23,18 @@
       </v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="data" :loading="isBusy" dense loading-text="Loading... Please wait"
-          :hide-default-footer="true">
+          :hide-default-footer="true" :items-per-page="perPage" :page.sync="currentPage">
           <template v-slot:item.status="{ item }">
-
-
             <v-chip v-if="item.payroll_client">
               In Payroll <span v-if="item.payroll_client.amount">{{ item.payroll_client.payroll.amount }}</span>
               | Client No: {{ item.payroll_client.sequence }}
               <span v-if="item.payroll_client.status"> | {{ item.payroll_client.status }}</span>
             </v-chip>
 
-          </template>
-
-          <template v-slot:item.verified="{ item }">
-            <span dark v-if="item.is_verified == 'grievance'">{{
+            <v-chip v-if="item.is_verified == 'grievance'">{{
               item.is_verified }}
-            </span>
-
-            <span v-if="!item.is_verified">
-              <v-btn dark small @click="isVerified(item.id, 'verified')">
-                <v-icon small> mdi-check-circle </v-icon>
-                VERIFY
-              </v-btn>
-              <br>
-
-
-            </span>
+            </v-chip>
           </template>
-
-          <template v-slot:item.grievance="{ item }">
-
-
-            <span v-if="!item.is_verified">
-              <v-btn dark small @click="isVerified(item.id, 'grievance')">
-                <v-icon small>mdi-close-circle </v-icon>
-                GRIEVANCE </v-btn>
-            </span>
-          </template>
-
-
 
           <template v-slot:item.barangay="{ item }">
             <span v-if="item.psgc"> {{ item.psgc.brgy_name }}</span>
@@ -84,29 +52,36 @@
             <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
           </template>
 
-          <template v-slot:item.actions="{ item }">
 
+          <template v-slot:item.actions="{ item }">
             <span
               v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate')">
               <span v-if="item.is_verified == 'verified'">
-                <v-icon small class="mr-2" @click="EditItem(item)">
-                  mdi-pencil
-                </v-icon>
+                <v-btn elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
+                  <v-icon left>
+                    mdi-pencil
+                  </v-icon>GIS
+
+                </v-btn>
               </span>
             </span>
 
-            <!--<span v-if="item.payroll_client || item.is_verified == 'grievance' || !item.is_verified  ">
-              <small> No Action Available </small>
-            </span>-->
+            <v-btn-toggle tile group borderless v-if="!item.is_verified">
+              <v-btn value="left" @click="isVerified(item.id, 'verified', item)">
+                <v-icon left> mdi-check-circle </v-icon>
+                Verify
+              </v-btn>
+
+              <v-btn value="center" @click="isVerified(item.id, 'grievance', item)">
+                <v-icon left> mdi-close-circle </v-icon>
+                Grievance
+              </v-btn>
+
+
+            </v-btn-toggle>
 
 
 
-
-
-            <!--<v-icon small class="mr-2" @click="PrintGIS(item)"
-              v-if="item.payroll_client && item.payroll_client.payroll_id">
-              mdi-printer
-            </v-icon>-->
 
           </template>
         </v-data-table>
@@ -116,7 +91,7 @@
         </v-col>
 
         <div v-if="userData.role == 'Super-Admin'">
-          <v-btn :loading="isExporting" @click="downloadClient()">Download</v-btn>
+          <v-btn color="primary" :loading="isExporting" @click="downloadClient()">Download</v-btn>
         </div>
 
       </v-card-text>
@@ -127,10 +102,11 @@
 <script>
 import GISComponent from "./GISComponent.vue";
 import userMixin from './../Mixin/userMixin.js'
+import authMixin from "../Mixin/authMixin";
 import { debounce, cloneDeep } from "lodash";
 
 export default {
-  mixins: [userMixin],
+  mixins: [userMixin, authMixin],
   props: ["user"],
   components: { GISComponent },
   data() {
@@ -139,7 +115,7 @@ export default {
       data: [],
       isBusy: true,
 
-      perPage: 20,
+      perPage: 10,
       currentPage: 1,
       lastPage: 1,
       dialog_create: false,
@@ -153,12 +129,8 @@ export default {
         { value: "barangay", text: "Barangay", sortable: true },
         { value: "city_muni", text: "City/Muni", sortable: true },
         { value: "province", text: "Province", sortable: true },
-
         { value: "status", text: "Payroll Status", sortable: true },
-        { value: "verified", text: "Verification Status" },
-        { value: "grievance", text: "" },
-
-        { value: "actions", text: "Actions" },
+        { value: "actions", text: "Actions", width: '100px' },
       ],
       isExporting: false,
 
@@ -214,11 +186,21 @@ export default {
       this.currentPage = 1;
       this.getList();
     }, 500),
-    isVerified: debounce(function (id, stat) {
-      axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
-        console.log(response.data);
-      }).catch(err => console.log(err))
-      this.getList();
+    isVerified: debounce(function (id, stat, client) {
+
+      let message = "TAG " + client.full_name + " AS " + stat.toUpperCase() + "? \n"
+      
+
+      var conf = confirm(message);
+      if (conf) {
+
+
+        axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
+          console.log(response.data);
+        }).catch(err => console.log(err))
+        this.getList();
+
+      }
 
     }, 200),
   },
