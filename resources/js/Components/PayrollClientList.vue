@@ -191,7 +191,7 @@
           </span>
           <span v-else>
             <span v-if="item.new_payroll_client">
-              Moved to {{ item.new_payroll_client.payroll.title }} Client #: {{ item.new_payroll_client.sequence }}
+              Moved to {{ item.new_payroll_client.payroll ? item.new_payroll_client.payroll.title : "" }} Client #: {{ item.new_payroll_client.sequence }}
             </span>
             <span v-else>
               Removed from Payroll List
