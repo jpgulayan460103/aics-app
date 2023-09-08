@@ -44,7 +44,7 @@ class AicsClientController extends Controller
             $clients->orWhere(fn($q) => $q->where("meta_full_name" , "like", "%".metaphone($search)."%"));
         }
         $clients->orderBy("full_name");
-        $clients = $clients->paginate(20);
+        $clients = $clients->paginate(10);
         return $clients;
     }
 
