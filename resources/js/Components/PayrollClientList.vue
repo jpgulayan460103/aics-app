@@ -190,7 +190,7 @@
           </span>
           <span v-else>
             <span v-if="item.new_payroll_client">
-              Moved to {{ item.new_payroll_client.payroll.title }} Client #: {{ item.new_payroll_client.sequence }}
+              Moved to {{ item.new_payroll_client.payroll ? item.new_payroll_client.payroll.title : "" }} Client #: {{ item.new_payroll_client.sequence }}
             </span>
             <span v-else>
               Removed from Payroll List
@@ -304,9 +304,6 @@ export default {
       clientListPerPage: 10,
     };
   },
-  computed: {
-    lastPage() { return Math.ceil(this.data.clients.length / 10); }
-  },
   watch() {
     id();
     {
@@ -328,7 +325,10 @@ export default {
     },
     print_payroll_w_gt() {
       window.open(
-        route("pdf.payroll.printv2", { id: this.id, page: this.lastPage, gt: 1 }),
+        route("pdf.payroll.printv2", { id: this.id, _query: {
+          page: this.lastPage,
+          gt: 1
+        } }),
         "_blank"
       );
     },
@@ -349,8 +349,6 @@ export default {
         });
     },
     async save(e) {
-      // console.log("in save");
-      //console.log(e);
       return axios.put(route("api.payroll-clients.update", e.id), e);
     },
     cancel(e) {
@@ -418,7 +416,6 @@ export default {
       }
     }, 250),
     markAllAsClaimed: debounce(async function () {
-      //let ids = this.selected.map(item => item.id);
       if(confirm("Are you sure you want to tag all clients as claimed?")){
         axios.post(route('api.payroll.set_claimed', this.id))
         .then(res => {
@@ -431,7 +428,6 @@ export default {
       }
     }, 250),
     MarkAsClaimed: debounce(async function () {
-      //let ids = this.selected.map(item => item.id);
       let promises = [];
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
@@ -444,7 +440,6 @@ export default {
       this.getClients();
     }, 250),
     MarkAsUnClaimed: debounce(async function () {
-      //let ids = this.selected.map(item => item.id);
       let promises = [];
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
@@ -489,13 +484,14 @@ export default {
 
   },
   mounted() {
-    //console.log("list");
-    // console.log(this.id);
     this.isBusy = true;
     this.getClients();
   },
 
   computed: {
+    lastPage() {
+      return Math.ceil(this.data.clients.length / 10);
+    },
     uploadProgress(){
       return (this.crimsUploads.currentBatch / this.crimsUploads.lastBatch) * 100;
     }
