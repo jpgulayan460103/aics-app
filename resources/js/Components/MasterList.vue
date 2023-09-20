@@ -195,7 +195,7 @@ export default {
       var conf = confirm(message);
       if (conf) {
         axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
-          console.log(response.data);
+         // console.log(response.data);
           this.verifying = false;
           if (response.data.message) {
             alert(response.data.message);

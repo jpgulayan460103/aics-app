@@ -459,14 +459,15 @@
       </div>-->
 
       <div class="text-center col-md-12" style="padding: 10px 0px">
+        <v-btn dark large class="btn-error" value="center" @click="isVerified(form.id, 'grievance', form)">
+          GRIEVANCE
+        </v-btn>
+       
         <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
           SUBMIT
         </button>
 
-        <v-btn dark large class="btn-error" value="center" @click="isVerified(form.id, 'grievance', form)">
-          
-          GRIEVANCE
-        </v-btn>
+        
 
 
 
@@ -608,7 +609,7 @@ export default {
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             this.submit = false;
-            console.log(response.data);
+          //  console.log(response.data);
             this.setDialogCreate(false);
             alert(`${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`);
             this.getList();
@@ -621,7 +622,7 @@ export default {
           })
           .catch((error) => {
             this.submit = false;
-            console.log(error);
+          //  console.log(error);
             if (error.response && error.response.status == 422) {
               alert("Kumpletohin ang form. \nPlease complete the form.");
               this.validationErrors = error.response.data.errors;
@@ -720,9 +721,9 @@ export default {
     },
 
     groupByKey(array, key) {
-      console.log(array);
-      console.log(key);
-      console.log(Array.isArray(array));
+     // console.log(array);
+     // console.log(key);
+     // console.log(Array.isArray(array));
       if (Array.isArray(array)) {
         return array.reduce((hash, obj) => {
           if (obj[key] === undefined) return hash;
@@ -775,18 +776,24 @@ export default {
       if (conf) {
 
         axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           if (response.data.message) {
             alert(response.data.message);
           }
 
         }).catch(err => console.log(err))
-        this.getList();
-        this.setDialogCreate(false);
+
+        this.$nextTick(() => {
+          this.getList();
+          this.setDialogCreate(false);
+        })
+
+        
+       
 
       }
 
-    }, 200),
+    }, 500),
   },
   mounted() {
     this.form = cloneDeep(this.dialog_data);
