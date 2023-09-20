@@ -151,7 +151,7 @@ class AicsAssistanceController extends Controller
             "aics_documents",          
             "aics_documents.requirement:id,name",
            
-            )->get();
+            )->orderBy("created_at","desc")->get();
     }
 
     public function update(request $request)
