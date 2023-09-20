@@ -2,7 +2,7 @@
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
 
-      <pre>{{ form }}</pre>
+
 
       <div class="row">
 
@@ -463,9 +463,9 @@
           SUBMIT
         </button>
 
-        <v-btn value="center" @click="isVerified(form.id, 'grievance', form)">
-          <v-icon left> mdi-close-circle </v-icon>
-          Grievance
+        <v-btn dark large class="btn-error" value="center" @click="isVerified(form.id, 'grievance', form)">
+          
+          GRIEVANCE
         </v-btn>
 
 
@@ -545,10 +545,11 @@ export default {
       this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
-      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null;
-      this.getBeneficiaryPsgc();
-      this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name];
-
+      if (this.dialog_data.psgc) {
+        this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null;
+        this.getBeneficiaryPsgc();
+        this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name] ? this.beneficiary_provinces[this.dialog_data.psgc.province_name] : null;
+      }
     },
     beneficiary_region_selector(newVal, oldVal) {
       ((this.beneficiary_provinces = {}),
@@ -630,6 +631,7 @@ export default {
         alert(
           "Pumili ng Payroll!"
         );
+        this.submit = false;
       }
     }, 250),
     resetForm() {
@@ -718,14 +720,17 @@ export default {
     },
 
     groupByKey(array, key) {
-
-      return array.reduce((hash, obj) => {
-        if (obj[key] === undefined) return hash;
-        return Object.assign(hash, {
-          [obj[key]]: (hash[obj[key]] || []).concat(obj),
-        });
-      }, {});
-
+      console.log(array);
+      console.log(key);
+      console.log(Array.isArray(array));
+      if (Array.isArray(array)) {
+        return array.reduce((hash, obj) => {
+          if (obj[key] === undefined) return hash;
+          return Object.assign(hash, {
+            [obj[key]]: (hash[obj[key]] || []).concat(obj),
+          });
+        }, {});
+      }
     },
 
     isEmpty(value) {

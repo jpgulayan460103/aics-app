@@ -37,7 +37,8 @@
           </template>
 
           <template v-slot:item.barangay="{ item }">
-            <span v-if="item.psgc"> <small>{{ item.psgc.brgy_name }}, <br> {{ item.psgc.city_name }},<br> {{  item.psgc.province_name  }}</small> </span>
+            <span v-if="item.psgc"> <small>{{ item.psgc.brgy_name }}, <br> {{ item.psgc.city_name }},<br> {{
+              item.psgc.province_name }}</small> </span>
           </template>
 
           <!--<template v-slot:item.city_muni="{ item }">
@@ -54,33 +55,34 @@
 
 
           <template v-slot:item.actions="{ item }">
-            <span
-              v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate')">
-              <span v-if="item.is_verified == 'verified'">
-                <v-btn elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
-                  <v-icon left>
-                    mdi-pencil
-                  </v-icon>GIS
 
-                </v-btn>
+            <div>
+              <span
+                v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate')">
+                <span v-if="item.is_verified == 'verified'">
+                  <v-btn elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
+                    <v-icon left>
+                      mdi-pencil
+                    </v-icon>GIS
+
+                  </v-btn>
+                </span>
               </span>
-            </span>
 
-            <v-btn-toggle tile group borderless v-if="!item.is_verified">
-              <v-btn value="left" @click="isVerified(item.id, 'verified', item)">
-                <v-icon left> mdi-check-circle </v-icon>
-                Verify
-              </v-btn>
+              <v-btn-toggle tile group borderless v-if="!item.is_verified">
+                <v-btn value="left" @click="isVerified(item.id, 'verified', item)" :loading="verifying">
+                  <v-icon left> mdi-check-circle </v-icon>
+                  Verify
+                </v-btn>
 
-              <v-btn value="center" @click="isVerified(item.id, 'grievance', item)">
-                <v-icon left> mdi-close-circle </v-icon>
-                Grievance
-              </v-btn>
-
-
-            </v-btn-toggle>
+                <v-btn value="center" @click="isVerified(item.id, 'grievance', item)" :loading="verifying">
+                  <v-icon left> mdi-close-circle </v-icon>
+                  Grievance
+                </v-btn>
+              </v-btn-toggle>
 
 
+            </div>
 
 
           </template>
@@ -114,7 +116,6 @@ export default {
       search: "",
       data: [],
       isBusy: true,
-
       perPage: 10,
       currentPage: 1,
       lastPage: 1,
@@ -133,6 +134,7 @@ export default {
         { value: "actions", text: "Actions", width: '100px' },
       ],
       isExporting: false,
+      verifying: false
 
     };
   },
@@ -188,24 +190,29 @@ export default {
     }, 500),
     isVerified: debounce(function (id, stat, client) {
 
+      this.verifying = true;
       let message = "TAG " + client.full_name + " AS " + stat.toUpperCase() + "? \n"
-
-
       var conf = confirm(message);
       if (conf) {
-
-
         axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
           console.log(response.data);
+          this.verifying = false;
           if (response.data.message) {
             alert(response.data.message);
           }
+
+          this.$nextTick(() => {
+            this.getList();
+          })
+
+
         }).catch(err => console.log(err))
-        this.getList();
+
+
 
       }
 
-    }, 200),
+    }, 500),
   },
   watch: {
     dialog_create(newVal, oldVal) {
