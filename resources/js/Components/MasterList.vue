@@ -37,10 +37,10 @@
           </template>
 
           <template v-slot:item.barangay="{ item }">
-            <span v-if="item.psgc"> {{ item.psgc.brgy_name }}</span>
+            <span v-if="item.psgc"> <small>{{ item.psgc.brgy_name }}, <br> {{ item.psgc.city_name }},<br> {{  item.psgc.province_name  }}</small> </span>
           </template>
 
-          <template v-slot:item.city_muni="{ item }">
+          <!--<template v-slot:item.city_muni="{ item }">
             <span v-if="item.psgc"> {{ item.psgc.city_name }}</span>
           </template>
 
@@ -50,7 +50,7 @@
 
           <template v-slot:item.region="{ item }">
             <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
-          </template>
+          </template>-->
 
 
           <template v-slot:item.actions="{ item }">
@@ -126,9 +126,9 @@ export default {
         { value: "last_name", text: "Last Name", sortable: true },
         { value: "ext_name", text: "Ext", sortable: true },
         { value: "birth_date", text: "DOB", sortable: true },
-        { value: "barangay", text: "Barangay", sortable: true },
-        { value: "city_muni", text: "City/Muni", sortable: true },
-        { value: "province", text: "Province", sortable: true },
+        { value: "barangay", text: "Address", sortable: true },
+        //{ value: "city_muni", text: "City/Muni", sortable: true },
+        //{ value: "province", text: "Province", sortable: true },
         { value: "status", text: "Payroll Status", sortable: true },
         { value: "actions", text: "Actions", width: '100px' },
       ],
@@ -189,7 +189,7 @@ export default {
     isVerified: debounce(function (id, stat, client) {
 
       let message = "TAG " + client.full_name + " AS " + stat.toUpperCase() + "? \n"
-      
+
 
       var conf = confirm(message);
       if (conf) {
@@ -197,6 +197,9 @@ export default {
 
         axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
           console.log(response.data);
+          if (response.data.message) {
+            alert(response.data.message);
+          }
         }).catch(err => console.log(err))
         this.getList();
 

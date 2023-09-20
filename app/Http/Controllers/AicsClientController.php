@@ -289,17 +289,26 @@ class AicsClientController extends Controller
 
     public function verify(Request $request, $id)
     {
-        $client = AicsClient::findOrFail($id);
-        if ($client) {
-            $client->is_verified = $request->is_verified;
-            $client->save();
+        DB::beginTransaction();
+        try {
+            $client = AicsClient::findOrFail($id);
+            if ($client) {
+                $client->is_verified = $request->is_verified;
+                $client->save();
+                DB::commit();
+                return ["message" => "saved"];
+            }
+           
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ["message" => $e];
         }
     }
 
     public function grievance_list(Request $request)
     {
         $clients = AicsClient::with("psgc");
-       
+
         if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
@@ -313,9 +322,9 @@ class AicsClientController extends Controller
         $clients->orderBy("full_name");
         $clients->where("is_verified", "=", "grievance");
 
-    
-        $clients = $clients->paginate(10)->through(function($client){
-            $client->activity =  Activity::forSubject($client)->orderBy("created_at","desc")->get();
+
+        $clients = $clients->paginate(10)->through(function ($client) {
+            $client->activity =  Activity::forSubject($client)->orderBy("created_at", "desc")->get();
             return $client;
         });;
         return $clients;

@@ -2,6 +2,7 @@
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
 
+      <pre>{{ form }}</pre>
 
       <div class="row">
 
@@ -129,7 +130,7 @@
 
               <div class="col-md-3 underline">
                 <label for="">Last Name</label><br>
-                 {{ form.last_name }}
+                {{ form.last_name }}
               </div>
               <div class="col-md-3 underline">
                 <label for="">First Name</label><br>
@@ -252,9 +253,9 @@
                   {{ validationErrors.birth_date[0] }}
                 </div>
               </div>-->
-              <div class="col-md-3 underline" > 
+              <div class="col-md-3 underline">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
-                  {{ form.birth_date }}
+                {{ form.birth_date }}
               </div>
 
               <div class="col-md-3">
@@ -461,6 +462,14 @@
         <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
           SUBMIT
         </button>
+
+        <v-btn value="center" @click="isVerified(form.id, 'grievance', form)">
+          <v-icon left> mdi-close-circle </v-icon>
+          Grievance
+        </v-btn>
+
+
+
       </div>
     </div>
   </form>
@@ -536,7 +545,7 @@ export default {
       this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
-      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null ;
+      this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null;
       this.getBeneficiaryPsgc();
       this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name];
 
@@ -710,7 +719,6 @@ export default {
 
     groupByKey(array, key) {
 
-
       return array.reduce((hash, obj) => {
         if (obj[key] === undefined) return hash;
         return Object.assign(hash, {
@@ -753,6 +761,27 @@ export default {
         })
         .catch((error) => console.log(error));
     },
+    isVerified: debounce(function (id, stat, client) {
+
+      let message = "TAG " + client.full_name + " AS " + stat.toUpperCase() + "? \n"
+
+
+      var conf = confirm(message);
+      if (conf) {
+
+        axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
+          console.log(response.data);
+          if (response.data.message) {
+            alert(response.data.message);
+          }
+
+        }).catch(err => console.log(err))
+        this.getList();
+        this.setDialogCreate(false);
+
+      }
+
+    }, 200),
   },
   mounted() {
     this.form = cloneDeep(this.dialog_data);
