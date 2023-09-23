@@ -293,7 +293,7 @@
               </div>
               <div class="col-md-3" v-else>
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
-                <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" />
+                <input id="birth_date" @input="calculateAge" v-model="form.birth_date" type="date" class="form-control" />
               </div>
 
               <div class="col-md-3">
