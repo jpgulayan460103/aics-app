@@ -126,7 +126,7 @@
                 </div>
               </div>
             </div>-->
-            <div class="row">
+            <div class="row" v-if="userData.role != 'Super-Admin'">
 
               <div class="col-md-3 underline">
                 <label for="">Last Name</label><br>
@@ -145,6 +145,40 @@
                 {{ form.ext_name }}
               </div>
 
+            </div>
+            <div class="row" v-else>
+              <div class="col-md-3">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" v-model="form.last_name" type="text" class="form-control" />
+
+                <div v-if="validationErrors && validationErrors.last_name" style="color: red">
+                  {{ validationErrors.last_name[0] }}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="first_name">First Name</label>
+                <input id="first_name" v-model="form.first_name" type="text" class="form-control" />
+
+                <div v-if="validationErrors && validationErrors.first_name" style="color: red">
+                  {{ validationErrors.first_name[0] }}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="middle_name">Middle Name</label>
+                <input id="middle_name" v-model="form.middle_name" type="text" class="form-control" />
+
+                <div v-if="validationErrors && validationErrors.middle_name" style="color: red">
+                  {{ validationErrors.middle_name[0] }}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="ext_name">Ext Name</label>
+                <input id="ext_name" v-model="form.ext_name" type="text" class="form-control" />
+
+                <div v-if="validationErrors && validationErrors.ext_name" style="color: red">
+                  {{ validationErrors.ext_name[0] }}
+                </div>
+              </div>
             </div>
 
             <div class="row mt-2">
@@ -253,9 +287,13 @@
                   {{ validationErrors.birth_date[0] }}
                 </div>
               </div>-->
-              <div class="col-md-3 underline">
+              <div class="col-md-3 underline" v-if="userData.role != 'Super-Admin'">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
                 {{ form.birth_date }}
+              </div>
+              <div class="col-md-3" v-else>
+                <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
+                <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" />
               </div>
 
               <div class="col-md-3">
