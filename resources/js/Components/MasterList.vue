@@ -58,7 +58,7 @@
 
             <div>
               <span
-                v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate')">
+                v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate') || userData.role == 'Super-Admin'">
                 <span v-if="item.is_verified == 'verified'">
                   <v-btn elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
                     <v-icon left>
