@@ -54,7 +54,7 @@ class AicsAssistanceController extends Controller
             //Assistance Validation
             $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
             $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
-           // (new AicsAssistanceCreateRequest())->withValidator($assistance_validator);
+            // (new AicsAssistanceCreateRequest())->withValidator($assistance_validator);
             if ($assistance_validator->fails()) {
                 $errors['assistance'] = $assistance_validator->errors();
             }
@@ -148,10 +148,10 @@ class AicsAssistanceController extends Controller
             "aics_client.psgc",
             "aics_beneficiary.psgc",
             "aics_type:id,name",
-            "aics_documents",          
+            "aics_documents",
             "aics_documents.requirement:id,name",
-           
-            )->orderBy("created_at","desc")->get();
+
+        )->orderBy("created_at", "desc")->get();
     }
 
     public function update(request $request)
@@ -161,12 +161,11 @@ class AicsAssistanceController extends Controller
             $a = AicsAssistance::where("uuid", "=", $request->uuid)->first();
 
             if ($a) {
-                
+
                 $a->status = $request->status;
                 $a->status_date = Carbon::now();
-                $a->save(); 
+                $a->save();
                 return ["message" => "saved"];
-
             } else {
                 return ["message" => "Assistance Request Not Found"];
             }
@@ -174,4 +173,7 @@ class AicsAssistanceController extends Controller
             return ["message" => $th];
         }
     }
+
+
+    
 }

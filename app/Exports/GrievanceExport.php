@@ -87,7 +87,7 @@ class GrievanceExport implements FromCollection, WithHeadings, WithMapping
             $grievance_client->birth_date ? Carbon::parse($grievance_client->birth_date)->format("m/d/Y") : "",
             $grievance_client->dirty_list->file_name,
             $grievance_client->updated_at,
-            $grievance_client->activity ? $grievance_client->activity->properties["old"]["full_name"] : "Not Updated" ,
+          //  $grievance_client->activity->properties["old"]["full_name"] ? $grievance_client->activity->properties["old"]["full_name"] : "Not Updated" ,
             
         ];
     }

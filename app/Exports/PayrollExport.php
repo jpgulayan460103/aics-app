@@ -107,6 +107,7 @@ class PayrollExport implements FromCollection, WithHeadings, WithMapping
             'Column8',
             'Column9',
             'Column10',
+            'Mobile'
         ];
     }
 
@@ -169,6 +170,7 @@ class PayrollExport implements FromCollection, WithHeadings, WithMapping
             "",
             "",
             "",
+            $payroll_client->mobile_number,   
         ];
     }
     

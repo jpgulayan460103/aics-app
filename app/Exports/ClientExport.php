@@ -55,7 +55,8 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             'Payroll',
             'Sequence',
             'Claim Status',
-            'ImportFileName'
+            'ImportFileName',
+            'Mobile',
         ];
     }
 
@@ -82,6 +83,7 @@ class ClientExport implements FromCollection, WithHeadings, WithMapping
             $payroll_client->payroll_client ? $payroll_client->payroll_client->status : "No Payroll",
             $payroll_client->dirty_list->file_name,
             $payroll_client->is_verified,           
+            $payroll_client->mobile_number,           
             //$payroll_client->payroll_client ? $payroll_client->dirty_list->file_name : "",
 
             
