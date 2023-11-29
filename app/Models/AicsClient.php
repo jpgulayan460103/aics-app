@@ -53,7 +53,8 @@ class AicsClient extends Model
         'mode_of_admission',
         'dirty_list_id',
         'meta_full_name',
-        'full_name'
+        'full_name',
+        'valid_id_presented'
     ];
 
     public $appends = ['name'];

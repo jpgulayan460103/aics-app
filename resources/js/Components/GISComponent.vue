@@ -276,17 +276,7 @@
                   {{ validationErrors.mobile_number[0] }}
                 </div>
               </div>
-
-              <!--<div class="col-md-3" v-if="userData.role == 'Super-Admin'">
-                <label for="birth_date">Kapanganakan <small>(Birthdate)</small>
-                  <span color="red"></span></label>
-                <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
-                  @input="calculateAge" required />
-
-                <div v-if="validationErrors && validationErrors.birth_date" style="color: red">
-                  {{ validationErrors.birth_date[0] }}
-                </div>
-              </div>-->
+            
               <div class="col-md-3 underline" v-if="userData.role != 'Super-Admin'">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
                 {{ form.birth_date }}
@@ -367,6 +357,35 @@
                 </div>
               </div>
             </div>
+
+
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <label>Valid ID Presented</label>
+                <v-combobox v-model="form.valid_id_presented" clearable outlined dense 
+                :error-messages = "validationErrors.valid_id_presented[0]"
+                :items="['National ID',
+                  'Driver\'s License',
+                  'Senior Citizen ID',
+                  'Voter\'s ID/Certificate',
+                  'Person\'s With Disability (PWD) ID',
+                  '4Ps ID',
+                  'Phil-health ID',
+                  'NBI Clearance',
+                  'BIR (TIN)',
+                  'Pag-ibig ID',
+                  'School ID',
+                  'Passport',
+                  'SSS ID/UMID Card',
+                  'PRC ID'
+                ].sort()"></v-combobox>
+
+
+
+
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -500,12 +519,12 @@
         <v-btn dark large class="btn-error" value="center" @click="isVerified(form.id, 'grievance', form)">
           GRIEVANCE
         </v-btn>
-       
+
         <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
           SUBMIT
         </button>
 
-        
+
 
 
 
@@ -647,7 +666,7 @@ export default {
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             this.submit = false;
-          //  console.log(response.data);
+            //  console.log(response.data);
             this.setDialogCreate(false);
             alert(`${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`);
             this.getList();
@@ -660,7 +679,7 @@ export default {
           })
           .catch((error) => {
             this.submit = false;
-          //  console.log(error);
+            //  console.log(error);
             if (error.response && error.response.status == 422) {
               alert("Kumpletohin ang form. \nPlease complete the form.");
               this.validationErrors = error.response.data.errors;
@@ -759,9 +778,9 @@ export default {
     },
 
     groupByKey(array, key) {
-     // console.log(array);
-     // console.log(key);
-     // console.log(Array.isArray(array));
+      // console.log(array);
+      // console.log(key);
+      // console.log(Array.isArray(array));
       if (Array.isArray(array)) {
         return array.reduce((hash, obj) => {
           if (obj[key] === undefined) return hash;
@@ -826,8 +845,8 @@ export default {
           this.setDialogCreate(false);
         })
 
-        
-       
+
+
 
       }
 

@@ -105,10 +105,7 @@ class AicsClientController extends Controller
             $aics_client = AicsClient::findOrFail($id);
 
             if ($aics_client) {
-                //activity()->disableLogging();
-
-
-
+              
                 $aics_client->fill($request->all());
                 $request->ext_name = is_null($request->ext_name) ? "" : $request->ext_name;
                 $aics_client->user_id = Auth::check() ? Auth::user()->id : null;
@@ -133,7 +130,7 @@ class AicsClientController extends Controller
                     }
                 }
 
-                // activity()->enableLogging();    
+                
                 $aics_client->save();
                 DB::commit();
 

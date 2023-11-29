@@ -171,7 +171,12 @@
                                 <li> <span style="font-family: DejaVu Sans, sans-serif;">✔</span> Barangay Certificate
                                 </li>
                                 <li> <span style="font-family: DejaVu Sans, sans-serif;">✔</span> Valid ID Presented:
-                                    _____________________ </li>
+                                    @if($aics_beneficiary['valid_id_presented'])
+                                 <span class="sig">   {{$aics_beneficiary['valid_id_presented']}}</span>
+                                 @else
+                                    __________________________
+                                 @endif
+                                </li>
 
                             </ul>
                         </div>
