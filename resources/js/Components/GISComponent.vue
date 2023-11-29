@@ -363,7 +363,7 @@
               <div class="col-md-3">
                 <label>Valid ID Presented</label>
                 <v-combobox v-model="form.valid_id_presented" clearable outlined dense 
-                :error-messages = "validationErrors.valid_id_presented[0]"
+                :error-messages = "validationErrors && validationErrors.valid_id_presented ? validationErrors.valid_id_presented[0] : '' "
                 :items="['National ID',
                   'Driver\'s License',
                   'Senior Citizen ID',

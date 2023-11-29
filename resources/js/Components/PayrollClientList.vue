@@ -27,7 +27,7 @@
             </v-list-item>
             <v-list-item @click="print_coe_batch()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> All COE of page {{ page }} <v-chip label small>CTLR + ALT + E </v-chip>
+                <v-icon> mdi-printer </v-icon> All COE of page {{ page }} <v-chip label small>CTLR + E </v-chip>
               </v-list-item-title>
             </v-list-item>
             <v-list-item @click="print_payroll()">
@@ -43,11 +43,11 @@
             </v-list-item>
             
 
-            <v-list-item @click="print_payroll_footer()">
+            <!--<v-list-item @click="print_payroll_footer()">
               <v-list-item-title>
                 <v-icon> mdi mdi-foot-print</v-icon> Footer Only
               </v-list-item-title>
-            </v-list-item>
+            </v-list-item>-->
           </v-list>
         </v-menu>
       </div>
