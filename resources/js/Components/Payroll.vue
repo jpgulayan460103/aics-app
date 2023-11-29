@@ -7,43 +7,6 @@
           <form @submit.prevent="submit" enctype="multipart/form-data" action="">
             <label for=""> Title</label>
             <input type="text" name="" v-model="formData.title" id="" class="form-control" />
-
-            <!--<label for="">Region</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.region"
-              id=""
-              class="form-control"
-            />
-
-            <label for="">Province</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.province"
-              id=""
-              class="form-control"
-            />
-
-            <label for="">Municipality/City</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.muni_city"
-              id=""
-              class="form-control"
-            />
-
-            <label for="">Barangay</label>
-            <input
-              type="text"
-              name=""
-              v-model="formData.barangay"
-              id=""
-              class="form-control"
-            />-->
-
             <div class="row mt-2">
               <div class="col-md-3">
                 <label>Region <small>(Ex. NCR)</small>
@@ -117,15 +80,6 @@
             <label for="">Amount</label>
             <input type="number" name="" v-model="formData.amount" id="" class="form-control" />
 
-            <!-- <label for="">Certified By (1)</label>
-            <input type="text" name="" v-model="formData.certified_by1" id="" class="form-control" />
-
-            <label for="">Certified By (2)</label>
-            <input type="text" name="" v-model="formData.certified_by2" id="" class="form-control" />
-
-            <label for="">Approved By</label>
-            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />-->
-
             <label for="">SDO</label>
             <input type="text" name="" v-model="formData.sdo" id="" class="form-control" />
 
@@ -172,10 +126,7 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <!--<v-icon small class="mr-5" @click="DownloadPayroll(item)"  :disabled="isExporting">
-              mdi-download
-            </v-icon>-->
-
+        
             <v-icon small class="mr-5" @click="ViewList(item.id)">
               mdi-eye
             </v-icon>

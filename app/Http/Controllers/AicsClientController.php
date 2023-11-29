@@ -21,6 +21,7 @@ use App\Models\DirtyList;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
+use \NumberFormatter;
 
 class AicsClientController extends Controller
 {
@@ -40,7 +41,7 @@ class AicsClientController extends Controller
                     $query->where("full_name", "like", "%$keyword%");
                 }
             });
-          //  $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
+            //  $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
         $clients->orderBy("full_name");
         $clients = $clients->paginate(10);
@@ -267,6 +268,35 @@ class AicsClientController extends Controller
         }
     }
 
+    public function batchCoe(Request $request, $payroll_id)
+    {
+        // dd($id);
+        $client =  AicsClient::with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $request->ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->join('payroll_clients', function ($join) use ($payroll_id) {
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $payroll_id);
+            })
+            ->get();
+
+        $payroll = Payroll::findOrFail($payroll_id);       
+        $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+        
+
+        if ($client) {
+            $pdf = Pdf::loadView('pdf.coe_batch', ["aics_beneficiaries" =>  $client->toArray(), "SDO"=> $payroll->sdo, "amount_in_words" => $f->format($payroll->amount) ]);
+            return $pdf->stream('coe.pdf');
+        }
+    }
+
+
     public function export(Request $request)
     {
         $filename = "";
@@ -298,7 +328,6 @@ class AicsClientController extends Controller
                 DB::commit();
                 return ["message" => "saved"];
             }
-           
         } catch (Exception $e) {
             DB::rollBack();
             return ["message" => $e];

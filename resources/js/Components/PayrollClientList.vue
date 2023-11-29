@@ -5,17 +5,12 @@
     <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
-      
+
 
       <div style="margin-right: 1em;">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
               <v-icon> mdi-printer </v-icon> Print
             </v-btn>
           </template>
@@ -30,6 +25,11 @@
                 <v-icon> mdi-printer </v-icon> All GIS of page {{ page }} <v-chip label small>CTLR + SHIFT + P</v-chip>
               </v-list-item-title>
             </v-list-item>
+            <v-list-item @click="print_coe_batch()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> All COE of page {{ page }} <v-chip label small>CTLR + ALT + E </v-chip>
+              </v-list-item-title>
+            </v-list-item>
             <v-list-item @click="print_payroll()">
               <v-list-item-title>
                 <v-icon> mdi-printer </v-icon> Payroll of page {{ page }} <v-chip label small>CTLR + P</v-chip>
@@ -37,9 +37,12 @@
             </v-list-item>
             <v-list-item @click="print_payroll_w_gt()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total <v-chip label small>CTLR + ALT + P</v-chip>
+                <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total <v-chip label small>CTLR + ALT +
+                  P</v-chip>
               </v-list-item-title>
             </v-list-item>
+            
+
             <v-list-item @click="print_payroll_footer()">
               <v-list-item-title>
                 <v-icon> mdi mdi-foot-print</v-icon> Footer Only
@@ -52,12 +55,7 @@
       <div>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="default"
-              dark
-              v-bind="attrs"
-              v-on="on"
-            >
+            <v-btn color="default" dark v-bind="attrs" v-on="on">
               <v-icon> mdi-cog </v-icon> Actions
             </v-btn>
           </template>
@@ -120,21 +118,15 @@
           'disable-items-per-page': true,
           'showFirstLastPage': true,
 
-        }"
-        @toggle-select-all="selectAllToggle"
-        :page="page">
+        }" @toggle-select-all="selectAllToggle" :page="page">
 
         <template v-slot:item.data-table-select="{ item, isSelected, select }">
-        <v-simple-checkbox
-          :value="isSelected"
-          :readonly="item.deleted_at != null"
-          :disabled="item.deleted_at != null"
-          @input="select($event)"
-        ></v-simple-checkbox>
-      </template>
+          <v-simple-checkbox :value="isSelected" :readonly="item.deleted_at != null" :disabled="item.deleted_at != null"
+            @input="select($event)"></v-simple-checkbox>
+        </template>
         <template v-slot:footer.page-text="{ pageStart, pageStop, itemsLength }">
-          <v-row align="center" no-gutters >
-            <v-col> 
+          <v-row align="center" no-gutters>
+            <v-col>
               <label for="">Page No.</label>
               <input type="text" name="" id="" class="form-control" v-model="page">
             </v-col>
@@ -190,7 +182,8 @@
           </span>
           <span v-else>
             <span v-if="item.new_payroll_client">
-              Moved to {{ item.new_payroll_client.payroll ? item.new_payroll_client.payroll.title : "" }} Client #: {{ item.new_payroll_client.sequence }}
+              Moved to {{ item.new_payroll_client.payroll ? item.new_payroll_client.payroll.title : "" }} Client #: {{
+                item.new_payroll_client.sequence }}
             </span>
             <span v-else>
               Removed from Payroll List
@@ -215,11 +208,7 @@
       </v-card>
     </v-dialog>-->
 
-    <v-dialog
-      v-model="uploadDialog"
-      persistent
-      max-width="290"
-    >
+    <v-dialog v-model="uploadDialog" persistent max-width="290">
       <v-card>
         <v-card-title class="text-h5">
           Uploading to Database
@@ -227,7 +216,7 @@
         <v-card-text>
           Database status: <b>{{ crimsUploads.connectionStatus }}</b><br>
           <span v-if="crimsUploads.isConnected">
-            Uploading status: <b>{{ Math.round(uploadProgress, 2)  }}%</b>
+            Uploading status: <b>{{ Math.round(uploadProgress, 2) }}%</b>
           </span>
           <span v-else>
             Please check connection to server <a :href="uploadConfig.globalUrl">{{ uploadConfig.globalUrl }}</a>
@@ -236,12 +225,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn
-            color="green darken-1"
-            text
-            @click="uploadDialog = false"
-            v-if="crimsUploads.lastBatch == crimsUploads.currentBatch"
-          >
+          <v-btn color="green darken-1" text @click="uploadDialog = false"
+            v-if="crimsUploads.lastBatch == crimsUploads.currentBatch">
             Done
           </v-btn>
         </v-card-actions>
@@ -253,6 +238,7 @@
 
 
     <span v-shortkey="['ctrl', 'r']" @shortkey="getClients()"></span>
+    <span v-shortkey="['ctrl', 'e']" @shortkey="print_coe_batch()"></span>
     <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="print_gis_page()"></span>
     <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
     <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span>
@@ -317,6 +303,24 @@ export default {
         "_blank"
       );
     },
+    print_coe_batch() {
+   
+      if (!isEmpty(this.selected)) {
+        let ids = this.selected.map(item => item.aics_client_id);
+        window.open(
+
+          route(`pdf.coe.batch`, {
+            id: this.id,
+            _query: {
+              ids
+            }
+          }),
+          "_blank"
+        );
+      }
+
+    },
+
     print_payroll() {
       window.open(
         route("pdf.payroll.printv2", { id: this.id, page: this.page }),
@@ -325,10 +329,12 @@ export default {
     },
     print_payroll_w_gt() {
       window.open(
-        route("pdf.payroll.printv2", { id: this.id, _query: {
-          page: this.lastPage,
-          gt: 1
-        } }),
+        route("pdf.payroll.printv2", {
+          id: this.id, _query: {
+            page: this.lastPage,
+            gt: 1
+          }
+        }),
         "_blank"
       );
     },
@@ -370,42 +376,42 @@ export default {
         this.crimsUploads.isConnected = true;
         const claimedClients = this.data.clients.filter(i => i.status == "claimed");
         this.crimsUploads.lastBatch = ~~(claimedClients.length / this.crimsUploads.perClient);
-        if((claimedClients.length % this.crimsUploads.perClient) != 0){
+        if ((claimedClients.length % this.crimsUploads.perClient) != 0) {
           this.crimsUploads.lastBatch++
         }
         this.crimsUploads.currentBatch = 0;
-        
+
         for (let index = 0; index < this.crimsUploads.lastBatch; index++) {
           this.crimsUploads.clients = claimedClients.slice((this.crimsUploads.perClient * this.crimsUploads.currentBatch), ((this.crimsUploads.currentBatch + 1) * this.crimsUploads.perClient));
-          const aics_clients =  this.crimsUploads.clients.map(client => {
-              let newClient = {
-                entered_datetime: client.created_at,
-                entered_by: serverName,
-                client_number: client.sequence,
-                accomplished_datetime: client.updated_at,
-                psgc: client.aics_client.psgc.brgy_psgc,
-                last_name: client.aics_client.last_name,
-                first_name: client.aics_client.first_name,
-                middle_name: client.aics_client.middle_name,
-                ext_name: client.aics_client.ext_name,
-                sex: client.aics_client.gender,
-                civil_status: client.aics_client.civil_status,
-                birth_date: client.aics_client.birth_date,
-                age: client.aics_client.age,
-                mode_of_admission: "Referral",
-                type_of_assistance: client.aics_client.aics_type.name,
-                amount: this.data.amount,
-                source_of_fund: this.data.source_of_fund,
-                client_category: client.category ? client.category.category : "",
-                charging: this.data.charging,
-                mode_of_assistance: "CAV",
-                date_claimed: client.date_claimed,
-                uuid: client.aics_client.uuid,
-              };
-              return newClient
-            });
-          await axios.post(`${globalUrl}/api/clients`, {aics_clients});
-          await axios.post(`${localUrl}/api/clients`, {aics_clients});
+          const aics_clients = this.crimsUploads.clients.map(client => {
+            let newClient = {
+              entered_datetime: client.created_at,
+              entered_by: serverName,
+              client_number: client.sequence,
+              accomplished_datetime: client.updated_at,
+              psgc: client.aics_client.psgc.brgy_psgc,
+              last_name: client.aics_client.last_name,
+              first_name: client.aics_client.first_name,
+              middle_name: client.aics_client.middle_name,
+              ext_name: client.aics_client.ext_name,
+              sex: client.aics_client.gender,
+              civil_status: client.aics_client.civil_status,
+              birth_date: client.aics_client.birth_date,
+              age: client.aics_client.age,
+              mode_of_admission: "Referral",
+              type_of_assistance: client.aics_client.aics_type.name,
+              amount: this.data.amount,
+              source_of_fund: this.data.source_of_fund,
+              client_category: client.category ? client.category.category : "",
+              charging: this.data.charging,
+              mode_of_assistance: "CAV",
+              date_claimed: client.date_claimed,
+              uuid: client.aics_client.uuid,
+            };
+            return newClient
+          });
+          await axios.post(`${globalUrl}/api/clients`, { aics_clients });
+          await axios.post(`${localUrl}/api/clients`, { aics_clients });
           this.crimsUploads.currentBatch++;
         }
 
@@ -416,22 +422,22 @@ export default {
       }
     }, 250),
     markAllAsClaimed: debounce(async function () {
-      if(confirm("Are you sure you want to tag all clients as claimed?")){
+      if (confirm("Are you sure you want to tag all clients as claimed?")) {
         axios.post(route('api.payroll.set_claimed', this.id))
-        .then(res => {
-          alert("All clients has been tagged as claimed.");
-          this.getClients();
-        })
-        .catch(res => {
-          console.error(res);
-        });
+          .then(res => {
+            alert("All clients has been tagged as claimed.");
+            this.getClients();
+          })
+          .catch(res => {
+            console.error(res);
+          });
       }
     }, 250),
     MarkAsClaimed: debounce(async function () {
       let promises = [];
       for (let index = 0; index < this.selected.length; index++) {
         const item = this.selected[index];
-        if(!item.deleted_at){
+        if (!item.deleted_at) {
           item.status = "claimed";
           promises.push(this.save(item));
         }
@@ -450,36 +456,36 @@ export default {
       this.getClients();
     }, 250),
     PrintGISMany() {
-      if(!isEmpty(this.selected)){
+      if (!isEmpty(this.selected)) {
         let ids = this.selected.map(item => item.aics_client_id);
         window.open(
 
-            route(`pdf.batch-gis`, {
-              id: this.id,
-              _query: {
-                ids
-              }
-            }),
-            "_blank"
+          route(`pdf.batch-gis`, {
+            id: this.id,
+            _query: {
+              ids
+            }
+          }),
+          "_blank"
         );
       }
     },
     selectAllToggle(props) {
-      if(this.selected.length != (props.items.length - this.disabledCount)) {
+      if (this.selected.length != (props.items.length - this.disabledCount)) {
         this.selected = [];
         this.disabledCount = 0;
         const self = this;
         props.items.forEach(item => {
-          if(!item.deleted_at) {
+          if (!item.deleted_at) {
             self.selected.push(item);
-          }else{  
+          } else {
             this.disabledCount++;
           }
         });
-      }else{
+      } else {
         this.selected = [];
       }
-     }
+    }
 
 
   },
@@ -492,7 +498,7 @@ export default {
     lastPage() {
       return Math.ceil(this.data.clients.length / 10);
     },
-    uploadProgress(){
+    uploadProgress() {
       return (this.crimsUploads.currentBatch / this.crimsUploads.lastBatch) * 100;
     }
   }

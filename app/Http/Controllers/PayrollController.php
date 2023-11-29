@@ -141,24 +141,7 @@ class PayrollController extends Controller
         $payroll = Payroll::with("psgc", "clients")->find($id);
         if ($payroll) {
             return view('pdf.payroll', ["data" => $payroll,  "grand_total" => ($payroll->clients()->count() * $payroll->amount)]);
-
-            /*$pdf = Pdf::loadView('pdf.payroll', 
-                ["data" => $payroll,  
-                "grand_total"=> ($payroll->clients()->count() * $payroll->amount) 
-            ]);
-            return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');*/
         };
-
-        /*$payroll = Payroll::with("psgc","clients")->find($id);
-        if ($payroll) {
-            #return view('pdf.payroll', ["data" => $payroll]);
-
-            $pdf = Pdf::loadView('pdf.payroll', 
-                ["data" => $payroll,  
-                "grand_total"=> ($payroll->clients()->count() * $payroll->amount) 
-            ]);
-            return $pdf->setPaper('a4', 'landscape')->stream('payroll.pdf');
-        };*/
     }
 
     public function print_footer($id)
@@ -227,11 +210,11 @@ class PayrollController extends Controller
                 "payroll" => $payroll,
                 "in_words" => strtoupper($f->format($payroll_clients->count())),
             ];
-            if($request->ext && $request->ext == "xlsx"){
+            if ($request->ext && $request->ext == "xlsx") {
                 $file_ext = ".xlsx";
                 $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . $file_ext;
                 return Excel::download(new CoeExport($data), $export_file_name);
-            }else{
+            } else {
                 $file_ext = ".pdf";
                 $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . $file_ext;
                 $pdf = Pdf::loadView('pdf.coe', $data);
@@ -239,6 +222,42 @@ class PayrollController extends Controller
             }
         }
     }
+
+    public function print_coe_single(Request $request, $id)
+    {
+        $payroll_clients = PayrollClient::query()->with([
+            'aics_client',
+            'aics_client.psgc',
+            'aics_client.aics_type',
+            'aics_client.subcategory',
+            'aics_client.category',
+        ])
+            ->where('payroll_id', $id)
+            ->where('status', 'claimed')
+            ->orderBy('sequence', "asc")
+            ->get();
+
+
+        $payroll = Payroll::with("psgc")->find($id);
+
+        if ($payroll) {
+
+            abort_unless($payroll_clients->count(), 204);
+            $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+            $data = [
+                "clients" => $payroll_clients,
+                "payroll" => $payroll,
+                "in_words" => strtoupper($f->format($payroll_clients->count())),
+            ];
+
+            $file_ext = ".pdf";
+            $export_file_name = "aics-online-app-coe-" . Str::slug(Carbon::now()) . $file_ext;
+            $pdf = Pdf::loadView('pdf.coe-single', $data);
+            return $pdf->setPaper('portrait')->download($export_file_name);
+        }
+    }
+
+
 
     public function export(Request $request, $payroll_id)
     {
