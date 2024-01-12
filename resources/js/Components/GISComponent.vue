@@ -597,7 +597,7 @@ export default {
     dialog_data(e) {
       this.resetForm();
       this.form = e;
-      this.form.aics_type_id = 8;
+      // this.form.aics_type_id = 8;
       this.form.mode_of_admission = "Referral";
       this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
@@ -857,7 +857,7 @@ export default {
     if (this.form.payroll_client) {
       this.form.payroll_id = this.form.payroll_client.payroll_id;
     }
-    this.form.aics_type_id = 8;
+    // this.form.aics_type_id = 8;
     this.form.mode_of_admission = "Referral";
     this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
     this.form.interviewed_by = this.userData ? this.userData.name : "";
