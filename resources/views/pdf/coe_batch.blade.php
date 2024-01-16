@@ -225,7 +225,7 @@
                     </td>
                     <td>
                         <div class="sig">
-                           
+                           {{$approved_by}}
                         </div>
                     </td>
                 </tr>

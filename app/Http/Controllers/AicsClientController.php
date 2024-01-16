@@ -286,9 +286,8 @@ class AicsClientController extends Controller
         $payroll = Payroll::findOrFail($payroll_id);       
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
         
-
         if ($client) {
-            $pdf = Pdf::loadView('pdf.coe_batch', ["aics_beneficiaries" =>  $client->toArray(), "SDO"=> $payroll->sdo, "amount_in_words" => $f->format($payroll->amount) ]);
+            $pdf = Pdf::loadView('pdf.coe_batch', ["aics_beneficiaries" =>  $client->toArray(), "SDO"=> $payroll->sdo, "amount_in_words" => $f->format($payroll->amount) , "approved_by"=>$payroll->approved_by]);
             return $pdf->stream('coe.pdf');
         }
     }

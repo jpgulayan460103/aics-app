@@ -89,10 +89,17 @@
             <label for="">Charging</label>
             <input type="text" name="" v-model="formData.charging" id="" class="form-control" />
 
+            <hr>
+            Cert of Eligibility Settings <br>
+            <label for="">Approving Authority</label>
+            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />
+
             <label for="">Status</label>
             <select name="" id="" v-model="formData.status" class="form-control">
               <option :value="e" v-for="(e, i) in ['active', 'closed']" :key="i">{{ e }}</option>
             </select>
+
+           
 
             <button type="submit" class="btn btn-primary btn-block">
               SUBMIT
