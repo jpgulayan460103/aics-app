@@ -220,13 +220,12 @@
                     </td>
                     <td>
                         <div class="sig">
-                            {{ strtoupper($aics_beneficiary['interviewed_by']) }}
-
+                           
                         </div>
                     </td>
                     <td>
                         <div class="sig">
-                            CIELETO C. GUZMAN
+                           
                         </div>
                     </td>
                 </tr>
@@ -291,8 +290,7 @@
                     </td>
                     <td>
                         <div class="sig">
-                            {{ strtoupper($aics_beneficiary['interviewed_by']) }}
-
+                           
                         </div>
                     </td>
                 </tr>
