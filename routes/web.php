@@ -53,7 +53,7 @@ Route::group(['prefix' => '/pdf'], function () {
     });
 
     Route::group(['prefix' => '/coe'], function () {
-       // Route::get('printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("pdf.payroll_client.printv2");
+        Route::get('page/{id}', [\App\Http\Controllers\PayrollClientController::class, 'page_coe'])->name("pdf.coe.print_page");
         Route::get('batch/{id}', [\App\Http\Controllers\AicsClientController::class, 'batchCoe'])->name("pdf.coe.batch");
     });
 

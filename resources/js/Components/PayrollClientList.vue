@@ -30,6 +30,11 @@
                 <v-icon> mdi-printer </v-icon> Selected COE <v-chip label small>CTLR + E </v-chip>
               </v-list-item-title>
             </v-list-item>
+            <v-list-item @click="print_coe_page()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> All COE of {{ page }} <v-chip label small>CTLR + SHIFT + E </v-chip>
+              </v-list-item-title>
+            </v-list-item>
             <v-list-item @click="print_payroll()">
               <v-list-item-title>
                 <v-icon> mdi-printer </v-icon> Payroll of page {{ page }} <v-chip label small>CTLR + P</v-chip>
@@ -239,6 +244,7 @@
 
     <span v-shortkey="['ctrl', 'r']" @shortkey="getClients()"></span>
     <span v-shortkey="['ctrl', 'e']" @shortkey="print_coe_batch()"></span>
+    <span v-shortkey="['ctrl', 'shift','e']" @shortkey="print_coe_page()"></span>
     <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="print_gis_page()"></span>
     <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
     <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span>
@@ -302,6 +308,14 @@ export default {
         route("pdf.payroll_client.printv2", { id: this.id, page: this.page }),
         "_blank"
       );
+    },
+    print_coe_page()
+    {
+      window.open(
+        route("pdf.coe.print_page", { id: this.id, page: this.page }),
+        "_blank"
+      );
+
     },
     print_coe_batch() {
    
