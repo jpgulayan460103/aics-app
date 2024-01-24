@@ -216,7 +216,7 @@
                 <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
                     ONLY</span>,
                 PHP <span class="underline">
-                    {{ number_format($aics_beneficiary['payroll_client']['payroll']['amount'], 2) }} </span>
+                    {{ number_format($amount, 2) }} </span>
                 CHARGABLE AGAINST: PSP<span
                     class="underline">{{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('Y') }}
 
@@ -270,7 +270,7 @@
                     <span class="underline" style="text-transform:uppercase">
                         {{ $amount_in_words }} PESOS ONLY</span>,
                     PHP <span class="underline">
-                        {{ number_format($aics_beneficiary['payroll_client']['payroll']['amount'], 2) }}
+                        {{ number_format($amount, 2) }}
                     </span>
                 </td>
                 <td style="text-align:right; width:100px"> Date:
