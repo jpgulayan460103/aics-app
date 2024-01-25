@@ -10,7 +10,6 @@
                     alt="DSWD" />
                 <div class="my-2"> 
                     <b>Welcome to DSWD-AICS Onsite Payroll Generation & Encoding App!</b> <br>
-                    <v-divider></v-divider>
                  </div>
                 <form method="POST" class="my-2" action="{{ route('login') }}" background="primary">
                     @csrf
@@ -67,6 +66,17 @@
                         </div>
                     </div>
                 </form>
+
+                <!--<v-card outlined>
+                    <v-card-title class="headline text-center">
+                       
+                    </v-card-title>
+                    <v-card-text class="text-center" >
+                       
+                    </v-card-text>
+                </v-card>-->
+            </v-col>
+
             <!-- Image Column class="fill-height" -->
             <v-col cols="12" sm="4" md="6">
                 <v-img src="/images/login-bg.png" alt="Login Image" style="max-width:80%;"></v-img>
