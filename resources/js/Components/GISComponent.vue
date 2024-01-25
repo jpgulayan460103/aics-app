@@ -42,6 +42,11 @@
                   {{ e.name }}
                 </option>
               </select>
+
+              <div v-if="validationErrors && validationErrors.aics_type_id" style="color: red">
+                  {{ validationErrors.aics_type_id[0] }}
+                </div>
+
             </div>
           </div>
         </div>
@@ -245,7 +250,7 @@
                 <div class="col-md-3">
                   <label for="mobile_number">Telepono
                     <small>(Mobile Number)
-                      <span style="color:red;">*</span>
+                      <span style="color:red;"></span>
                     </small>
                   </label>
 
@@ -274,7 +279,7 @@
                 </div>
 
                 <div class="col-md-3">
-                  <label for="gender">Kasarian <small>(gender)</small> <span color="red"></span></label>
+                  <label for="gender">Kasarian <small>(gender)</small> <span color="red">*</span></label>
                   <select name="" id="" class="form-control" v-model="form.gender">
                     <option :value="gender" v-for="gender in ['Babae', 'Lalake']" :key="gender">
                       {{ gender }}

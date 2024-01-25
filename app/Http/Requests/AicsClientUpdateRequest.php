@@ -26,6 +26,7 @@ class AicsClientUpdateRequest extends FormRequest
     public function rules()
     {
         return [
+            'aics_type_id' => ['required', 'exists:aics_types,id'],
             'last_name' => ['required', 'string', 'max:200', new AllowedStringName],
             'first_name' => ['required', 'string', 'max:200', new AllowedStringName],
             'psgc_id' => ['required', 'exists:psgcs,id'],
