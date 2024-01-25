@@ -1,21 +1,15 @@
 <template>
   <form @submit.prevent="submitForm" enctype="multipart/form-data">
     <div class="container-fluid">
-
-
-
       <div class="row">
-
         <div class="col-md-4 text-center">
           <img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" class="img-fluid" />
         </div>
         <div class="col-md-8 text-md-end text-center">
-          <h1 style="
-                            font-size: 2rem;
-                            font-family: arial;
-                            font-weight: bold;
-                            margin-bottom: 0px;
-                          ">
+          <h1 style="font-size: 2rem;
+              font-family: arial;
+              font-weight: bold;
+              margin-bottom: 0px;">
             CRISIS INTERVENTION DIVISION
           </h1>
           <p>
@@ -26,7 +20,7 @@
       <div class="row text-center">
         <div class="col-md-12">
           <img src="" />
-          <!--<h1 style="font-size: 20pt">Assistance to Individuals in Crisis</h1>-->
+          
           <h2 style="font-family: 'Arial black', sans-serif; margin-bottom: 0px">
             GENERAL INTAKE SHEET<br />
           </h2>
@@ -34,22 +28,6 @@
         </div>
       </div>
 
-      <!--<div v-if="validationErrors">
-        <ul class="alert alert-danger">
-          <li
-            v-for="(value, index) in validationErrors"
-            :key="index"
-          >
-           {{index}} -  {{ value }}
-          </li>
-        </ul>
-
-        <ul class="alert alert-danger">
-          <li v-for="(value, index) in validationErrors.client" :key="index">
-            {{ value }}
-          </li>
-        </ul>
-      </div>-->
 
       <div class="card mt-2">
         <div class="card-title">
@@ -276,7 +254,7 @@
                   {{ validationErrors.mobile_number[0] }}
                 </div>
               </div>
-            
+
               <div class="col-md-3 underline" v-if="userData.role != 'Super-Admin'">
                 <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label> <br>
                 {{ form.birth_date }}
@@ -362,23 +340,23 @@
             <div class="row mt-2">
               <div class="col-md-3">
                 <label>Valid ID Presented</label>
-                <v-combobox v-model="form.valid_id_presented" clearable outlined dense 
-                :error-messages = "validationErrors && validationErrors.valid_id_presented ? validationErrors.valid_id_presented[0] : '' "
-                :items="['National ID',
-                  'Driver\'s License',
-                  'Senior Citizen ID',
-                  'Voter\'s ID/Certificate',
-                  'Person\'s With Disability (PWD) ID',
-                  '4Ps ID',
-                  'Phil-health ID',
-                  'NBI Clearance',
-                  'BIR (TIN)',
-                  'Pag-ibig ID',
-                  'School ID',
-                  'Passport',
-                  'SSS ID/UMID Card',
-                  'PRC ID'
-                ].sort()"></v-combobox>
+                <v-combobox v-model="form.valid_id_presented" clearable outlined dense
+                  :error-messages="validationErrors && validationErrors.valid_id_presented ? validationErrors.valid_id_presented[0] : ''"
+                  :items="['National ID',
+                    'Driver\'s License',
+                    'Senior Citizen ID',
+                    'Voter\'s ID/Certificate',
+                    'Person\'s With Disability (PWD) ID',
+                    '4Ps ID',
+                    'Phil-health ID',
+                    'NBI Clearance',
+                    'BIR (TIN)',
+                    'Pag-ibig ID',
+                    'School ID',
+                    'Passport',
+                    'SSS ID/UMID Card',
+                    'PRC ID'
+                  ].sort()"></v-combobox>
 
 
 
@@ -439,7 +417,11 @@
         <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
         <div class="card-body">
 
-          <div v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed'">
+          <pre>
+            {{ dialog_data.payroll_client }}
+          </pre>
+
+          <div v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed' && (dialog_data.payroll_client.status != 'cancelled-revalidate') ">
             <b>
               IN
               {{ dialog_data.payroll_client.payroll.title }} |
@@ -453,9 +435,9 @@
 
 
             <div v-if="payrolls.length > 0">
-
+           
               <select name="" id="" v-model="form.payroll_id" class="form-control"
-                :disabled="dialog_data.payroll_client && userData.role == 'Encoder'">
+                :disabled="dialog_data.payroll_client && dialog_data.payroll_client.status != 'cancelled-revalidate'">
 
                 <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
                   {{ p.title }} | {{ p.amount }}

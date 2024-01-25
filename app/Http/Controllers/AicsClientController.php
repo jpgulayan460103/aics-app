@@ -32,7 +32,7 @@ class AicsClientController extends Controller
      */
     public function index(Request $request)
     {
-        $clients = AicsClient::with("psgc", "payroll_client.payroll");
+        $clients = AicsClient::with("psgc", "payroll_client.payroll", "payroll_client.new_payroll_client", "payroll_client.new_payroll_client.payroll:id,title,schedule,amount");
         if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
@@ -43,6 +43,7 @@ class AicsClientController extends Controller
             });
             //  $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
+       
         $clients->orderBy("full_name");
         $clients = $clients->paginate(10);
         return $clients;
@@ -119,7 +120,8 @@ class AicsClientController extends Controller
                             ]);
 
                             $aics_client->payroll_client->update([
-                                'new_payroll_client_id' => $new_payroll_client->id
+                                'new_payroll_client_id' => $new_payroll_client->id,
+                                'status'=> '',
                             ]);
                             $aics_client->payroll_client->delete();
                         }

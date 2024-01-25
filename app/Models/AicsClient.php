@@ -119,6 +119,11 @@ class AicsClient extends Model
         return $this->hasOne(PayrollClient::class, 'aics_client_id')->withTrashed();
     }
 
+    public function new_payroll_client()
+    {
+        return $this->hasOne(PayrollClient::class, 'new_payroll_client_id')->withTrashed();
+    }
+
     public function dirty_list()
     {
         return $this->belongsTo(DirtyList::class, 'dirty_list_id');

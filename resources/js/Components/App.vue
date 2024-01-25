@@ -1,10 +1,66 @@
 <template>
- 
-    <div class="container-fluid">
-      <v-row  dense>
+  <v-sheet>
+    <v-toolbar dense dark color="red" >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title> 
+      AICS Onsite
+      </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      {{this.userData.name }}
+      ({{ this.userData.role }})
+
+    
+
+      <v-btn icon @click="logout()">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+
+      
+    </v-toolbar>
+
+    <v-container dense fluid>
+
+      <v-row dense>
+
+
+      
+
+      </v-row>
+
+
+      <router-view :user="user" :upload-config="uploadConfig"></router-view>
+
+
+    </v-container>
+
+    <v-navigation-drawer v-model="drawer" absolute temporary >
+
+      
+      <v-list-item>
+        <v-list-item-content centered>
+          <v-list-item-title>
+            <v-img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD"></v-img>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list dense nav>
+
+        <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
+          <v-list-item v-for="(link, i) in links" :key="i" :to="link.to">
+
+            <v-list-item-content>
+              <v-list-item-title v-text="link.text"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+  </v-sheet>
+  <!--<v-row  no-gutters>
         <v-col cols="2">
-
-
           <v-list dense>
 
             <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
@@ -23,12 +79,11 @@
           {{ this.userData.role }}
           <router-view :user="user" :upload-config="uploadConfig"></router-view>
         </v-col>
-      </v-row>
-    </div>
-  
+      </v-row>-->
 </template>
 
 <script>
+import axios from 'axios';
 import userMixin from '../Mixin/userMixin';
 
 export default {
@@ -36,6 +91,7 @@ export default {
   mixins: [userMixin],
   data() {
     return {
+      drawer: null,
       selectedItem: 1,
       links: [],
 
@@ -105,9 +161,19 @@ export default {
       ]
     };
   },
-  methods: {},
+  methods: {
+    logout() {
+      axios.post("/logout").then(response => {
+       
+        location.reload();
+      })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  },
   mounted() {
-    
+
     switch (this.userData.role.toLowerCase()) {
       case "admin":
       case "super-admin":

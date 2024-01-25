@@ -25,13 +25,50 @@
         <v-data-table :headers="headers" :items="data" :loading="isBusy" dense loading-text="Loading... Please wait"
           :hide-default-footer="true" :items-per-page="perPage" :page.sync="currentPage">
           <template v-slot:item.status="{ item }">
-            <v-chip v-if="item.payroll_client">
-              In Payroll <span v-if="item.payroll_client.amount">{{ item.payroll_client.payroll.amount }}</span>
-              | Client No: {{ item.payroll_client.sequence }}
-              <span v-if="item.payroll_client.status"> | {{ item.payroll_client.status }}</span>
-            </v-chip>
 
-            <v-chip v-if="item.is_verified == 'grievance'">{{
+
+
+            <div v-if="item.payroll_client">
+              <div v-if="item.payroll_client.new_payroll_client">
+                <v-chip color="primary" outlined small>
+                  Client No: {{ item.payroll_client.new_payroll_client.sequence }}
+                </v-chip>
+                <v-chip small> In Payroll schedule:
+                  ({{ item.payroll_client.new_payroll_client.payroll.schedule }}) |
+                  amount: {{ item.payroll_client.new_payroll_client.payroll.amount }}
+                </v-chip>
+
+                <v-chip small> Date Accomplished: {{
+                  item.payroll_client.updated_at | FormatDateAccomplished }}
+                </v-chip>
+
+              </div>
+
+
+              <div v-else>
+                <v-chip color="primary" outlined small :hidden="item.payroll_client.status == 'cancelled-revalidate'">
+                  Client No: {{ item.payroll_client.sequence }}</v-chip>
+                <span v-if="item.payroll_client.status">
+                  <v-chip small :color="item.payroll_client.status != 'cancelled-revalidate' ? 'success' : 'error'"
+                    outlined>{{ item.payroll_client.status }}</v-chip>
+                </span>
+
+                <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"> In Payroll schedule: ({{
+                  item.payroll_client.payroll.schedule }}) | amount: {{
+    item.payroll_client.payroll.amount }} </v-chip>
+
+
+                <div class="my-2" v-if="item.payroll_client">
+                  <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"> Date Accomplished: {{
+                    item.payroll_client.updated_at | FormatDateAccomplished }}
+                  </v-chip>
+                </div>
+              </div>
+            </div>
+
+
+
+            <v-chip v-if="item.is_verified == 'grievance'" small>{{
               item.is_verified }}
             </v-chip>
           </template>
@@ -41,17 +78,7 @@
               item.psgc.province_name }}</small> </span>
           </template>
 
-          <!--<template v-slot:item.city_muni="{ item }">
-            <span v-if="item.psgc"> {{ item.psgc.city_name }}</span>
-          </template>
 
-          <template v-slot:item.province="{ item }">
-            <span v-if="item.psgc"> {{ item.psgc.province_name }}</span>
-          </template>
-
-          <template v-slot:item.region="{ item }">
-            <span v-if="item.psgc"> {{ item.psgc.region_name }}</span>
-          </template>-->
 
 
           <template v-slot:item.actions="{ item }">
@@ -60,7 +87,7 @@
               <span
                 v-if="!item.payroll_client || (item.payroll_client && item.payroll_client.status == 'cancelled-revalidate') || userData.role == 'Super-Admin'">
                 <span v-if="item.is_verified == 'verified'">
-                  <v-btn elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
+                  <v-btn small elevation="0" color="primary" class="white--text" tile @click="EditItem(item)">
                     <v-icon left>
                       mdi-pencil
                     </v-icon>GIS
@@ -70,12 +97,12 @@
               </span>
 
               <v-btn-toggle tile group borderless v-if="!item.is_verified">
-                <v-btn value="left" @click="isVerified(item.id, 'verified', item)" :loading="verifying">
+                <v-btn small value="left" @click="isVerified(item.id, 'verified', item)" :loading="verifying">
                   <v-icon left> mdi-check-circle </v-icon>
                   Verify
                 </v-btn>
 
-                <v-btn value="center" @click="isVerified(item.id, 'grievance', item)" :loading="verifying">
+                <v-btn small value="center" @click="isVerified(item.id, 'grievance', item)" :loading="verifying">
                   <v-icon left> mdi-close-circle </v-icon>
                   Grievance
                 </v-btn>
@@ -128,10 +155,10 @@ export default {
         { value: "ext_name", text: "Ext", sortable: true },
         { value: "birth_date", text: "DOB", sortable: true },
         { value: "barangay", text: "Address", sortable: true },
-        //{ value: "city_muni", text: "City/Muni", sortable: true },
-        //{ value: "province", text: "Province", sortable: true },
-        { value: "status", text: "Payroll Status", sortable: true },
-        { value: "actions", text: "Actions", width: '100px' },
+
+        { value: "status", text: "Payroll Status", sortable: true, divider: true, width: '50px', },
+
+        { value: "actions", text: "Actions", width: '100px', },
       ],
       isExporting: false,
       verifying: false
@@ -195,7 +222,7 @@ export default {
       var conf = confirm(message);
       if (conf) {
         axios.post(route("api.client.verify", id), { "is_verified": stat }).then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.verifying = false;
           if (response.data.message) {
             alert(response.data.message);

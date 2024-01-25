@@ -138,6 +138,13 @@ Vue.filter("formatDate", function (value) {
     }
 });
 
+Vue.filter("FormatDateAccomplished", function (value) {
+    if (value) {
+        return moment(String(value)).format("YYYY-MM-DD HH:mm");
+    }
+});
+
+
 export default new Vuetify({
     icons: {
         iconfont: 'mdi', // default - only for display purposes
