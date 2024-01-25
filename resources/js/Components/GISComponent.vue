@@ -626,32 +626,7 @@ export default {
       (this.beneficiary_barangays = {}),
         (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
     },
-    /*client_region_selector(newVal, oldVal) {
-      ((this.client_provinces = {}),
-      (this.client_cities = {}),
-      (this.client_barangays = {})),
-        (this.client_provinces = this.groupByKey(newVal, "province_name"));
-    },
-
-    client_province_selector(newVal, oldVal) {
-      ((this.client_cities = {}), (this.client_barangays = {})),
-        (this.client_cities = this.groupByKey(newVal, "city_name"));
-    },
-
-    client_city_selector(newVal, oldVal) {
-      (this.client_barangays = {}),
-        (this.client_barangays = this.groupByKey(newVal, "brgy_name"));
-    },*/
-    /*is_beneficiary(newVal, oldVal) {
-      console.log(newVal);
-      if (newVal === true) {
-        this.form.client = this.form.beneficiary;
-        this.form.client.rel_beneficiary = "Myself";
-      } else {
-        this.form.client = {};
-        this.form.client.rel_beneficiary = "";
-      }
-    },*/
+    
   },
 
   methods: {
@@ -774,9 +749,7 @@ export default {
     },
 
     groupByKey(array, key) {
-      // console.log(array);
-      // console.log(key);
-      // console.log(Array.isArray(array));
+    
       if (Array.isArray(array)) {
         return array.reduce((hash, obj) => {
           if (obj[key] === undefined) return hash;

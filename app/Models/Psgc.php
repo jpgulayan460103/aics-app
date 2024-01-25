@@ -12,7 +12,7 @@ class Psgc extends Model
     public static function getRegions()
     {
         $instance = new static;
-        return $instance->select('region_psgc','region_name')->distinct()->get();
+        return $instance->select('region_psgc','region_name')->where("region_name_short","XI")->distinct()->get();
     }
 
     public static function getBrgys($field, $value)

@@ -14,7 +14,9 @@
     
 
       <v-btn icon @click="logout()">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <v-icon> mdi-logout</v-icon>
+
+      
       </v-btn>
 
       
