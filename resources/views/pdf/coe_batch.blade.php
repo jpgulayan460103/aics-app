@@ -18,7 +18,7 @@
 
         body,
         th {
-            font-size: 9pt;
+            font-size: 10pt;
             font-family: Arial, sans-serif
         }
 
@@ -35,10 +35,12 @@
         .sig {
             width: 90%;
             margin: 0 auto;
-            border-bottom: solid 1px #000;
+           
             text-transform: uppercase;
             vertical-align: bottom;
         }
+
+        .sig-underline { border-top: solid 1px #000;}
 
         .table {
             width: 100%;
@@ -55,7 +57,7 @@
         }
 
         @page {
-            size: 8.27in 12in;
+            size: 8.5in 13in;
             margin: 0.5in;
             opacity: 0.75;
             padding: 0 !important;
@@ -80,7 +82,7 @@
         }
 
         .footer-ds {
-            font-size: 9pt;
+            font-size: 10pt;
             text-align: center;
             font-family: 'Times New Roman', Times, serif
         }
@@ -104,6 +106,8 @@
             margin-top: 5px;
             margin-bottom: 5px;
         }
+
+       
     </style>
 </head>
 
@@ -111,6 +115,7 @@
 
     <body>
         @for ($i = 0; $i < 2; $i++)
+        
             <table style="width:100%">
                 <tr>
                     <td><img src='{{ public_path('images/DSWD-DVO-LOGO_01.png') }}' style="width: 130px;">
@@ -222,7 +227,7 @@
 
             </p>
 
-            <table class="signatories table text-center dotted-table" style="table-layout: fixed; ">
+            <table class="signatories table text-center " style="table-layout: fixed; margin-bottom:10px ">
                 <tbody>
                     <tr>
                         <td style="text-align: left; width: 33%">Conforme:</td>
@@ -230,7 +235,7 @@
                         <td style="text-align: left; width: 33%">Approved by:</td>
                     </tr>
                     <tr>
-                        <td style="height: 5px;"></td>
+                        <td style="height: 15px;"></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -252,13 +257,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><b>Beneficiary/Representative</b><br><small>Signature Over Printed Name</small></td>
-                        <td><b>Social Worker</b><br><small>Signature Over Printed Name</small></td>
-                        <td><b>Approving Authority</b><br><small>Signature Over Printed Name</small></td>
+                        <td class="sig-underline"><b>Beneficiary/Representative</b><br><small>Signature Over Printed Name</small></td>
+                        <td class="sig-underline"><b>Social Worker</b><br><small>Signature Over Printed Name</small></td>
+                        <td class="sig-underline"><b>Approving Authority</b><br><small>Signature Over Printed Name</small></td>
                     </tr>
                 </tbody>
             </table>
-        @endfor
+            <br>
+        @endfor;
+    </div>
 <br>
         <div class="text-center" style="width: 100%; background: #787878; color: #fff; margin-top:-5px">
             <b> Acknowledgement Receipt</b>
@@ -273,7 +280,7 @@
                         {{ number_format($amount, 2) }}
                     </span>
                 </td>
-                <td style="text-align:right; width:100px"> Date:
+                <td style="text-align:right; width:200px"> Date:
                     {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('m-d-Y') }}
                 </td>
             </tr>
@@ -315,9 +322,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Beneficiary/Representative</b><br><small>Signature Over Printed Name</small></td>
-                    <td><b>Special Disbursing Officer</b><br><small>Signature Over Printed Name</small></td>
-                    <td><b>Social Worker</b><br><small>Signature Over Printed Name</small></td>
+                    <td class="sig-underline"><b>Beneficiary/Representative</b><br><small>Signature Over Printed Name</small></td>
+                    <td class="sig-underline"><b>Special Disbursing Officer</b><br><small>Signature Over Printed Name</small></td>
+                    <td class="sig-underline"><b>Social Worker</b><br><small>Signature Over Printed Name</small></td>
                 </tr>
                
                 
