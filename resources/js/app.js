@@ -140,7 +140,7 @@ Vue.filter("formatDate", function (value) {
 
 Vue.filter("FormatDateAccomplished", function (value) {
     if (value) {
-        return moment(String(value)).format("YYYY-MM-DD HH:mm");
+        return moment(String(value)).format("YYYY-MM-DD");
     }
 });
 

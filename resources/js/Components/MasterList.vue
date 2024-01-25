@@ -26,9 +26,11 @@
           :hide-default-footer="true" :items-per-page="perPage" :page.sync="currentPage">
           <template v-slot:item.status="{ item }">
 
+            <v-chip v-if="item.is_verified == 'grievance'" small color="red" outlined>{{
+              item.is_verified }}
+            </v-chip>
 
-
-            <div v-if="item.payroll_client">
+            <div v-if="item.payroll_client && item.is_verified != 'grievance'">
               <div v-if="item.payroll_client.new_payroll_client">
                 <v-chip color="primary" outlined small>
                   Client No: {{ item.payroll_client.new_payroll_client.sequence }}
@@ -68,9 +70,7 @@
 
 
 
-            <v-chip v-if="item.is_verified == 'grievance'" small>{{
-              item.is_verified }}
-            </v-chip>
+            
           </template>
 
           <template v-slot:item.barangay="{ item }">
