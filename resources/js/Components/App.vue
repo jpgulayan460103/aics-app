@@ -3,43 +3,27 @@
     <v-toolbar dense dark color="red" >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title> 
-      AICS Onsite
+      AICS Onsite Payroll Generation & Encoding App!
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       {{this.userData.name }}
-      ({{ this.userData.role }})
-
-    
+      ({{ this.userData.role }})  
 
       <v-btn icon @click="logout()">
-        <v-icon> mdi-logout</v-icon>
-
-      
+        <v-icon> mdi-logout</v-icon>      
       </v-btn>
 
       
     </v-toolbar>
 
     <v-container dense fluid>
-
-      <v-row dense>
-
-
       
-
-      </v-row>
-
-
       <router-view :user="user" :upload-config="uploadConfig"></router-view>
-
-
     </v-container>
 
-    <v-navigation-drawer v-model="drawer" absolute temporary >
-
-      
+    <v-navigation-drawer v-model="drawer" absolute temporary >      
       <v-list-item>
         <v-list-item-content centered>
           <v-list-item-title>
@@ -61,27 +45,7 @@
       </v-list>
     </v-navigation-drawer>
   </v-sheet>
-  <!--<v-row  no-gutters>
-        <v-col cols="2">
-          <v-list dense>
-
-            <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
-              <v-list-item v-for="(link, i) in links" :key="i" :to="link.to">
-
-                <v-list-item-content>
-                  <v-list-item-title v-text="link.text"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-
-        </v-col>
-        <v-col cols="10">
-          {{ this.userData.role }}
-          <router-view :user="user" :upload-config="uploadConfig"></router-view>
-        </v-col>
-      </v-row>-->
+  
 </template>
 
 <script>
