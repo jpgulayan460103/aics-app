@@ -18,8 +18,7 @@
       
     </v-toolbar>
 
-    <v-container dense fluid>
-      
+    <v-container dense fluid>      
       <router-view :user="user" :upload-config="uploadConfig"></router-view>
     </v-container>
 

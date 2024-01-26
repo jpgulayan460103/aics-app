@@ -155,9 +155,8 @@ export default {
         { value: "ext_name", text: "Ext", sortable: true },
         { value: "birth_date", text: "DOB", sortable: true },
         { value: "barangay", text: "Address", sortable: true },
-
+        { value: "user.name", text: "Last Updated By", sortable: true },
         { value: "status", text: "Payroll Status", sortable: true, divider: true, width: '50px', },
-
         { value: "actions", text: "Actions", width: '100px', },
       ],
       isExporting: false,
