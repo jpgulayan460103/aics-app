@@ -35,7 +35,7 @@
                 <v-chip color="primary" outlined small>
                   Client No: {{ item.payroll_client.new_payroll_client.sequence }}
                 </v-chip>
-                <v-chip small> In Payroll schedule:
+                <v-chip small v-if="item.payroll_client.new_payroll_client.payroll.schedule"> In Payroll schedule:
                   ({{ item.payroll_client.new_payroll_client.payroll.schedule }}) |
                   amount: {{ item.payroll_client.new_payroll_client.payroll.amount }}
                 </v-chip>
@@ -55,8 +55,9 @@
                     outlined>{{ item.payroll_client.status }}</v-chip>
                 </span>
 
-                <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"> In Payroll schedule: ({{
-                  item.payroll_client.payroll.schedule }}) | amount: {{
+                <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"
+                  v-if="item.payroll_client.payroll.schedule"> In Payroll schedule: ({{
+                    item.payroll_client.payroll.schedule }}) | amount: {{
     item.payroll_client.payroll.amount }} </v-chip>
 
 
@@ -70,7 +71,7 @@
 
 
 
-            
+
           </template>
 
           <template v-slot:item.barangay="{ item }">
