@@ -20,6 +20,7 @@ class PayrollClient extends Model
         'date_claimed',
         
     ];
+    
 
     public static function boot()
     {

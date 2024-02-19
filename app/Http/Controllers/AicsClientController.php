@@ -32,7 +32,7 @@ class AicsClientController extends Controller
      */
     public function index(Request $request)
     {
-        $clients = AicsClient::with("psgc", "payroll_client.payroll", "payroll_client.new_payroll_client", "payroll_client.new_payroll_client.payroll:id,title,schedule,amount","user:id,name");
+        $clients = AicsClient::with("psgc", "payroll_client.payroll", "payroll_client.new_payroll_client", "payroll_client.new_payroll_client.payroll:id,title,schedule,amount", "user:id,name");
         if ($request->search) {
             $search = $request->search;
             $keywords = explode(" ", $search);
@@ -43,7 +43,7 @@ class AicsClientController extends Controller
             });
             //  $clients->orWhere(fn ($q) => $q->where("meta_full_name", "like", "%" . metaphone($search) . "%"));
         }
-       
+
         $clients->orderBy("full_name");
         $clients = $clients->paginate(10);
         return $clients;
@@ -106,7 +106,7 @@ class AicsClientController extends Controller
             $aics_client = AicsClient::findOrFail($id);
 
             if ($aics_client) {
-              
+
                 $aics_client->fill($request->all());
                 $request->ext_name = is_null($request->ext_name) ? "" : $request->ext_name;
                 $aics_client->user_id = Auth::check() ? Auth::user()->id : null;
@@ -121,7 +121,7 @@ class AicsClientController extends Controller
 
                             $aics_client->payroll_client->update([
                                 'new_payroll_client_id' => $new_payroll_client->id,
-                                'status'=> '',
+                                'status' => '',
                             ]);
                             $aics_client->payroll_client->delete();
                         }
@@ -132,11 +132,11 @@ class AicsClientController extends Controller
                     }
                 }
 
-                
+
                 $aics_client->save();
                 DB::commit();
 
-                return ["message" => "Saved", "client" => $aics_client->load('payroll_client','payroll_client.new_payroll_client')];
+                return ["message" => "Saved", "client" => $aics_client->load('payroll_client', 'payroll_client.new_payroll_client')];
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -285,11 +285,53 @@ class AicsClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::findOrFail($payroll_id);       
+        $payroll = Payroll::findOrFail($payroll_id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-        
+
+        $record_options = [
+            "General Intake Sheet",
+            "Medical Certificate/Abstract",
+            "Discharge Summary",
+            "Death Summary",
+            "Valid ID Presented",
+            "Prescriptions",
+            "Laboratory Request",
+            "Referral Letter",
+            "______________________",
+            "Statement of Account",
+            "Charge Slip",
+            "Social Case Study Report",
+            "4PS DSWD ID",
+            "Treatment Protocol",
+            "Funeral Contract",
+            "Others",
+            "Justification",
+            "Quotation",
+            "Death Certificate",
+        ];
+
+        $cav_assistance_options = [
+            "Medical Assistance",
+            "Transportation Assistance",
+            "Food Assistance",
+            "Funeral Assistance",
+            "Education Assistance",
+            "Cash Assistance for Support Services"
+        ];
+
         if ($client) {
-            $pdf = Pdf::loadView('pdf.coe_batch', ["aics_beneficiaries" =>  $client->toArray(), "SDO"=> $payroll->sdo, "amount_in_words" => $f->format($payroll->amount) , "approved_by"=>$payroll->approved_by, "amount"=>$payroll->amount]);
+            $pdf = Pdf::loadView(
+                'pdf.coe_batch',
+                [
+                    "aics_beneficiaries" =>  $client->toArray(),
+                    "SDO" => $payroll->sdo,
+                    "amount_in_words" => $f->format($payroll->amount),
+                    "approved_by" => $payroll->approved_by,
+                    "amount" => $payroll->amount,
+                    "record_options" => $record_options,
+                    "cav_assistance_options" => $cav_assistance_options,
+                ]
+            );
             return $pdf->stream('coe.pdf');
         }
     }

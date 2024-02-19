@@ -76,7 +76,6 @@ class PayrollClientController extends Controller
     {
         $payroll_client = PayrollClient::findOrFail($id);
         $payroll_client->update($request->all());
-      
     }
 
     /**
@@ -109,7 +108,7 @@ class PayrollClientController extends Controller
             ->select("aics_clients.*")
             ->orderBy('payroll_clients.sequence')
             ->join('payroll_clients', function ($join) use ($id) {
-                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $id);
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
             })
             ->get();
         if ($clients) {
@@ -150,11 +149,55 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::findOrFail($id);       
+        $payroll = Payroll::findOrFail($id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-        
+
+        $record_options = [
+            "General Intake Sheet",
+            "Medical Certificate/Abstract",
+            "Discharge Summary",
+            "Death Summary",
+            "Valid ID Presented",
+            "Prescriptions",
+            "Laboratory Request",
+            "Referral Letter",
+            "______________________",
+            "Statement of Account",
+            "Charge Slip",
+            "Social Case Study Report",
+            "4PS DSWD ID",
+            "Treatment Protocol",
+            "Funeral Contract",
+            "Others",
+            "Justification",
+            "Quotation",
+            "Death Certificate",
+        ];
+
+        $cav_assistance_options = [
+            "Medical Assistance",
+            "Transportation Assistance",
+            "Food Assistance",
+            "Funeral Assistance",
+            "Education Assistance",
+            "Cash Assistance for Support Services"
+        ];
+
+
+
         if ($client) {
-            $pdf = Pdf::loadView('pdf.coe_batch', ["aics_beneficiaries" =>  $client->toArray(), "SDO"=> $payroll->sdo, "amount_in_words" => $f->format($payroll->amount) , "approved_by"=>$payroll->approved_by,"amount"=>$payroll->amount]);
+            $pdf = Pdf::loadView(
+                'pdf.coe_batch',
+                [
+                    "aics_beneficiaries" =>  $client->toArray(),
+                    "SDO" => $payroll->sdo,
+                    "amount_in_words" => $f->format($payroll->amount),
+                    "approved_by" => $payroll->approved_by,
+                    "amount" => $payroll->amount,
+                    "record_options" => $record_options,
+                    "cav_assistance_options" => $cav_assistance_options,
+                ]
+            );
             return $pdf->stream('coe.pdf');
         }
 
