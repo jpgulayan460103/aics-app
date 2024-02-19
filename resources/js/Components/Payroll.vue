@@ -1,113 +1,151 @@
 <template>
   <div>
-    <v-dialog v-model="openModal">
-      <v-card>
-        <v-card-title>New Payroll</v-card-title>
-        <v-card-text>
-          <form @submit.prevent="submit" enctype="multipart/form-data" action="">
-            <label for=""> Title</label>
-            <input type="text" name="" v-model="formData.title" id="" class="form-control" />
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label>Region <small>(Ex. NCR)</small>
-                  <span color="red">*</span>
-                </label>
-                <select id="psgc_id" name="" v-model="region_selector" v-if="regions" class="form-control"
-                  @change="getPsgc">
-                  <option value=""></option>
-                  <option :value="e" v-for="(e, i) in regions" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
+    <v-dialog v-model="openModal" small>
+      <v-app>
+        <v-card>
+          <v-card-title>New Payroll</v-card-title>
+          <v-card-text>
+            <form @submit.prevent="submit" enctype="multipart/form-data" action="">
 
-                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                  {{ validationErrors.psgc_id[0] }}
+              <v-row>
+
+
+                <v-col cols="12" md="6" sm="12"> <v-text-field v-model="formData.title" label="Title" outlined flat dense
+                    tile
+                    :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="3">
+                  <v-select v-model="formData.assistance_type" :items="assistance_types" label="Assistance Type" outlined
+                    flat dense tile
+                    :error-messages="validationErrors && validationErrors.assistance_type ? validationErrors.assistance_type[0] : ''">
+                  </v-select>
+                </v-col>
+
+                <v-col cols="12" sm="3">
+
+                  <v-text-field type="date" v-model="formData.schedule" label="Schedule" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.schedule ? validationErrors.schedule[0] : ''"></v-text-field>
+
+
+                </v-col>
+
+              </v-row>
+
+              <div class="row mt-2">
+                <div class="col-md-3">
+                  <label>Region <small>(Ex. NCR)</small>
+                    <span color="red">*</span>
+                  </label>
+                  <select id="psgc_id" name="" v-model="region_selector" v-if="regions" class="form-control"
+                    @change="getPsgc">
+                    <option value=""></option>
+                    <option :value="e" v-for="(e, i) in regions" :key="i">
+                      {{ i }}
+                    </option>
+                  </select>
+
+
+
+                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
+                    {{ validationErrors.psgc_id[0] }}
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <label>Province/District <small>(Ex. Dis. III)</small>
+                    <span color="red">*</span>
+                  </label>
+                  <select id="psgc_id" name="" v-model="province_selector" v-if="provinces" class="form-control">
+                    <option :value="e" v-for="(e, i) in provinces" :key="i">
+                      {{ i }}
+                    </option>
+                  </select>
+
+                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
+                    {{ validationErrors.psgc_id[0] }}
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <label>
+                    City/Municipality <small>(Ex. Quezon City)</small>
+                    <span color="red">*</span>
+                  </label>
+
+                  <select name="" v-model="city_selector" v-if="cities" class="form-control">
+                    <option :value="e" v-for="(e, i) in cities" :key="i">
+                      {{ i }}
+                    </option>
+                  </select>
+
+                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
+                    {{ validationErrors.psgc_id[0] }}
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <label>Barangay
+                    <small>(Ex. Batasan Hills)</small>
+                    <span color="red">*</span>
+                  </label>
+                  <select id="psgc_id" name="" v-model="formData.psgc_id" v-if="cities" class="form-control">
+                    <option :value="e[0].id" v-for="(e, i) in barangays" :key="i">
+                      {{ i }}
+                    </option>
+                  </select>
+
+                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
+                    {{ validationErrors.psgc_id[0] }}
+                  </div>
                 </div>
               </div>
 
-              <div class="col-md-3">
-                <label>Province/District <small>(Ex. Dis. III)</small>
-                  <span color="red">*</span>
-                </label>
-                <select id="psgc_id" name="" v-model="province_selector" v-if="provinces" class="form-control">
-                  <option :value="e" v-for="(e, i) in provinces" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
+              <v-row class="py-0">
 
-                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                  {{ validationErrors.psgc_id[0] }}
-                </div>
-              </div>
+                <v-col cols="12" md="3" sm="12" xs="12">
+                  <v-text-field v-model="formData.amount" label="Amount" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.amount ? validationErrors.amount[0] : ''"></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" sm="12" xs="12">
 
-              <div class="col-md-3">
-                <label>
-                  City/Municipality <small>(Ex. Quezon City)</small>
-                  <span color="red">*</span>
-                </label>
+                  <v-text-field v-model="formData.sdo" label="SDO" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.sdo ? validationErrors.sdo[0] : ''"></v-text-field>
+                </v-col>
 
-                <select name="" v-model="city_selector" v-if="cities" class="form-control">
-                  <option :value="e" v-for="(e, i) in cities" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
+                <v-col cols="12" md="3" sm="12" xs="12">
+                  <v-text-field v-model="formData.source_of_fund" label="Fund Source" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.source_of_fund ? validationErrors.source_of_fund[0] : ''"></v-text-field>
+                </v-col>
 
-                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                  {{ validationErrors.psgc_id[0] }}
-                </div>
-              </div>
+                <v-col cols="12" md="3" sm="12" xs="12">
+                  <v-text-field v-model="formData.charging" label="Charging" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.charging ? validationErrors.charging[0] : ''"></v-text-field>
+                </v-col>
+              </v-row>
 
-              <div class="col-md-3">
-                <label>Barangay
-                  <small>(Ex. Batasan Hills)</small>
-                  <span color="red">*</span>
-                </label>
-                <select id="psgc_id" name="" v-model="formData.psgc_id" v-if="cities" class="form-control">
-                  <option :value="e[0].id" v-for="(e, i) in barangays" :key="i">
-                    {{ i }}
-                  </option>
-                </select>
+              <v-row>
+                <v-col cols="12" md="3" sm="12" xs="12">
+                  <v-text-field v-model="formData.approved_by" label="Approving Authority" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.approved_by ? validationErrors.approved_by[0] : ''"></v-text-field>
+                </v-col>
 
-                <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                  {{ validationErrors.psgc_id[0] }}
-                </div>
-              </div>
-            </div>
+                <v-col cols="12" md="3" sm="12" xs="12">
 
-            <label for="">Schedule</label>
-            <input type="date" name="" v-model="formData.schedule" id="" class="form-control" />
+                  <v-select v-model="formData.status" label="Status" outlined dense flat tile
+                    :items="['active', 'closed']"
+                    :error-messages="validationErrors && validationErrors.status ? validationErrors.status[0] : ''"></v-select>
 
-            <label for="">Amount</label>
-            <input type="number" name="" v-model="formData.amount" id="" class="form-control" />
+                </v-col>
+              </v-row>
 
-            <label for="">SDO</label>
-            <input type="text" name="" v-model="formData.sdo" id="" class="form-control" />
 
-            <label for="">Fund Source</label>
-            <input type="text" name="" v-model="formData.source_of_fund" id="" class="form-control" />
-
-            <label for="">Charging</label>
-            <input type="text" name="" v-model="formData.charging" id="" class="form-control" />
-
-            <hr>
-            Cert of Eligibility Settings <br>
-            <label for="">Approving Authority</label>
-            <input type="text" name="" v-model="formData.approved_by" id="" class="form-control" />
-
-            <label for="">Status</label>
-            <select name="" id="" v-model="formData.status" class="form-control">
-              <option :value="e" v-for="(e, i) in ['active', 'closed']" :key="i">{{ e }}</option>
-            </select>
-
-           
-
-            <button type="submit" class="btn btn-primary btn-block">
-              SUBMIT
-            </button>
-          </form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+              <button type="submit" class="btn btn-primary btn-block">
+                SUBMIT
+              </button>
+            </form>
+          </v-card-text>
+        </v-card>
+      </v-app></v-dialog>
 
     <v-card flat>
 
@@ -133,7 +171,7 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-        
+
             <v-icon small class="mr-5" @click="ViewList(item.id)">
               mdi-eye
             </v-icon>
@@ -146,7 +184,7 @@
             <v-icon small class="mr-5" @click="DeleteItem(item)" v-if="userData.role == 'Super-Admin'">
               mdi-delete
             </v-icon>
-            
+
 
             <v-menu bottom left>
               <template v-slot:activator="{ on, attrs }">
@@ -180,7 +218,7 @@
               </v-list>
             </v-menu>
 
-           
+
           </template>
         </v-data-table>
       </v-card-text>
@@ -202,7 +240,7 @@ export default {
       openModal: false,
       formData: {
         title: "",
-        source_of_fund: "AICS FUND"
+        source_of_fund: "AICS FUND " +  new Date().getFullYear(),
       },
       search: "",
       isBusy: false,
@@ -231,6 +269,15 @@ export default {
       validationErrors: {},
       search: "",
       isExporting: false,
+      assistance_types: ["FOOD ASSISTANCE FOR DAILY CONSUMPTION AND OTHER NEEDS",
+        "OTHER CASH ASSISTANCE  FOR  FIRE VICTIM",
+        "OTHER CASH ASSISTANCE  FOR  FLOOD VICTIM",
+        "OTHER CASH ASSISTANCE  FOR  VICTIM OF CALAMITY",
+        "EDUCATIONAL ASSISTANCE FOR TUITION FEE",
+        "EDUCATIONAL ASSISTANCE FOR OTHER SCHOOL NEEDS"
+      ],
+      validationErrors: null
+
     };
   },
   watch: {
@@ -261,14 +308,19 @@ export default {
             this.getPayrolls();
             this.openModal = false;
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            if (error.response && error.response.status == 422) {
+              this.validationErrors = error.response.data.errors;
+            }
+
+          });
       } else {
         axios
           .post(route("api.payroll.create"), this.formData)
           .then((response) => {
             this.isBusy = false;
             this.data = response.data;
-
+alert(response.data.Message);
             if (response.data.Message == "Saved") {
               this.getPayrolls();
               this.openModal = false;
@@ -280,7 +332,11 @@ export default {
               }
             }
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            if (error.response && error.response.status == 422) {
+              this.validationErrors = error.response.data.errors;
+            }
+          });
       }
     },
     getPayrolls() {
@@ -291,7 +347,7 @@ export default {
     NewPayroll() {
       this.formData = {
         title: "",
-        source_of_fund: "AICS FUND"
+        source_of_fund: "AICS FUND "  +  new Date().getFullYear()
       };
       this.openModal = true;
     },
@@ -359,11 +415,13 @@ export default {
     exportCoe(id, ext) {
       window.open(route("pdf.payroll.print_coe", { id, _query: { ext } }));
     },
+    
+
   },
   mounted() {
     this.getPayrolls();
-
     axios.get(route("api.psgc.show", "region")).then((response) => {
+      console.log(response.data);
       this.regions = this.groupByKey(response.data, "region_name");
     });
   },

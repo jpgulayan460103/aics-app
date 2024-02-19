@@ -278,7 +278,7 @@
                     <td class="underlined"><b>Buong Pangalan ng Benepisyaryo</b> <i>(Name of the Beneficiary)</i></td>
                 </tr>
             </table>
-
+<br>
             <table class="table" style=" border:solid #000 1px;" cellpadding=0 cellspacing=0>
                 <thead>
                     <tr>
@@ -331,14 +331,14 @@
                         <td style="text-align: left; font-size:8pt;"><b>Approved by:</b></td>
                     </tr>
                     <tr>
-                        <td style="padding-top:15px; font-size:8pt;">
+                        <td style="padding-top:10px; font-size:8pt;">
 
                             {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
 
                         <td>
                             <div class="sig"></div>
                         </td>
-                        <td style="padding-top:15px; font-size:8pt;">
+                        <td style="padding-top:10px; font-size:8pt;">
 
                             {{ $approved_by }}
 
@@ -442,15 +442,15 @@
             <td style="text-align: left; font-size:8pt; "><b>Sinaksihan ni:</b><br></td>
         </tr>
         <tr>
-            <td style="padding-top:15px; ">
+            <td style="padding-top:10px; ">
                 <div class="sig" style="font-size:8pt;">
                     {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
                 </div>
             </td>
-            <td style="font-size:8pt; padding-top:15px; ">
+            <td style="font-size:8pt; padding-top:10px; ">
                 {{ $SDO }}
             </td>
-            <td style="font-size:8pt; padding-top:15px; ">
+            <td style="font-size:8pt; padding-top:10px; ">
 
             </td>
         </tr>

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\Models\PayrollClient;
+use App\Models\Psgc;
 
 class PayrollController extends Controller
 {
@@ -32,7 +33,22 @@ class PayrollController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(request $request)
-    {
+    {   
+
+        $validated = $request->validate([
+            'title' => 'required',
+            'assistance_type' => 'required',
+            'amount' => 'required|numeric',
+            'sdo'=>'required',
+            'psgc_id'=>'required|exists:psgcs,id',
+            'approved_by'=>'required',
+            'source_of_fund'=>'required',
+            'charging'=>'required',
+            'status'=>'required',
+            'schedule'=>'required|date',
+        ]);
+
+     
         try {
             $p = new Payroll;
             $p->fill($request->toArray());
