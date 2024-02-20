@@ -413,7 +413,32 @@
             </div>
           </div>
         </div>
+        <br />
 
+        <div class="card">
+          <div class="card-title"> Records on File </div>
+          <div class="card-body">
+              <v-row no-gutters dense>
+                <v-col dense v-for="(record, index) in records" :key="index" cols="12" sm="6" md="4" lg="3">
+                  <v-checkbox v-model="selectedAssistances" :label="record" :value="record" dense></v-checkbox>
+                </v-col>
+              </v-row>
+          </div>
+        </div>
+        <br />
+
+
+        <div class="card">
+          <div class="card-title"> Acknowledgment Receipt </div>
+          <div class="card-body">
+              
+              <v-row no-gutters dense>
+                <v-col dense v-for="(assistance, index) in assistances" :key="index" cols="12" sm="6" md="4" lg="3">
+                  <v-checkbox v-model="selectedAssistances" :label="assistance" :value="assistance" dense></v-checkbox>
+                </v-col>
+              </v-row>
+          </div>
+        </div>
         <br />
 
         <div class="card">
@@ -469,51 +494,7 @@
           </div>
         </div>
 
-        <!-- <div class="card mt-2" v-if="requirements">
-        <div class="card-title">Requirements <span></span></div>
-
-        <div class="card-body">
-          <div
-            v-if="!isEmpty(validationErrors.assistance)"
-            class="alert alert-danger"
-          >
-            <ul>
-              <li v-for="(e, i) in validationErrors.assistance" :key="i">
-                {{ e[0] }}
-              </li>
-            </ul>
-          </div>
-          <ul
-            v-if="requirements[0]"
-            style="list-style: decimal; display: block"
-            class="ml-3 list-group list-group-flush"
-          >
-            <li
-              v-for="(r, i) in requirements[0].requirements.filter(
-                (i) => i.is_required == 1
-              )"
-              :key="r.id"
-              class="list-group-item"
-            >
-              <p>
-                {{ r.name }}
-                <span color="red"> {{ r.is_required ? "*" : "" }}</span>
-              </p>
-
-              <div class="alert alert-primary">
-                <input
-                  type="file"
-                  @input="onFileChange(i, $event)"
-                  accept="application/pdf,image/jpeg,image/png"
-                  :required="r.is_required"
-                />
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>-->
-
-
+      
 
         <div class="text-center col-md-12 " style="padding: 10px 0px">
           <v-btn color="red" dark large @click="isVerified(form.id, 'grievance', form)">
@@ -582,6 +563,26 @@ export default {
       subcategories: [],
       payrolls: [],
       submit: false,
+      assistances: ['Medical Assistance', 'Funeral Assistance', 'Transportation Assistance', 'Educational Assistance','Food Assistance', 'Cash Assistance'],
+      selectedAssistances: [],
+      records: ["General Intake Sheet",
+            "Medical Certificate/Abstract",
+            "Discharge Summary",
+            "Death Summary",
+            "Valid ID Presented",
+            "Prescriptions",
+            "Laboratory Request",
+            "Referral Letter",
+            "Statement of Account",
+            "Charge Slip",
+            "Social Case Study Report",
+            "4PS DSWD ID",
+            "Treatment Protocol",
+            "Funeral Contract",
+            "Others",
+            "Justification",
+            "Quotation",
+            "Death Certificate"],
     };
   },
   watch: {

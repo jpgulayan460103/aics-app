@@ -8,8 +8,6 @@
             <form @submit.prevent="submit" enctype="multipart/form-data" action="">
 
               <v-row>
-
-
                 <v-col cols="12" md="6" sm="12"> <v-text-field v-model="formData.title" label="Title" outlined flat dense
                     tile
                     :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>
@@ -138,6 +136,7 @@
                 </v-col>
               </v-row>
 
+              
 
               <button type="submit" class="btn btn-primary btn-block">
                 SUBMIT
@@ -237,10 +236,11 @@ export default {
 
   data() {
     return {
+      
       openModal: false,
       formData: {
         title: "",
-        source_of_fund: "AICS FUND " +  new Date().getFullYear(),
+        source_of_fund: "AICS FUND " + new Date().getFullYear(),
       },
       search: "",
       isBusy: false,
@@ -320,7 +320,7 @@ export default {
           .then((response) => {
             this.isBusy = false;
             this.data = response.data;
-alert(response.data.Message);
+            alert(response.data.Message);
             if (response.data.Message == "Saved") {
               this.getPayrolls();
               this.openModal = false;
@@ -347,7 +347,7 @@ alert(response.data.Message);
     NewPayroll() {
       this.formData = {
         title: "",
-        source_of_fund: "AICS FUND "  +  new Date().getFullYear()
+        source_of_fund: "AICS FUND " + new Date().getFullYear()
       };
       this.openModal = true;
     },
@@ -415,7 +415,7 @@ alert(response.data.Message);
     exportCoe(id, ext) {
       window.open(route("pdf.payroll.print_coe", { id, _query: { ext } }));
     },
-    
+
 
   },
   mounted() {

@@ -211,7 +211,7 @@
                         <input type="radio">On-site
                         <input type="checkbox">Walk-in
                         <input type="checkbox">Referral
-                        <input type="radio">Off-site
+                        <input type="radio" checked>Off-site
                     </td>
 
                 </tr>
