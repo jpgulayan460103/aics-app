@@ -601,12 +601,16 @@ export default {
     },
 
     dialog_data(e) {
+      console.log("dialog_data");
       this.resetForm();
       this.form = e;
       // this.form.aics_type_id = 8;
       this.form.mode_of_admission = "Referral";
       this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
+      this.form.records = this.form.records ? JSON.parse(this.form.records) : [];
+      console.log( this.form.records );
+      
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
       if (this.dialog_data.psgc) {
@@ -839,13 +843,18 @@ export default {
     this.form.mode_of_admission = "Referral";
     this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
     this.form.interviewed_by = this.userData ? this.userData.name : "";
+    this.form.records = this.form.records ? JSON.parse(this.form.records) : [];
+
+    
+
     this.calculateAge();
     // this.getAssistanceTypes();
     this.getRegions();
     this.getCategories();
     this.getPayrolls();
    
-    console.log(this.form);
+    console.log("mounted");
+    console.log( this.form.records );
   },
 };
 </script>
