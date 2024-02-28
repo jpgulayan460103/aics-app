@@ -36,7 +36,6 @@ class PayrollController extends Controller
     {   
 
         $validated = $request->validate([
-            'title' => 'required',
             'assistance_type' => 'required',
             'amount' => 'required|numeric',
             'sdo'=>'required',
@@ -46,13 +45,23 @@ class PayrollController extends Controller
             'charging'=>'required',
             'status'=>'required',
             'schedule'=>'required|date',
+            'aics_type_subcategory_id'=>"required|exists:aics_type_subcategories,id"
         ]);
 
-     
+       
         try {
             $p = new Payroll;
+           
             $p->fill($request->toArray());
+          
+            $p->title = $request->assistance_type["name"];
+        
+            $p->aics_type_id  = $request->assistance_type["id"];
+
+           
+
             $res = $p->save();
+            
             if ($res) {
                 return ["Message" => "Saved"];
             } else {
@@ -123,6 +132,9 @@ class PayrollController extends Controller
             try {
 
                 $payroll->fill($request->toArray());
+                $payroll->title = $request->assistance_type["name"];        
+                $payroll->aics_type_id  = $request->assistance_type["id"];
+    
                 $payroll->save();
                 return ["Message" => "saved"];
             } catch (Exception $e) {

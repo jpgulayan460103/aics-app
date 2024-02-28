@@ -8,15 +8,23 @@
             <form @submit.prevent="submit" enctype="multipart/form-data" action="">
 
               <v-row>
-                <v-col cols="12" md="6" sm="12"> <v-text-field v-model="formData.title" label="Title" outlined flat dense
+                <v-col cols="12" md="6" sm="12">
+                  <!--<v-text-field v-model="formData.title" label="Title" outlined flat dense
                     tile
-                    :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="3">
-                  <v-select v-model="formData.assistance_type" :items="assistance_types" label="Assistance Type" outlined
-                    flat dense tile
+                    :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>-->
+                  <v-select v-model="formData.assistance_type" :items="assistance_types" label="Title/Assistance Type"
+                    outlined flat dense tile item-text="name" item-value="id" return-object
                     :error-messages="validationErrors && validationErrors.assistance_type ? validationErrors.assistance_type[0] : ''">
                   </v-select>
+                </v-col>
+                <v-col cols="12" sm="3">
+                  <div v-if="formData.assistance_type && formData.assistance_type.subtype">
+                    <v-select v-model="formData.aics_type_subcategory_id" :items="formData.assistance_type.subtype" outlined flat dense 
+                      label="Subtype" item-text="name" item-value="id"></v-select>
+
+                      
+                   
+                  </div>
                 </v-col>
 
                 <v-col cols="12" sm="3">
@@ -136,7 +144,7 @@
                 </v-col>
               </v-row>
 
-              
+
 
               <button type="submit" class="btn btn-primary btn-block">
                 SUBMIT
@@ -236,7 +244,7 @@ export default {
 
   data() {
     return {
-      
+
       openModal: false,
       formData: {
         title: "",
@@ -269,15 +277,15 @@ export default {
       validationErrors: {},
       search: "",
       isExporting: false,
-      assistance_types: ["FOOD ASSISTANCE FOR DAILY CONSUMPTION AND OTHER NEEDS",
+      purposes: ["FOOD ASSISTANCE FOR DAILY CONSUMPTION AND OTHER NEEDS",
         "OTHER CASH ASSISTANCE  FOR  FIRE VICTIM",
         "OTHER CASH ASSISTANCE  FOR  FLOOD VICTIM",
         "OTHER CASH ASSISTANCE  FOR  VICTIM OF CALAMITY",
         "EDUCATIONAL ASSISTANCE FOR TUITION FEE",
         "EDUCATIONAL ASSISTANCE FOR OTHER SCHOOL NEEDS"
       ],
-      validationErrors: null
-
+      validationErrors: null,
+      assistance_types: [],
     };
   },
   watch: {
@@ -295,6 +303,17 @@ export default {
       (this.barangays = {}),
         (this.barangays = this.groupByKey(newVal, "brgy_name"));
     },
+
+    "formData.assistance_type"(newVal, oldVal) {
+       if (newVal && newVal.subtype && newVal.subtype.length > 0) {
+        console.log( newVal.subtype[0].id);
+        this.formData.aics_type_subcategory_id = newVal.subtype[0].id;
+      }
+    }
+
+    
+                      
+
   },
   methods: {
     submit() {
@@ -415,10 +434,16 @@ export default {
     exportCoe(id, ext) {
       window.open(route("pdf.payroll.print_coe", { id, _query: { ext } }));
     },
+    getAssistanceTypes() {
+      axios.get(route("api.aics.assistance-types")).then((response) => {
+        this.assistance_types = response.data;
+      });
+    },
 
 
   },
   mounted() {
+    this.getAssistanceTypes();
     this.getPayrolls();
     axios.get(route("api.psgc.show", "region")).then((response) => {
       console.log(response.data);

@@ -37,7 +37,7 @@
           </div>
           <div class="card-body">
             <div class="col-md-12">
-              <select name="assistance_type" v-model="form.aics_type_id" class="form-control" @change="getRequirements">
+              <!--<select name="assistance_type" v-model="form.aics_type_id" class="form-control" @change="getRequirements" readonly>
                 <option :value="e.id" v-for="e in assistance_types" :key="e.id">
                   {{ e.name }}
                 </option>
@@ -45,7 +45,7 @@
 
               <div v-if="validationErrors && validationErrors.aics_type_id" style="color: red">
                   {{ validationErrors.aics_type_id[0] }}
-                </div>
+                </div>-->
 
             </div>
           </div>
@@ -261,7 +261,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-3" >
+                <div class="col-md-3">
                   <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
                   <input id="birth_date" @input="calculateAge" v-model="form.birth_date" type="date"
                     class="form-control" />
@@ -418,25 +418,12 @@
         <div class="card">
           <div class="card-title"> Records on File </div>
           <div class="card-body">
-              <v-row no-gutters dense>
-                <v-col dense v-for="(record, index) in records" :key="index" cols="12" sm="6" md="4" lg="3">
-                  <v-checkbox v-model="selectedAssistances" :label="record" :value="record" dense></v-checkbox>
-                </v-col>
-              </v-row>
-          </div>
-        </div>
-        <br />
+            <v-row no-gutters dense>
 
-
-        <div class="card">
-          <div class="card-title"> Acknowledgment Receipt </div>
-          <div class="card-body">
-              
-              <v-row no-gutters dense>
-                <v-col dense v-for="(assistance, index) in assistances" :key="index" cols="12" sm="6" md="4" lg="3">
-                  <v-checkbox v-model="selectedAssistances" :label="assistance" :value="assistance" dense></v-checkbox>
-                </v-col>
-              </v-row>
+              <v-col dense v-for="(record, index) in record_opts" :key="index" cols="12" sm="6" md="4" lg="3">
+                <v-checkbox v-model="form.records" :label="record" :value="record" dense></v-checkbox>
+              </v-col>
+            </v-row>
           </div>
         </div>
         <br />
@@ -445,7 +432,7 @@
           <div class="card-title">Select Payroll <span style="color:red;">*</span></div>
           <div class="card-body">
 
-            <div 
+            <div
               v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed' && (dialog_data.payroll_client.status != 'cancelled-revalidate')">
 
               <div v-if="dialog_data.payroll_client.new_payroll_client">
@@ -477,13 +464,28 @@
 
               <div v-if="payrolls.length > 0">
 
-                <select name="" id="" v-model="form.payroll_id" class="form-control"
+                <v-select v-model="form.payroll_id"
+                  :disabled="dialog_data.payroll_client && dialog_data.payroll_client.status != 'cancelled-revalidate'"
+                  :items="payrolls" label="Payroll" outlined dense item-text="title" item-value="id">
+                  <template v-slot:item="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      <v-list-item-subtitle>
+                        Amount: Php.{{ item.amount }} | Schedule: {{ item.schedule }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </template>
+                </v-select>
+
+
+
+                <!--<select name="" id="" v-model="form.payroll_id" class="form-control"
                   :disabled="dialog_data.payroll_client && dialog_data.payroll_client.status != 'cancelled-revalidate'">
 
                   <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
-                    {{ p.title }} | {{ p.amount }}
+                    {{ p.title }} - [Amount:Php.{{ p.amount }} | Schedule: {{ p.schedule }}]
                   </option>
-                </select>
+                </select>-->
               </div>
               <div v-else>
                 NO ACTIVE PAYROLLS
@@ -494,16 +496,19 @@
           </div>
         </div>
 
-      
 
-        <div class="text-center col-md-12 " style="padding: 10px 0px">
-          <v-btn color="red" dark large @click="isVerified(form.id, 'grievance', form)">
-            GRIEVANCE
-          </v-btn>
 
-          <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
-            SUBMIT
-          </button>
+        <div class=" row justify-center " style="padding: 10px 0px">
+          <v-col>
+            <v-btn color="red" dark large @click="isVerified(form.id, 'grievance', form)">
+              GRIEVANCE
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn  color="blue"  dark large type="submit" :disabled="submit">
+              SUBMIT
+            </v-btn>
+          </v-col>
 
 
 
@@ -530,7 +535,7 @@ export default {
   data() {
     return {
       form: {
-        aics_type_id: 8,
+
         mode_of_admission: "Referral",
         assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention."
       },
@@ -563,26 +568,25 @@ export default {
       subcategories: [],
       payrolls: [],
       submit: false,
-      assistances: ['Medical Assistance', 'Funeral Assistance', 'Transportation Assistance', 'Educational Assistance','Food Assistance', 'Cash Assistance'],
       selectedAssistances: [],
-      records: ["General Intake Sheet",
-            "Medical Certificate/Abstract",
-            "Discharge Summary",
-            "Death Summary",
-            "Valid ID Presented",
-            "Prescriptions",
-            "Laboratory Request",
-            "Referral Letter",
-            "Statement of Account",
-            "Charge Slip",
-            "Social Case Study Report",
-            "4PS DSWD ID",
-            "Treatment Protocol",
-            "Funeral Contract",
-            "Others",
-            "Justification",
-            "Quotation",
-            "Death Certificate"],
+      record_opts: ["General Intake Sheet",
+        "Medical Certificate/Abstract",
+        "Discharge Summary",
+        "Death Summary",
+        "Valid ID Presented",
+        "Prescriptions",
+        "Laboratory Request",
+        "Referral Letter",
+        "Statement of Account",
+        "Charge Slip",
+        "Social Case Study Report",
+        "4PS DSWD ID",
+        "Treatment Protocol",
+        "Funeral Contract",
+        "Others",
+        "Justification",
+        "Quotation",
+        "Death Certificate"],
     };
   },
   watch: {
@@ -632,7 +636,7 @@ export default {
       (this.beneficiary_barangays = {}),
         (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
     },
-    
+
   },
 
   methods: {
@@ -643,16 +647,15 @@ export default {
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             this.submit = false;
-             console.log(response.data);
+            console.log(response.data);
             this.setDialogCreate(false);
             let message = `${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`;
-            if(response.data.client.payroll_client.new_payroll_client)
-            {
-              message = `${response.data.message}! Client number: ${response.data.client.payroll_client.new_payroll_client.sequence}` 
+            if (response.data.client.payroll_client.new_payroll_client) {
+              message = `${response.data.message}! Client number: ${response.data.client.payroll_client.new_payroll_client.sequence}`
             }
             alert(message);
             this.getList();
-           
+
           })
           .catch((error) => {
             this.submit = false;
@@ -671,9 +674,8 @@ export default {
     }, 250),
     resetForm() {
       this.form = {
-        aics_type_id: 8,
         mode_of_admission: "Referral",
-        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention."
+        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
 
       };
       this.beneficiary_provinces = {};
@@ -755,7 +757,7 @@ export default {
     },
 
     groupByKey(array, key) {
-    
+
       if (Array.isArray(array)) {
         return array.reduce((hash, obj) => {
           if (obj[key] === undefined) return hash;
@@ -829,19 +831,21 @@ export default {
   },
   mounted() {
     this.form = cloneDeep(this.dialog_data);
+
     if (this.form.payroll_client) {
       this.form.payroll_id = this.form.payroll_client.payroll_id;
     }
-    // this.form.aics_type_id = 8;
+
     this.form.mode_of_admission = "Referral";
     this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
     this.form.interviewed_by = this.userData ? this.userData.name : "";
     this.calculateAge();
-    this.getAssistanceTypes();
+    // this.getAssistanceTypes();
     this.getRegions();
     this.getCategories();
     this.getPayrolls();
-
+   
+    console.log(this.form);
   },
 };
 </script>

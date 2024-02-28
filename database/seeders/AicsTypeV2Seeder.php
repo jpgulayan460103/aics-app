@@ -1,0 +1,78 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\AicsType;
+use App\Models\AicsTypeSubcategory;
+use Illuminate\Database\Seeder;
+
+class AicsTypeV2Seeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+      
+       #$types = ["Medical Assistance", "Funeral Assistance", "Food Assistance", "Transporation Assistance", "Educational Assistance", "Other Cash Assistance"];
+       
+       $types = array(
+        array(
+            "Type" => "Medical Assistance",
+            "Subtype" => array("Laboratory", "Medicine")
+        ),
+        array(
+            "Type" => "Funeral Assistance",
+            "Subtype" => array("Burial", "Transfer of Cadaver")
+        ),
+        array(
+            "Type" => "Food Assistance",
+            "Subtype" => array("Daily Consumption and Other Needs")
+        ),
+        array(
+            "Type" => "Transporation Assistance",
+            "Subtype" => array("Locally stranded individuals (LSI)", "Repatriates")
+        ),
+        array(
+            "Type" => "Educational Assistance",
+            "Subtype" => array("Tuition Fee", "Other School Needs")
+        ),
+        array(
+            "Type" =>  "Other Cash Assistance",
+            "Subtype" => array("Fire Victim", "Victim of Calamity", "Flood Victim")
+        ),        
+    );
+
+    $ids=array();
+
+       foreach ($types as $data) {
+            $type = AicsType::where("name", $data['Type'])->first();
+            if( $type )
+            {
+                foreach ($data['Subtype'] as $subtypeName) {
+                    AicsTypeSubcategory::create([
+                        'aics_type_id' => $type->id,
+                        'name' => $subtypeName
+                    ]);
+                }
+                $ids[] =  $type->id;
+            }else
+            {
+                $type = AicsType::create(['name' => $data['Type']]);
+                foreach ($data['Subtype'] as $subtypeName) {
+                    AicsTypeSubcategory::create([
+                        'aics_type_id' => $type->id,
+                        'name' => $subtypeName
+                    ]);
+                }
+
+                $ids[] =  $type->id;
+
+            }
+        }
+
+        AicsType::whereNotIn('id', $ids)->delete();
+    }
+}

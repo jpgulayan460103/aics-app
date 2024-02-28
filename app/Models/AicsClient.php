@@ -54,7 +54,8 @@ class AicsClient extends Model
         'dirty_list_id',
         'meta_full_name',
         'full_name',
-        'valid_id_presented'
+        'valid_id_presented',
+        'records'
     ];
 
     public $appends = ['name'];
@@ -93,7 +94,7 @@ class AicsClient extends Model
 
     public function aics_type()
     {
-        return $this->belongsTo(AicsType::class);
+        return $this->belongsTo(AicsType::class)->withTrashed();
     }
     public function subcategory()
     {
