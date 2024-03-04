@@ -46,20 +46,26 @@ class PsgcController extends Controller
      */
     public function show(Request $request, $type)
     {
-        switch ($type) {
+       switch ($type) {
             case 'region':
                 return Psgc::getRegions();
                 break;
-            case 'brgy':
+            case 'province':
+                return Psgc::getProvinces();
+                break;
+            case 'cities':
                 $field = $request->field;
                 $value = $request->value;
-                return Psgc::getBrgys($field, $value);
+                return Psgc::getCities($field, $value)->toArray();
+            case 'brgy':
+                return Psgc::getBrgys($request->fields);
             case 'id':
                 return Psgc::find($request->id);
             default:
                 # code...
                 break;
-        }
+            }
+
     }
 
     /**

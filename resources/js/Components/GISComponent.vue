@@ -30,14 +30,14 @@
         </div>
 
 
-        <div class="card mt-2">
+        <!--<<div class="card mt-2">
           <div class="card-title">
             NAIS HINGIIN NA TULONG (Assistance Requested)
             <span color="red"></span>
           </div>
           <div class="card-body">
             <div class="col-md-12">
-              <!--<select name="assistance_type" v-model="form.aics_type_id" class="form-control" @change="getRequirements" readonly>
+              select name="assistance_type" v-model="form.aics_type_id" class="form-control" @change="getRequirements" readonly>
                 <option :value="e.id" v-for="e in assistance_types" :key="e.id">
                   {{ e.name }}
                 </option>
@@ -45,11 +45,11 @@
 
               <div v-if="validationErrors && validationErrors.aics_type_id" style="color: red">
                   {{ validationErrors.aics_type_id[0] }}
-                </div>-->
+                </div>
 
             </div>
           </div>
-        </div>
+        </div>-->
 
         <div class="card mt-2">
           <div class="card-title">
@@ -178,7 +178,28 @@
                   </div>
                 </div>
               </div>
-              <div class="row mt-2">
+              <v-row class="row mt-2">
+                <div class="col-md-3">
+                  <v-select label="Region" v-model="region" outlined dense :items="['XI']">
+                  </v-select>
+                </div>
+                <div class="col-md-3">
+                  <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
+                    cache-items hide-no-data hide-details label="Province" outlined item-text="province_name"
+                    item-value="id" dense></v-autocomplete>
+                </div>
+                <div class="col-md-3">
+                  <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
+                    @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined
+                    item-text="city_name" item-value="id" dense></v-autocomplete>
+                </div>
+                <div class="col-md-3">
+                  <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
+                    hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
+                    :error-messages="validationErrors.psgc_id" required></v-autocomplete>
+                </div>
+              </v-row>
+              <!--<div class="row mt-2">
                 <div class="col-md-3">
                   <label>Region <small>(Ex. NCR)</small>
                     <span color="red"></span>
@@ -244,7 +265,7 @@
                     {{ validationErrors.psgc_id[0] }}
                   </div>
                 </div>
-              </div>
+              </div>-->
 
               <div class="row mt-2">
                 <div class="col-md-3">
@@ -421,7 +442,8 @@
             <v-row no-gutters dense>
 
               <v-col dense v-for="(record, index) in record_opts" :key="index" cols="12" sm="6" md="4" lg="3">
-                <v-checkbox v-model="form.records" :label="record" :value="record" dense></v-checkbox>
+                <v-checkbox v-model="form.records" :label="record" :value="record" dense
+                  class="shrink mr-0 mt-0"></v-checkbox>
               </v-col>
             </v-row>
           </div>
@@ -436,7 +458,7 @@
               v-if="dialog_data.payroll_client && dialog_data.payroll_client.payroll.status == 'closed' && (dialog_data.payroll_client.status != 'cancelled-revalidate')">
 
               <div v-if="dialog_data.payroll_client.new_payroll_client">
-                Client No: {{ dialog_data.payroll_client.new_payroll_client.sequence }}
+                Client No: {{ dialog_data.payroll_client.new_payroll_client.sequence }} <br>
                 <span v-if="dialog_data.payroll_client.new_payroll_client.payroll.status"> Status:{{
                   dialog_data.payroll_client.new_payroll_client.payroll.status }}</span> <br>
                 In Payroll:{{ dialog_data.payroll_client.new_payroll_client.payroll.title }} |
@@ -445,7 +467,7 @@
               </div>
 
               <div v-else>
-                Client No: {{ dialog_data.payroll_client.sequence }}
+                Client No: {{ dialog_data.payroll_client.sequence }}<br>
                 <span v-if="dialog_data.payroll_client.payroll.status">
                   Status:{{ dialog_data.payroll_client.payroll.status }}
                 </span><br>
@@ -505,7 +527,7 @@
             </v-btn>
           </v-col>
           <v-col>
-            <v-btn  color="blue"  dark large type="submit" :disabled="submit">
+            <v-btn color="blue" dark large type="submit" :disabled="submit">
               SUBMIT
             </v-btn>
           </v-col>
@@ -530,8 +552,10 @@
 
 <script>
 import { debounce, cloneDeep } from 'lodash'
+
 export default {
-  props: ["dialog_data", "getList", "userData", "setDialogCreate"],
+  props: ["dialog_data", "getList", "userData", "setDialogCreate", "provinces"],
+
   data() {
     return {
       form: {
@@ -587,6 +611,13 @@ export default {
         "Justification",
         "Quotation",
         "Death Certificate"],
+      region: "XI",
+      loading: false,
+      province_name: "",
+      city_name: "",
+      cities: [],
+      brgys: [],
+
     };
   },
   watch: {
@@ -596,50 +627,11 @@ export default {
       }
     },
 
-    "form.psgc_id": function (newVal, oldVal) {
-      //console.log(newVal);
-    },
 
     dialog_data(e) {
-      console.log("dialog_data");
       this.resetForm();
-      this.form = e;
-      // this.form.aics_type_id = 8;
-      this.form.mode_of_admission = "Referral";
-      this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
-      this.form.interviewed_by = this.form.interviewed_by ? this.form.interviewed_by : this.userData.name;
-      this.form.records = this.form.records ? JSON.parse(this.form.records) : [];
-      console.log( this.form.records );
-      
-      if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
-      this.calculateAge();
-      if (this.dialog_data.psgc) {
-        this.beneficiary_region_selector = this.regions[this.dialog_data.psgc.region_name] ? this.regions[this.dialog_data.psgc.region_name] : null;
-        this.getBeneficiaryPsgc();
-        this.beneficiary_province_selector = this.beneficiary_provinces[this.dialog_data.psgc.province_name] ? this.beneficiary_provinces[this.dialog_data.psgc.province_name] : null;
-      }
-    },
-    beneficiary_region_selector(newVal, oldVal) {
-      ((this.beneficiary_provinces = {}),
-        (this.beneficiary_cities = {}),
-        (this.beneficiary_barangays = {})),
-        (this.beneficiary_provinces = this.groupByKey(newVal, "province_name"));
-    },
-
-    beneficiary_province_selector(newVal, oldVal) {
-      ((this.beneficiary_cities = {}), (this.beneficiary_barangays = {})),
-        (this.beneficiary_cities = this.groupByKey(newVal, "city_name"));
-
-      if (this.dialog_data.psgc) {
-        this.beneficiary_city_selector =
-          this.beneficiary_cities[this.dialog_data.psgc.city_name];
-      }
-    },
-
-    beneficiary_city_selector(newVal, oldVal) {
-      (this.beneficiary_barangays = {}),
-        (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
-    },
+      this.populateForm(e);
+    },    
 
   },
 
@@ -651,7 +643,7 @@ export default {
           .post(route("api.client.update", this.dialog_data.id), this.form)
           .then((response) => {
             this.submit = false;
-            console.log(response.data);
+            /*console.log(response.data);*/
             this.setDialogCreate(false);
             let message = `${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`;
             if (response.data.client.payroll_client.new_payroll_client) {
@@ -682,32 +674,11 @@ export default {
         assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
 
       };
-      this.beneficiary_provinces = {};
-      this.beneficiary_cities = {};
-      this.beneficiary_barangays = {};
-      this.beneficiary_region_selector = {};
-      this.beneficiary_province_selector = {};
-      this.beneficiary_city_selector = {};
+      this.province_name = "";
+      this.city_name = "";
     },
 
-    onFileChange(i, e) {
-      this.form.documents[i] = e.target.files[0];
-    },
-
-    getRequirements() {
-      this.form.documents = {};
-      if (this.validationErrors.assistance) {
-        this.validationErrors.assistance = {};
-      }
-
-      this.requirements = this.assistance_types.filter((x) => {
-        if (x.id === this.form.aics_type_id) {
-          return x.requirements;
-        }
-      });
-    },
-
-    getBeneficiaryPsgc() {
+    /*getBeneficiaryPsgc() {
       axios
         .get(route("api.psgc.show", "brgy"), {
           params: {
@@ -729,7 +700,7 @@ export default {
               this.beneficiary_cities[this.dialog_data.psgc.city_name];
           }
         });
-    },
+    },*/
 
     getClientPsgc() {
       axios
@@ -781,7 +752,7 @@ export default {
         this.assistance_types = response.data;
       });
     },
-    getRegions() {
+    /*getRegions() {
       axios.get(route("api.psgc.show", "region")).then((response) => {
         this.regions = this.groupByKey(response.data, "region_name");
         if (this.dialog_data.psgc) {
@@ -790,7 +761,7 @@ export default {
           this.getBeneficiaryPsgc();
         }
       });
-    },
+    },*/
     getCategories() {
       axios.get(route("api.categories")).then((response) => {
         this.categories = response.data.categories;
@@ -808,7 +779,6 @@ export default {
     isVerified: debounce(function (id, stat, client) {
 
       let message = "TAG " + client.full_name + " AS " + stat.toUpperCase() + "? \n"
-
 
       var conf = confirm(message);
       if (conf) {
@@ -832,29 +802,59 @@ export default {
       }
 
     }, 500),
-  },
-  mounted() {
-    this.form = cloneDeep(this.dialog_data);
+    getCities() {
+      this.cities = [];
+      this.brgys = [];
+      this.loading = true;
+      axios.get(route("api.psgc.show", { type: "cities", field: "province_name", value: this.province_name })).then(response => {
+        this.cities = response.data;
+        this.loading = false;
+      }).catch(error => { console.log(error); this.loading = false; });
+    },
+    getBrgys() {
+      this.loading = true;
+      let fields = [{ field: "city_name", value: this.city_name }, { field: "province_name", value: this.province_name, }];
 
-    if (this.form.payroll_client) {
-      this.form.payroll_id = this.form.payroll_client.payroll_id;
+      axios.get(route("api.psgc.show", { type: "brgy", fields })).then(response => {
+        this.brgys = response.data;
+        this.loading = false;
+      }).catch(error => { console.log(error); this.loading = false; });
+
+    },
+    populateForm(e) {
+      this.form = cloneDeep(e);
+
+
+      if (this.form.payroll_client) {
+        this.form.payroll_id = this.form.payroll_client.payroll_id;
+      }
+
+      this.form.mode_of_admission = "Referral";
+      this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
+      this.form.interviewed_by = this.userData ? this.userData.name : "";
+      this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : [];
+
+      if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
+      this.calculateAge();
+
+      if (this.form.psgc) {
+        this.province_name = this.form.psgc.province_name;
+        this.getCities();
+        this.city_name = this.form.psgc.city_name;
+        this.getBrgys();
+      }
+
     }
 
-    this.form.mode_of_admission = "Referral";
-    this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
-    this.form.interviewed_by = this.userData ? this.userData.name : "";
-    this.form.records = this.form.records ? JSON.parse(this.form.records) : [];
+  },
+  mounted() {
 
-    
-
+    this.populateForm(this.dialog_data);
     this.calculateAge();
-    // this.getAssistanceTypes();
-    this.getRegions();
     this.getCategories();
     this.getPayrolls();
-   
-    console.log("mounted");
-    console.log( this.form.records );
+
+
   },
 };
 </script>

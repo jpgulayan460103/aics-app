@@ -10,7 +10,7 @@
         </v-card-title>
         <v-card-text>
           <GISComponent :dialog_data="dialogData_edit" :getList="getList" :user-data="userData"
-            :set-dialog-create="setDialogCreate"></GISComponent>
+            :set-dialog-create="setDialogCreate" :provinces="provinces"></GISComponent>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -161,7 +161,8 @@ export default {
         { value: "actions", text: "Actions", width: '100px', },
       ],
       isExporting: false,
-      verifying: false
+      verifying: false,
+      provinces: [],
 
     };
   },
@@ -233,13 +234,19 @@ export default {
           })
 
 
-        }).catch(err => console.log(err))
+        }).catch(err =>{ console.log(err); this.verifying = false;})
 
 
 
-      }
+      }else{ this.verifying = false; }
 
     }, 500),
+    getProvinces() {
+      axios.get(route("api.psgc.show", "province")).then((response) => {
+        this.provinces = response.data;
+
+      });
+    },
   },
   watch: {
     dialog_create(newVal, oldVal) {
@@ -249,6 +256,7 @@ export default {
     }
   },
   mounted() {
+    this.getProvinces();
     this.getList();
   },
 };
