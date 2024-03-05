@@ -28,6 +28,7 @@ Route::group(['prefix' => '/aics'], function () {
     Route::resource('assistance-types-subcategory', \App\Http\Controllers\AicsTypeSubcategoryController::class);
     Route::get('assistance-types', [\App\Http\Controllers\AicsTypeController::class, 'index'])->name("api.aics.assistance-types");
     Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
+    Route::get('assistance-types/{id}/subcategories', [\App\Http\Controllers\AicsTypeController::class, 'subtypes'])->name("assistances.subtypes.show");
     Route::get('beneficiaries', [\App\Http\Controllers\AicsBeneficiaryController::class, 'index']);
     Route::get('clients', [\App\Http\Controllers\AicsClientController::class, 'index'])->name("api.clients");
     Route::post('clients', [\App\Http\Controllers\AicsClientController::class, 'client_upload'])->name("api.client.upload");

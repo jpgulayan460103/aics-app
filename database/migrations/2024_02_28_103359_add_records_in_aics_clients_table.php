@@ -15,6 +15,8 @@ class AddRecordsInAicsClientsTable extends Migration
     {
         Schema::table('aics_clients', function (Blueprint $table) {
             $table->json("records")->nullable();
+            $table->string("records_others")->nullable();
+            
         });
     }
 
@@ -27,6 +29,7 @@ class AddRecordsInAicsClientsTable extends Migration
     {
         Schema::table('aics_clients', function (Blueprint $table) {
             $table->dropColumn('records');
+            $table->dropColumn('records_others');
         });
     }
 }

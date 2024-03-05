@@ -49,6 +49,13 @@ class AicsTypeController extends Controller
         return AicsType::with('requirements')->findOrFail($id);
     }
 
+    public function subtypes(AicsType $aicsType, $id)
+    {
+        return AicsType::with('subtype')->findOrFail($id);
+    }
+
+    
+
     /**
      * Show the form for editing the specified resource.
      *

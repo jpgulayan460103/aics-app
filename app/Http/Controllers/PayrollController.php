@@ -24,7 +24,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        return Payroll::with("psgc")->get();
+        return Payroll::with("psgc", "aics_type:id,name", "aics_subtype:id,name")->get();
     }
 
     /**
@@ -33,35 +33,32 @@ class PayrollController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(request $request)
-    {   
+    {
 
         $validated = $request->validate([
+            'title' => 'required',
             'assistance_type' => 'required',
             'amount' => 'required|numeric',
-            'sdo'=>'required',
-            'psgc_id'=>'required|exists:psgcs,id',
-            'approved_by'=>'required',
-            'source_of_fund'=>'required',
-            'charging'=>'required',
-            'status'=>'required',
-            'schedule'=>'required|date',
-            'aics_type_subcategory_id'=>"required|exists:aics_type_subcategories,id"
+            'sdo' => 'required',
+            'psgc_id' => 'required|exists:psgcs,id',
+            'approved_by' => 'required',
+            'source_of_fund' => 'required',
+            'charging' => 'required',
+            'status' => 'required',
+            'schedule' => 'required|date',
+            'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
         ]);
 
-       
+
         try {
             $p = new Payroll;
-           
+
             $p->fill($request->toArray());
-          
-            $p->title = $request->assistance_type["name"];
-        
+            $p->title = $request->title;
             $p->aics_type_id  = $request->assistance_type["id"];
 
-           
-
             $res = $p->save();
-            
+
             if ($res) {
                 return ["Message" => "Saved"];
             } else {
@@ -127,18 +124,32 @@ class PayrollController extends Controller
      */
     public function update(Request $request, Payroll $payroll)
     {
+        $validated = $request->validate([
+            'title' => 'required',
+            'assistance_type' => 'required',
+            'amount' => 'required|numeric',
+            'sdo' => 'required',
+            'psgc_id' => 'required|exists:psgcs,id',
+            'approved_by' => 'required',
+            'source_of_fund' => 'required',
+            'charging' => 'required',
+            'status' => 'required',
+            'schedule' => 'required|date',
+            'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
+        ]);
+
         $payroll = Payroll::find($request->id);
         if ($payroll) {
             try {
 
                 $payroll->fill($request->toArray());
-                $payroll->title = $request->assistance_type["name"];        
+                $payroll->title = $request->title ? $request->title : $request->assistance_type["name"];
                 $payroll->aics_type_id  = $request->assistance_type["id"];
-    
+
                 $payroll->save();
                 return ["Message" => "saved"];
             } catch (Exception $e) {
-                return ["Message" => $e];
+                throw $e;
             }
         }
     }
@@ -306,6 +317,7 @@ class PayrollController extends Controller
     public function active_payrolls()
     {
         return Payroll::whereNull("status")
+            ->with("aics_type:id,name", "aics_subtype:id,name")
             ->orWhere("status", "active")
             ->get();
     }

@@ -8,24 +8,27 @@
             <form @submit.prevent="submit" enctype="multipart/form-data" action="">
 
               <v-row>
-                <v-col cols="12" md="6" sm="12">
-                  <!--<v-text-field v-model="formData.title" label="Title" outlined flat dense
-                    tile
-                    :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>-->
-                  <v-select v-model="formData.assistance_type" :items="assistance_types" label="Title/Assistance Type"
-                    outlined flat dense tile item-text="name" item-value="id" return-object
+                <v-col cols="12" sm="3">
+                  <v-text-field v-model="formData.title" label="Title (Optional)" outlined flat dense tile
+                    :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>
+                </v-col>
+
+                <v-col cols="12" md="3" sm="12">
+                  <v-select v-model="formData.assistance_type" :items="assistance_types" label="Assistance Requested"
+                    outlined flat dense tile item-text="name" item-value="id" return-object @change="getSubtypes"
                     :error-messages="validationErrors && validationErrors.assistance_type ? validationErrors.assistance_type[0] : ''">
                   </v-select>
                 </v-col>
                 <v-col cols="12" sm="3">
-                  <div v-if="formData.assistance_type && formData.assistance_type.subtype">
-                    <v-select v-model="formData.aics_type_subcategory_id" :items="formData.assistance_type.subtype" outlined flat dense 
-                      label="Subtype" item-text="name" item-value="id"></v-select>
+                  <div>
+                    <v-select v-model="formData.aics_type_subcategory_id" :items="subtypes" :loading="!subtypes" outlined
+                      flat dense label="Subtype" item-text="name" item-value="id"  
+                      :error-messages="validationErrors && validationErrors.aics_type_subcategory_id ? validationErrors.aics_type_subcategory_id[0] : ''"></v-select>
 
-                      
-                   
                   </div>
                 </v-col>
+
+
 
                 <v-col cols="12" sm="3">
 
@@ -39,75 +42,33 @@
 
               <div class="row mt-2">
                 <div class="col-md-3">
-                  <label>Region <small>(Ex. NCR)</small>
-                    <span color="red">*</span>
-                  </label>
-                  <select id="psgc_id" name="" v-model="region_selector" v-if="regions" class="form-control"
-                    @change="getPsgc">
-                    <option value=""></option>
-                    <option :value="e" v-for="(e, i) in regions" :key="i">
-                      {{ i }}
-                    </option>
-                  </select>
-
-
-
-                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                    {{ validationErrors.psgc_id[0] }}
-                  </div>
+                  <v-select label="Region" v-model="region" outlined dense :items="['XI']">
+                  </v-select>
                 </div>
 
                 <div class="col-md-3">
-                  <label>Province/District <small>(Ex. Dis. III)</small>
-                    <span color="red">*</span>
-                  </label>
-                  <select id="psgc_id" name="" v-model="province_selector" v-if="provinces" class="form-control">
-                    <option :value="e" v-for="(e, i) in provinces" :key="i">
-                      {{ i }}
-                    </option>
-                  </select>
-
-                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                    {{ validationErrors.psgc_id[0] }}
-                  </div>
+                  <v-autocomplete v-model="province_name" :loading="psgc_loading" :items="provinces" @change="getCities()"
+                    cache-items hide-no-data hide-details label="Province" outlined item-text="province_name"
+                    item-value="id" dense></v-autocomplete>
                 </div>
 
                 <div class="col-md-3">
-                  <label>
-                    City/Municipality <small>(Ex. Quezon City)</small>
-                    <span color="red">*</span>
-                  </label>
-
-                  <select name="" v-model="city_selector" v-if="cities" class="form-control">
-                    <option :value="e" v-for="(e, i) in cities" :key="i">
-                      {{ i }}
-                    </option>
-                  </select>
-
-                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                    {{ validationErrors.psgc_id[0] }}
-                  </div>
+                  <v-autocomplete v-model="city_name" :disabled="!cities" :loading="psgc_loading" :items="cities"
+                    @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined
+                    item-text="city_name" item-value="id" dense></v-autocomplete>
                 </div>
 
                 <div class="col-md-3">
-                  <label>Barangay
-                    <small>(Ex. Batasan Hills)</small>
-                    <span color="red">*</span>
-                  </label>
-                  <select id="psgc_id" name="" v-model="formData.psgc_id" v-if="cities" class="form-control">
-                    <option :value="e[0].id" v-for="(e, i) in barangays" :key="i">
-                      {{ i }}
-                    </option>
-                  </select>
+                  <v-autocomplete v-model="formData.psgc_id" :disabled="!brgys" :loading="psgc_loading" :items="brgys"
+                    hide-no-data hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
+                    :error-messages="validationErrors && validationErrors.psgc_id ? validationErrors.psgc_id[0] : ''"
+                    required></v-autocomplete>
 
-                  <div v-if="validationErrors && validationErrors.psgc_id" style="color: red">
-                    {{ validationErrors.psgc_id[0] }}
-                  </div>
+
                 </div>
               </div>
 
               <v-row class="py-0">
-
                 <v-col cols="12" md="3" sm="12" xs="12">
                   <v-text-field v-model="formData.amount" label="Amount" outlined dense flat tile
                     :error-messages="validationErrors && validationErrors.amount ? validationErrors.amount[0] : ''"></v-text-field>
@@ -166,16 +127,11 @@
         <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
           loading-text="Loading... Please wait" :search="search">
           <template v-slot:item.province="{ item }">
-            {{ item.psgc.province_name }}
+            <small> {{ item.psgc.brgy_name }},
+              {{ item.psgc.city_name }},
+              {{ item.psgc.province_name }}</small>
           </template>
 
-          <template v-slot:item.muni_city="{ item }">
-            {{ item.psgc.city_name }}
-          </template>
-
-          <template v-slot:item.barangay="{ item }">
-            {{ item.psgc.brgy_name }}
-          </template>
 
           <template v-slot:item.actions="{ item }">
 
@@ -234,7 +190,7 @@
 </template>
 
 <script>
-import { debounce } from "lodash";
+import { debounce, cloneDeep } from "lodash";
 import userMixin from './../Mixin/userMixin.js'
 import authMixin from './../Mixin/authMixin.js'
 
@@ -254,14 +210,12 @@ export default {
       isBusy: false,
       headers: [
         { value: "schedule", text: "Schedule", sortable: true },
-
         { value: "title", text: "Title", sortable: true },
+        { value: "aics_type.name", text: "Assistance Requested", sortable: true },
+        { value: "aics_subtype.name", text: "For", sortable: true },
         { value: "sdo", text: "SDO", sortable: true },
-
-        { value: "province", text: "Province", sortable: true },
-        { value: "muni_city", text: "City/Municipality", sortable: true },
-        { value: "barangay", text: "Barangay", sortable: true },
-
+        { value: "charging", text: "Charging", sortable: true },
+        { value: "province", text: "Venue", sortable: true },
         { value: "amount", text: "AMOUNT", sortable: true },
         { value: "status", text: "STATUS", sortable: true },
         { value: "actions", text: "Actions", sortable: true },
@@ -286,6 +240,13 @@ export default {
       ],
       validationErrors: null,
       assistance_types: [],
+      region: "XI",
+      province_name: "",
+      city_name: "",
+      cities: [],
+      brgys: [],
+      psgc_loading: false,
+      subtypes: [],
     };
   },
   watch: {
@@ -304,15 +265,15 @@ export default {
         (this.barangays = this.groupByKey(newVal, "brgy_name"));
     },
 
-    "formData.assistance_type"(newVal, oldVal) {
-       if (newVal && newVal.subtype && newVal.subtype.length > 0) {
-        console.log( newVal.subtype[0].id);
+    /*"formData.assistance_type"(newVal, oldVal) {
+      if (newVal && newVal.subtype && newVal.subtype.length > 0) {
         this.formData.aics_type_subcategory_id = newVal.subtype[0].id;
+        this.formData.title = newVal.name;
       }
-    }
+    }*/
 
-    
-                      
+
+
 
   },
   methods: {
@@ -324,6 +285,7 @@ export default {
           .then((response) => {
             //console.log(response.data);
             this.isBusy = false;
+            alert(response.data.Message);
             this.getPayrolls();
             this.openModal = false;
           })
@@ -368,12 +330,44 @@ export default {
         title: "",
         source_of_fund: "AICS FUND " + new Date().getFullYear()
       };
+      this.province_name = "";
+      this.city_name = "";
+      this.validationErrors = null;
+      this.subtypes = [];
       this.openModal = true;
     },
     EditItem(e) {
-      this.formData = {};
-      this.formData = e;
+      this.formData = {
+        assistance_type: { id: null }
+      };
+      this.validationErrors = null;
+      this.subtypes = [];
+      this.formData = cloneDeep(e);
+      console.log(e);
       this.openModal = true;
+
+
+      if (this.formData.psgc) {
+        this.province_name = this.formData.psgc.province_name;
+        this.getCities();
+        this.city_name = this.formData.psgc.city_name;
+        this.getBrgys();
+
+      }
+
+      if (this.formData.aics_type_id) {
+        this.formData.assistance_type = this.assistance_types.find(type => {
+          return type.id === this.formData.aics_type_id
+        });
+
+        this.getSubtypes();
+
+
+      }
+
+
+
+
     },
     DeleteItem(e) {
       let x = confirm("Delete this Payroll?");
@@ -439,16 +433,45 @@ export default {
         this.assistance_types = response.data;
       });
     },
+    getProvinces() {
+      axios.get(route("api.psgc.show", "province")).then((response) => {
+        this.provinces = response.data;
+
+      });
+    },
+    getCities() {
+      this.cities = [];
+      this.brgys = [];
+      this.psgc_loading = true;
+      axios.get(route("api.psgc.show", { type: "cities", field: "province_name", value: this.province_name })).then(response => {
+        this.cities = response.data;
+        this.psgc_loading = false;
+      }).catch(error => { console.log(error); this.psgc_loading = false; });
+    },
+    getBrgys() {
+      this.loading = true;
+      let fields = [{ field: "city_name", value: this.city_name }, { field: "province_name", value: this.province_name, }];
+
+      axios.get(route("api.psgc.show", { type: "brgy", fields })).then(response => {
+        this.brgys = response.data;
+        this.loading = false;
+      }).catch(error => { console.log(error); this.loading = false; });
+
+    },
+    getSubtypes() {
+       this.loading = true;
+      axios.get(route("assistances.subtypes.show", { id: this.formData.assistance_type.id })).then(response => {
+        this.subtypes = response.data.subtype;
+      }).catch(error => { console.log(error); this.loading = false; })
+    }
 
 
   },
   mounted() {
+    this.getProvinces();
     this.getAssistanceTypes();
     this.getPayrolls();
-    axios.get(route("api.psgc.show", "region")).then((response) => {
-      console.log(response.data);
-      this.regions = this.groupByKey(response.data, "region_name");
-    });
+
   },
 };
 </script>

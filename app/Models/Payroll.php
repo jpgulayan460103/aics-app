@@ -24,5 +24,16 @@ class Payroll extends Model
     }
     
 
+    public function aics_type()
+    {
+        return $this->belongsTo(AicsType::class);
+    }
+
+    public function aics_subtype()
+    {
+        return $this->belongsTo(AicsTypeSubcategory::class, "aics_type_subcategory_id" );
+    }
+
+
    
 }

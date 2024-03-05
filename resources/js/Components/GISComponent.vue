@@ -440,12 +440,17 @@
           <div class="card-title"> Records on File </div>
           <div class="card-body">
             <v-row no-gutters dense>
-
               <v-col dense v-for="(record, index) in record_opts" :key="index" cols="12" sm="6" md="4" lg="3">
                 <v-checkbox v-model="form.records" :label="record" :value="record" dense
                   class="shrink mr-0 mt-0"></v-checkbox>
               </v-col>
+              <v-col xs="12" sm="5" md="3" lg="3">
+                <v-text-field outlined dense class="rounded-0" v-model="form.records_others"
+                  v-if="form.records && form.records.includes('Others')" label="Others"></v-text-field>
+              </v-col>
             </v-row>
+
+
           </div>
         </div>
         <br />
@@ -485,7 +490,6 @@
 
 
               <div v-if="payrolls.length > 0">
-
                 <v-select v-model="form.payroll_id"
                   :disabled="dialog_data.payroll_client && dialog_data.payroll_client.status != 'cancelled-revalidate'"
                   :items="payrolls" label="Payroll" outlined dense item-text="title" item-value="id">
@@ -494,32 +498,21 @@
                       <v-list-item-title>{{ item.title }}</v-list-item-title>
                       <v-list-item-subtitle>
                         Amount: Php.{{ item.amount }} | Schedule: {{ item.schedule }}
+                        <span v-if="item.aics_type">
+                          | Assistance Requested: {{ item.aics_type.name }}
+                        </span>
+                        <span v-if="item.aics_subtype"> for {{ item.aics_subtype.name }} </span>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
                 </v-select>
-
-
-
-                <!--<select name="" id="" v-model="form.payroll_id" class="form-control"
-                  :disabled="dialog_data.payroll_client && dialog_data.payroll_client.status != 'cancelled-revalidate'">
-
-                  <option v-for="(p, i) in payrolls" :key="i" :value="p.id">
-                    {{ p.title }} - [Amount:Php.{{ p.amount }} | Schedule: {{ p.schedule }}]
-                  </option>
-                </select>-->
               </div>
               <div v-else>
                 NO ACTIVE PAYROLLS
               </div>
-
             </div>
-
           </div>
         </div>
-
-
-
         <div class=" row justify-center " style="padding: 10px 0px">
           <v-col>
             <v-btn color="red" dark large @click="isVerified(form.id, 'grievance', form)">
@@ -531,10 +524,6 @@
               SUBMIT
             </v-btn>
           </v-col>
-
-
-
-
 
         </div>
       </div>
@@ -559,27 +548,12 @@ export default {
   data() {
     return {
       form: {
-
         mode_of_admission: "Referral",
         assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention."
       },
       assistance_types: {},
       psgc: {},
       regions: {},
-      /*client_provinces: {},
-      client_cities: {},
-      client_barangays: {},
-      client_region_selector: {},
-      client_province_selector: {},
-      client_city_selector: {},*/
-      beneficiary_provinces: {},
-      beneficiary_cities: {},
-      beneficiary_barangays: {},
-      beneficiary_region_selector: {},
-      beneficiary_province_selector: {},
-      beneficiary_city_selector: {},
-      is_beneficiary: true,
-      requirements: {},
       errors: {},
       validationErrors: {
         client: {},
@@ -626,12 +600,15 @@ export default {
         this.form.subcategory_others = "";
       }
     },
-
-
     dialog_data(e) {
       this.resetForm();
       this.populateForm(e);
-    },    
+    },
+    "form.records": function (newVal, oldVal) {
+      if (!newVal.includes("Others")) {
+        this.form.records_others = "";
+      }
+    },
 
   },
 
@@ -677,48 +654,6 @@ export default {
       this.province_name = "";
       this.city_name = "";
     },
-
-    /*getBeneficiaryPsgc() {
-      axios
-        .get(route("api.psgc.show", "brgy"), {
-          params: {
-            field: "region_psgc",
-            value: this.beneficiary_region_selector[0].region_psgc,
-          },
-        })
-        .then((response) => {
-          this.beneficiary_psgc = response.data;
-          this.beneficiary_provinces = this.groupByKey(
-            this.beneficiary_psgc,
-            "province_name"
-          );
-
-          if (this.dialog_data.psgc) {
-            this.beneficiary_province_selector =
-              this.beneficiary_provinces[this.dialog_data.psgc.province_name];
-            this.beneficiary_city_selector =
-              this.beneficiary_cities[this.dialog_data.psgc.city_name];
-          }
-        });
-    },*/
-
-    getClientPsgc() {
-      axios
-        .get(route("api.psgc.show", "brgy"), {
-          params: {
-            field: "region_psgc",
-            value: this.client_region_selector[0].region_psgc,
-          },
-        })
-        .then((response) => {
-          this.client_psgc = response.data;
-          this.client_provinces = this.groupByKey(
-            this.client_psgc,
-            "province_name"
-          );
-        });
-    },
-
     calculateAge: function () {
       if (!this.form.birth_date) {
         this.form.age = 0;
@@ -731,18 +666,6 @@ export default {
       }
     },
 
-    groupByKey(array, key) {
-
-      if (Array.isArray(array)) {
-        return array.reduce((hash, obj) => {
-          if (obj[key] === undefined) return hash;
-          return Object.assign(hash, {
-            [obj[key]]: (hash[obj[key]] || []).concat(obj),
-          });
-        }, {});
-      }
-    },
-
     isEmpty(value) {
       return _.isEmpty(value);
     },
@@ -752,16 +675,7 @@ export default {
         this.assistance_types = response.data;
       });
     },
-    /*getRegions() {
-      axios.get(route("api.psgc.show", "region")).then((response) => {
-        this.regions = this.groupByKey(response.data, "region_name");
-        if (this.dialog_data.psgc) {
-          this.beneficiary_region_selector =
-            this.regions[this.dialog_data.psgc.region_name];
-          this.getBeneficiaryPsgc();
-        }
-      });
-    },*/
+
     getCategories() {
       axios.get(route("api.categories")).then((response) => {
         this.categories = response.data.categories;
