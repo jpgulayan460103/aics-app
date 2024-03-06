@@ -145,6 +145,11 @@
 </head>
 
 @foreach ($aics_beneficiaries as $aics_beneficiary)
+    @php
+        $my_records = [];
+        $my_records = json_decode($aics_beneficiary['records']);
+
+    @endphp
 
     <body>
 
@@ -217,7 +222,7 @@
                 </tr>
             </table>
 
-            <br><br>
+            <br>
 
             <table class="table " cellpadding=0 cellspacing=0>
                 <tr>
@@ -278,42 +283,46 @@
                     <td class="underlined"><b>Buong Pangalan ng Benepisyaryo</b> <i>(Name of the Beneficiary)</i></td>
                 </tr>
             </table>
-<br>
+            <br>
             <table class="table" style=" border:solid #000 1px;" cellpadding=0 cellspacing=0>
                 <thead>
                     <tr>
-                        <td class="text-center" style=" background:#dedede; font-size:8pt; border:solid #000 1px;"
-                            colspan="4">
+                        <td class="text-center" style=" background:#dedede; font-size:8pt; border:solid #000 1px;">
                             <b>Records of the case such as the following are confidentially filed at the Crisis
                                 Intervention
-                                Division (CID)</b>
+                                Division (CID) </b>
+
                         </td>
                     </tr>
                 </thead>
                 <tbody>
-
-                    @foreach ($record_options as $index => $record_option)
-                        @if ($index % 4 == 0)
-                            </tr>
-                            <tr>
-                        @endif
+                    <tr>
                         <td style="font-size:8pt; ">
-                            @if ($index != 8)
-                                <input type="checkbox" name="" id="">
-                            @endif
-                            {{ $record_option }}
 
+                            @foreach ($record_options as $index => $record_option)
+                                <div style="width:24% ; display:inline-block; border-solid:1px red solid;">
+                                    @if ($index != 8)
+                                        <input type="checkbox" name="" id=""
+                                            @if ($my_records && in_array($record_option, $my_records)) checked @endif>
+                                        {{ $record_option }}
+                                    @elseif (isset($aics_beneficiary['valid_id_presented']))
+                                        <span
+                                            style="text-decoration:underline;">{{ $aics_beneficiary['valid_id_presented'] }}</span>
+                                    @endif
+                                </div>
+                            @endforeach
+                            {{ $aics_beneficiary['records_others'] }}
                         </td>
-                    @endforeach
-                    <td></td>
                     </tr>
+
 
                 </tbody>
             </table>
 
             <p class="text-center" style="line-height:1.2em">
-                The Client is hereby recommended to receive <span class="underline">
-                    {{ $aics_beneficiary['aics_type']['name'] }} </span> <br>
+                The Client is hereby recommended to receive
+                <span class="underline"> {{ $assistance_type }} </span> for
+                <span class="underline"> {{ $assistance_type_subcategory }} </span> <br>
                 in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
                     ONLY</span>
                 Php. <span class="underline"> {{ number_format($amount, 2) }}</span>
@@ -362,7 +371,7 @@
                     </tr>
                 </tbody>
             </table>
-            <br><br>
+            <br>
         @endfor
         </div>
 
@@ -420,7 +429,7 @@
                         </tr>
                         <tr>
 @endif
-<td style="font-size:8pt; "><input type="checkbox" name="" id="">{{ $options }}
+<td style="font-size:8pt; "><input type="checkbox" name="" id="" @if(  strtolower($options) == strtolower($assistance_type) ) checked @endif>{{ $options }}
 </td>
 @endforeach
 </tr>

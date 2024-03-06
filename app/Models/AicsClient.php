@@ -55,7 +55,8 @@ class AicsClient extends Model
         'meta_full_name',
         'full_name',
         'valid_id_presented',
-        'records'
+        'records',
+        'records_others'
     ];
 
     public $appends = ['name'];

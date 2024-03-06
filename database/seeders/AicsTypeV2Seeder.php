@@ -36,7 +36,7 @@ class AicsTypeV2Seeder extends Seeder
             "Subtype" => array("Locally stranded individuals (LSI)", "Repatriates")
         ),
         array(
-            "Type" => "Educational Assistance",
+            "Type" => "Education Assistance",
             "Subtype" => array("Tuition Fee", "Other School Needs")
         ),
         array(

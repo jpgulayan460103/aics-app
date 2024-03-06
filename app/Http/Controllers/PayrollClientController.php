@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AicsClient;
+use App\Models\AicsType;
 use App\Models\Payroll;
 use App\Models\PayrollClient;
 use Illuminate\Http\Request;
@@ -149,7 +150,7 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::findOrFail($id);
+        $payroll = Payroll::with("aics_type","aics_subtype")->findOrFail($id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
         $record_options = [
@@ -183,8 +184,8 @@ class PayrollClientController extends Controller
             "Cash Assistance for Support Services"
         ];
 
-
-
+        $assistance_types =  AicsType::all()->pluck("name");
+      
         if ($client) {
             $pdf = Pdf::loadView(
                 'pdf.coe_batch',
@@ -196,6 +197,8 @@ class PayrollClientController extends Controller
                     "amount" => $payroll->amount,
                     "record_options" => $record_options,
                     "cav_assistance_options" => $cav_assistance_options,
+                    "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
+                    "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
                 ]
             );
             return $pdf->stream('coe.pdf');
