@@ -300,7 +300,7 @@
                         <td style="font-size:8pt; ">
 
                             @foreach ($record_options as $index => $record_option)
-                                <div style="width:24% ; display:inline-block; border-solid:1px red solid;">
+                                <div style="width:24% ; display:inline-block;">
                                     @if ($index != 8)
                                         <input type="checkbox" name="" id=""
                                             @if ($my_records && in_array($record_option, $my_records)) checked @endif>
@@ -424,111 +424,113 @@
                 <td colspan="3">
                     <table cellpadding=0 cellspacing=0>
                         <tr>
-                            @foreach ($cav_assistance_options as $i => $options)
-                                @if ($i % 3 == 0)
+                            <td style="font-size: 8pt;">
+                                @foreach ($assistance_options as $options)
+                                    <div style="width:30%; display:inline-block;">
+                                        <input type="checkbox" name="" id=""
+                                            @if (strtolower($options) == strtolower($assistance_type)) checked @endif>{{ $options }}
+                                    </div>
+                                @endforeach
+                            </td>
                         </tr>
-                        <tr>
-@endif
-<td style="font-size:8pt; "><input type="checkbox" name="" id="" @if(  strtolower($options) == strtolower($assistance_type) ) checked @endif>{{ $options }}
-</td>
-@endforeach
-</tr>
-</table>
-</td>
-</tr>
 
-</tr>
+                    </table>
+                </td>
+            </tr>
 
-</table>
+            </tr>
+
+        </table>
 
 
 
-<table class="table  text-center" style="table-layout: fixed; font-size:8pt " cellpadding=0 cellspacing=1>
-    <tbody>
-        <tr>
-            <td style="text-align: left; font-size:8pt;"><b>Tinangap ni:</b><br></td>
-            <td style="text-align: left;font-size:8pt; "><b>Binayaran ni:</b><br></td>
-            <td style="text-align: left; font-size:8pt; "><b>Sinaksihan ni:</b><br></td>
-        </tr>
-        <tr>
-            <td style="padding-top:10px; ">
-                <div class="sig" style="font-size:8pt;">
-                    {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
-                </div>
-            </td>
-            <td style="font-size:8pt; padding-top:10px; ">
-                {{ $SDO }}
-            </td>
-            <td style="font-size:8pt; padding-top:10px; ">
+        <table class="table  text-center" style="table-layout: fixed; font-size:8pt " cellpadding=0 cellspacing=1>
+            <tbody>
+                <tr>
+                    <td style="text-align: left; font-size:8pt;"><b>Tinangap ni:</b><br></td>
+                    <td style="text-align: left;font-size:8pt; "><b>Binayaran ni:</b><br></td>
+                    <td style="text-align: left; font-size:8pt; "><b>Sinaksihan ni:</b><br></td>
+                </tr>
+                <tr>
+                    <td style="padding-top:10px; ">
+                        <div class="sig" style="font-size:8pt;">
+                            {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
+                        </div>
+                    </td>
+                    <td style="font-size:8pt; padding-top:10px; ">
+                        {{ $SDO }}
+                    </td>
+                    <td style="font-size:8pt; padding-top:10px; ">
 
-            </td>
-        </tr>
-        <tr style="line-height: 1em; font-size:8pt ">
+                    </td>
+                </tr>
+                <tr style="line-height: 1em; font-size:8pt ">
 
-            <td style="border-top:solid 1px; font-size:8pt; ">
-                <b>Beneficiary/Representative</b><br>
-                <i style="font-size: 6pt;">
-                    (Signature Over Printed Name)
-                </i>
-            </td>
+                    <td style="border-top:solid 1px; font-size:8pt; ">
+                        <b>Beneficiary/Representative</b><br>
+                        <i style="font-size: 6pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
 
-            <td style="border-top:solid 1px; font-size:8pt;">
-                <b>RDO/SDO</b><br>
-                <i style="font-size: 6pt;">
-                    (Signature Over Printed Name)
-                </i>
-            </td>
+                    <td style="border-top:solid 1px; font-size:8pt;">
+                        <b>RDO/SDO</b><br>
+                        <i style="font-size: 6pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
 
-            <td style="border-top:solid 1px; font-size:8pt;">
-                <b>Approving Authority</b><br>
-                <i style="font-size: 6pt;">
-                    (Signature Over Printed Name)
-                </i>
-            </td>
-        </tr>
-        <tr>
-            <td style="font-size: 6pt; text-align: center; border-bottom: 1px solid #000"></td>
-            <td style="font-size: 6pt; text-align: center; border-bottom: 1px solid #000"> Page 1 of 1 </td>
-            <td style="font-size: 6pt;text-align: right; border-bottom: 1px solid #000"><small>*E.O 163 series
-                    2022</small></td>
-        </tr>
-        <tr>
+                    <td style="border-top:solid 1px; font-size:8pt;">
+                        <b>Approving Authority</b><br>
+                        <i style="font-size: 6pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 6pt; text-align: center; border-bottom: 1px solid #000"></td>
+                    <td style="font-size: 6pt; text-align: center; border-bottom: 1px solid #000"> Page 1 of 1 </td>
+                    <td style="font-size: 6pt;text-align: right; border-bottom: 1px solid #000"><small>*E.O 163 series
+                            2022</small></td>
+                </tr>
+                <tr>
 
-            <td style="font-size: 6pt; font-family: 'Times New Roman', Times, serif " colspan="3">DSWD Field Office
-                XI, Ramon Magsaysay Avenue Corner Damaso Suazo Street, Davao City<br>
-                Email: fo11@dswd.gov.ph Tel. No. (082) 227-1964 Website: http://www.dswd.gov.ph
-                <img src='{{ public_path('images/ISO-INSIGNIA.png') }}'
-                    style="margin-top:-10px; width: auto; height:30px; text-align:right !important; float:right;">
-            </td>
+                    <td style="font-size: 6pt; font-family: 'Times New Roman', Times, serif " colspan="3">DSWD
+                        Field Office
+                        XI, Ramon Magsaysay Avenue Corner Damaso Suazo Street, Davao City<br>
+                        Email: fo11@dswd.gov.ph Tel. No. (082) 227-1964 Website: http://www.dswd.gov.ph
+                        <img src='{{ public_path('images/ISO-INSIGNIA.png') }}'
+                            style="margin-top:-10px; width: auto; height:30px; text-align:right !important; float:right;">
+                    </td>
 
-        </tr>
+                </tr>
 
-    </tbody>
-</table>
-
-
-<table class="table footer-ds" cellpadding=0 cellspacing=0 style="font-size: 6pt;">
-    <tr>
+            </tbody>
+        </table>
 
 
-    </tr>
-    <tr>
-        <td style="font-size: 6pt;">
-        </td>
-        <td>
+        <table class="table footer-ds" cellpadding=0 cellspacing=0 style="font-size: 6pt;">
+            <tr>
 
-        </td>
-    </tr>
-</table>
+
+            </tr>
+            <tr>
+                <td style="font-size: 6pt;">
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
 
 
 
 
-<!--END -->
+        <!--END -->
 
 
 
-</body>
+    </body>
 @endforeach
 
 </html>

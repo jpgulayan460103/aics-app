@@ -150,7 +150,7 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::with("aics_type","aics_subtype")->findOrFail($id);
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
         $record_options = [
@@ -175,7 +175,7 @@ class PayrollClientController extends Controller
             "Death Certificate",
         ];
 
-        $cav_assistance_options = [
+        $assistance_options = [
             "Medical Assistance",
             "Transportation Assistance",
             "Food Assistance",
@@ -184,8 +184,8 @@ class PayrollClientController extends Controller
             "Cash Assistance for Support Services"
         ];
 
-        $assistance_types =  AicsType::all()->pluck("name");
-      
+       # $assistance_options =  AicsType::all()->pluck("name");
+
         if ($client) {
             $pdf = Pdf::loadView(
                 'pdf.coe_batch',
@@ -196,7 +196,8 @@ class PayrollClientController extends Controller
                     "approved_by" => $payroll->approved_by,
                     "amount" => $payroll->amount,
                     "record_options" => $record_options,
-                    "cav_assistance_options" => $cav_assistance_options,
+                    # "cav_assistance_options" => $cav_assistance_options,
+                    "assistance_options" => $assistance_options,
                     "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
                     "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
                 ]

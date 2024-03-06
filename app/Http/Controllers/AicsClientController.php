@@ -269,7 +269,7 @@ class AicsClientController extends Controller
 
     public function batchCoe(Request $request, $payroll_id)
     {
-        
+
         $client =  AicsClient::with([
             "psgc",
             "aics_type",
@@ -286,7 +286,7 @@ class AicsClientController extends Controller
             ->get();
 
         $payroll = Payroll::findOrFail($payroll_id);
-    
+
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
         $record_options = [
@@ -311,7 +311,7 @@ class AicsClientController extends Controller
             "Death Certificate",
         ];
 
-        $cav_assistance_options = [
+        $assistance_options = [
             "Medical Assistance",
             "Transportation Assistance",
             "Food Assistance",
@@ -320,7 +320,8 @@ class AicsClientController extends Controller
             "Cash Assistance for Support Services"
         ];
 
-      
+       # $assistance_options =  AicsType::all()->pluck("name");
+
         if ($client) {
             $pdf = Pdf::loadView(
                 'pdf.coe_batch',
@@ -331,9 +332,11 @@ class AicsClientController extends Controller
                     "approved_by" => $payroll->approved_by,
                     "amount" => $payroll->amount,
                     "record_options" => $record_options,
-                    "cav_assistance_options" => $cav_assistance_options,
+                    # "cav_assistance_options" => $cav_assistance_options,
+                    "assistance_options" => $assistance_options,
                     "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
                     "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
+
                 ]
             );
             return $pdf->stream('coe.pdf');

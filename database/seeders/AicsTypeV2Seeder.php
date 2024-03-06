@@ -14,10 +14,7 @@ class AicsTypeV2Seeder extends Seeder
      * @return void
      */
     public function run()
-    {
-      
-       #$types = ["Medical Assistance", "Funeral Assistance", "Food Assistance", "Transporation Assistance", "Educational Assistance", "Other Cash Assistance"];
-       
+    {  
        $types = array(
         array(
             "Type" => "Medical Assistance",
