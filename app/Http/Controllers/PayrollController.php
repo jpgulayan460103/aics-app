@@ -35,19 +35,25 @@ class PayrollController extends Controller
     public function create(request $request)
     {
 
-        $validated = $request->validate([
-            'title' => 'required',
-            'assistance_type' => 'required',
-            'amount' => 'required|numeric',
-            'sdo' => 'required',
-            'psgc_id' => 'required|exists:psgcs,id',
-            'approved_by' => 'required',
-            'source_of_fund' => 'required',
-            'charging' => 'required',
-            'status' => 'required',
-            'schedule' => 'required|date',
-            'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => 'required',
+                'assistance_type' => 'required',
+                'amount' => 'required|numeric',
+                'sdo' => 'required',
+                'psgc_id' => 'required|exists:psgcs,id',
+                'approved_by' => 'required',
+                'source_of_fund' => 'required',
+                'charging' => 'required',
+                'status' => 'required',
+                'schedule' => 'required|date',
+                'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
+            ],
+            [
+                'aics_type_subcategory_id.required' => "Subtype is required"
+
+            ]
+        );
 
 
         try {
@@ -136,6 +142,9 @@ class PayrollController extends Controller
             'status' => 'required',
             'schedule' => 'required|date',
             'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
+        ],[
+            'aics_type_subcategory_id.required' => "Subtype is required"
+
         ]);
 
         $payroll = Payroll::find($request->id);
