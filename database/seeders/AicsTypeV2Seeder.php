@@ -29,7 +29,7 @@ class AicsTypeV2Seeder extends Seeder
             "Subtype" => array("Daily Consumption and Other Needs")
         ),
         array(
-            "Type" => "Transporation Assistance",
+            "Type" => "Transportation Assistance",
             "Subtype" => array("Locally stranded individuals (LSI)", "Repatriates")
         ),
         array(

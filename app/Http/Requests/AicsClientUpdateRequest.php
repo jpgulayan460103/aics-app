@@ -36,7 +36,17 @@ class AicsClientUpdateRequest extends FormRequest
             'civil_status' => ['required'],
             'birth_date' => ['required', 'date'],
             'age' => ['required', 'numeric','min:18', 'max:120'],
-            'mobile_number' => [new ValidCellphoneNumber]
+            'mobile_number' => [new ValidCellphoneNumber],
+            'valid_id_presented' => ['required'],
+            'records' => 'required|array|min:1',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'records.required' => 'Please select at least one record.',           
+        ];
+    }
+
 }
