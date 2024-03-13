@@ -87,6 +87,13 @@
             <img src="{{ public_path('images/gis-2024-2.jpg') }}" style="width: 95%;">
         </div>
 
+         <div class="data-textbox" style=" font-weight:bold; text-align:center;top:92pt;right:200pt; ">
+           <!--OFFSITE--> <input type="radio" checked name="" id="">
+        </div>
+
+        <div class="data-textbox" style=" font-weight:bold; text-align:center;top:92pt;right:260pt; ">
+            <!--Referral--> <input type="checkbox" checked name="" id="">
+         </div>
 
         <div class="data-textbox" style=" font-weight:bold; text-align:center;top:85pt;left:90pt; ">
             {{ $aics_beneficiary['payroll_client']['sequence'] }}
