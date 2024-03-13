@@ -402,6 +402,11 @@
                   </option>
                 </select>
 
+                <div v-if="validationErrors && validationErrors.category_id" style="color: red">
+                    {{ validationErrors.category_id[0] }}
+                  </div>
+                
+
                 Specific Subcategory
 
                 <select v-model="form.subcategory_id" class="form-control">
@@ -410,6 +415,10 @@
                     {{ e.subcategory }}
                   </option>
                 </select>
+
+                <div v-if="validationErrors && validationErrors.subcategory_id" style="color: red">
+                    {{ validationErrors.subcategory_id[0] }}
+                  </div>
 
                 <div class="" v-if="form.subcategory_id == 8">
                   Others

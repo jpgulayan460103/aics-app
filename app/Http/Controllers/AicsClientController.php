@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Imports\ClientsImport;
 use App\Models\AicsType;
+use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\DirtyList;
+use App\Models\Subcategory;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
@@ -261,8 +263,24 @@ class AicsClientController extends Controller
                 $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $payroll_id);
             })
             ->get();
+
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($payroll_id);
+        $categories  = Category::all()->pluck("category");
+        $subcategories  = Subcategory::all()->pluck("subcategory");
+        $assistance_options = AicsType::all()->pluck("name")->map(function ($e) {
+            $x = explode(" ", $e);
+            return $x[0];
+        });
+
         if ($client) {
-            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $client->toArray()]);
+            $pdf = Pdf::loadView('pdf.gis_many', [
+                "aics_beneficiaries" =>  $client->toArray(),  
+                "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
+                "approved_by" => $payroll->approved_by,
+                "categories" =>  $categories,
+                "subcategories" =>  $subcategories,
+                "assistance_options" => $assistance_options,
+            ]);
             return $pdf->stream('gis.pdf');
         }
     }
@@ -320,7 +338,7 @@ class AicsClientController extends Controller
             "Cash Assistance for Support Services"
         ];
 
-       # $assistance_options =  AicsType::all()->pluck("name");
+        # $assistance_options =  AicsType::all()->pluck("name");
 
         if ($client) {
             $pdf = Pdf::loadView(

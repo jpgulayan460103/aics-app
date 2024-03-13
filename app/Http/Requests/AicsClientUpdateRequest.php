@@ -39,6 +39,8 @@ class AicsClientUpdateRequest extends FormRequest
             'mobile_number' => [new ValidCellphoneNumber],
             'valid_id_presented' => ['required'],
             'records' => 'required|array|min:1',
+            'category_id' => 'required',
+            'subcategory_id'=> 'required'
         ];
     }
 
@@ -46,6 +48,8 @@ class AicsClientUpdateRequest extends FormRequest
     {
         return [
             'records.required' => 'Please select at least one record.',           
+            'category_id.required' => 'Please select category.',           
+            'subcategory_id.required' => 'Please select subcategory.',           
         ];
     }
 

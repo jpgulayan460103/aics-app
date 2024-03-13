@@ -7,6 +7,13 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Updated Payroll, GIS and COE
+
+- Updated forms based on DSWD-PMB-GF-013 | REV 02 | 08 JAN 2024
+- Select Assistance is moved under Create New Payroll
+- Requires Migration & Seeding
+- Seed: AicsTypeV2Seeder, SubSubcategoriesV2Seeder, CategoriesV2Seeder
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
