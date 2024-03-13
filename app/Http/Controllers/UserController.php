@@ -15,10 +15,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        return [
+        /*return [
             'users' => User::with([
                 'roles'
             ])->get()
+        ];*/
+
+        return [
+            'users'=>User::whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'Super-Admin')
+                ->where('name', 'super-admin');
+            })->with('roles')->get()
         ];
     }
 
