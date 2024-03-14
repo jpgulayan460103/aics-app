@@ -24,8 +24,8 @@ class AicsClientUpdateRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
+    {   
+        $rules =  [
             'aics_type_id' => ['required', 'exists:aics_types,id'],
             'last_name' => ['required', 'string', 'max:200', new AllowedStringName],
             'first_name' => ['required', 'string', 'max:200', new AllowedStringName],
@@ -36,7 +36,28 @@ class AicsClientUpdateRequest extends FormRequest
             'civil_status' => ['required'],
             'birth_date' => ['required', 'date'],
             'age' => ['required', 'numeric','min:18', 'max:120'],
-            'mobile_number' => [new ValidCellphoneNumber]
+            'mobile_number' => [new ValidCellphoneNumber],
+            'valid_id_presented' => ['required'],
+            'records' => 'required|array|min:1',
+            'category_id' => 'required',
+            'subcategory_id'=> 'required'
+        ];
+
+        if($this->input('subcategory_id') == 8)
+        {
+            $rules['subcategory_others'] = 'required';
+        }
+        return  $rules;
+
+    }
+
+    public function messages()
+    {
+        return [
+            'records.required' => 'Please select at least one record.',           
+            'category_id.required' => 'Please select category.',           
+            'subcategory_id.required' => 'Please select subcategory.',           
         ];
     }
+
 }

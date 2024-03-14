@@ -141,6 +141,10 @@
         .sig-underline {
             line-height: 1em;
         }
+
+        .bold {
+            font-weight: bold
+        }
     </style>
 </head>
 
@@ -161,9 +165,7 @@
                     </td>
                     <td style="text-align: right;">
                         <img src='{{ public_path('images/DSWD-DVO-LOGO_02.png') }}' style="width: 100px;">
-                        <div style="font-family: 'Times New Roman', Times, serif; font-size: 6pt;">DSWD-PMB-GF-013 | REV
-                            01
-                            | 30 SEPT 2022</div>
+                        <div style="font-family: 'Times New Roman', Times, serif; font-size: 6pt;">DSWD-PMB-GF-014 | REV 02 | 08 JAN 2024</div>
                     </td>
                 </tr>
             </table>
@@ -197,7 +199,7 @@
                             <tr>
                                 <td><b> Date: </b></td>
                                 <td style="border:solid 1px">
-                                    {{ date('M', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
+                                    {{ date('m', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
                                 <td style="border:solid 1px">
                                     {{ date('d', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
                                 <td style="border:solid 1px">
@@ -227,7 +229,7 @@
             <table class="table " cellpadding=0 cellspacing=0>
                 <tr>
                     <td style="width:120px">This is to certify that,</td>
-                    <td class="text-center">
+                    <td class="text-center bold">
                         {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
                     </td>
                     <td style="width:110px">,
@@ -237,7 +239,7 @@
                         <div class="chk"><input type="checkbox"
                                 @if ($aics_beneficiary['gender'] == 'Babae') checked="true" @endif>Female</label>
                     </td>
-                    <td class="text-center">{{ $aics_beneficiary['age'] }} year/s</td>
+                    <td class="text-center bold">{{ $aics_beneficiary['age'] }} year/s</td>
                 </tr>
                 <tr class="sub-label">
                     <td></td>
@@ -250,7 +252,7 @@
             <table class="table" cellpadding=0 cellspacing=0>
                 <tr>
                     <td style="width: 22%">and presently residing at</td>
-                    <td>
+                    <td class="bold" style="font-size:8pt; ">
                         @if ($aics_beneficiary['street_number'])
                             {{ $aics_beneficiary['street_number'] . ', ' }}
                         @endif
@@ -321,12 +323,13 @@
 
             <p class="text-center" style="line-height:1.2em">
                 The Client is hereby recommended to receive
-                <span class="underline"> {{ $assistance_type }} </span> for
-                <span class="underline"> {{ $assistance_type_subcategory }} </span> <br>
-                in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
+                <span class="underline bold"> {{ $assistance_type }} </span> for
+                <span class="underline bold"> {{ $assistance_type_subcategory }} </span> <br>
+                in the amount of <span class="underline bold" style="text-transform:uppercase">{{ $amount_in_words }}
+                    PESOS
                     ONLY</span>
-                Php. <span class="underline"> {{ number_format($amount, 2) }}</span>
-                CHARGABLE AGAINST:PSP <span class="underline">
+                Php. <span class="underline bold"> {{ number_format($amount, 2) }}</span>
+                CHARGABLE AGAINST:PSP <span class="underline bold">
                     {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('Y') }}
                 </span>
 
@@ -340,14 +343,14 @@
                         <td style="text-align: left; font-size:8pt;"><b>Approved by:</b></td>
                     </tr>
                     <tr>
-                        <td style="padding-top:10px; font-size:8pt;">
+                        <td class="bold" style="padding-top:10px; font-size:8pt;">
 
                             {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
 
                         <td>
-                            <div class="sig"></div>
+                            <div class="sig bold"></div>
                         </td>
-                        <td style="padding-top:10px; font-size:8pt;">
+                        <td class="bold" style="padding-top:10px; font-size:8pt;">
 
                             {{ $approved_by }}
 
@@ -381,30 +384,27 @@
             style="table-laylout:fixed; width: 100%; background: #787878; color: #fff; margin-top:-5px ;" cellpadding=0
             cellspacing=0>
             <tr>
-                <td style="width: 33%; font-size:8pt;"><b> QN:
-                        {{ $aics_beneficiary['payroll_client']['sequence'] }}</b></td>
+                <td style="width: 33%; font-size:8pt;"></td>
                 <td style="width: 33% ; font-size:8pt;" class="text-center"><b> Acknowledgement Receipt</b></td>
                 <td style="width: 33% ; font-size:7pt;"></td>
             </tr>
         </table>
 
 
-        <table class="table" style="table-layout:fixed; font-size:8pt ; line-height:1em;" cellpadding=0
-            cellspacing=0>
-            <tr>
-                <td style="width:20%;  font-size: 8pt;">
-                    <input type="checkbox" name="" id="" checked="true"> Financial Assistance:
+        <table class="table" style="table-layout:fixed; font-size:8pt ; line-height:1em;">
+            <tr class="sub-label">
+                <td style="text-align: left !important"> <b> QN: </b> <b>
+                    {{ $aics_beneficiary['payroll_client']['sequence'] }}
+                    
                 </td>
-                <td style="width:65%; text-transform:uppercase;  font-size: 8pt;">
-                    {{ $amount_in_words }} PESOS ONLY
-                </td>
+                <td></td>
                 <td>
                     <table class="table  text-center" cellspacing=0 cellpadding=0>
 
-                        <tr class="sub-label">
+                        <tr >
                             <td><b> Date: </b></td>
                             <td style="border:solid 1px">
-                                {{ date('M', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
+                                {{ date('m', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
                             <td style="border:solid 1px">
                                 {{ date('d', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
                             <td style="border:solid 1px">
@@ -412,12 +412,24 @@
                         </tr>
 
                     </table>
-
-
                 </td>
+            </tr>
+            <tr>
+                <td style="width:15%;  font-size: 8pt;">
+                    Financial Assistance:
+                </td>
+                <td class="bold" style="width:50%; text-transform:uppercase;  font-size: 8pt;">
+                    {{ $amount_in_words }} PESOS ONLY
+                </td>
+                <td>
+                    Php <span class="bold"> {{ number_format($amount, 2) }}</span>
+                </td>
+
             <tr class="sub-label">
                 <td></td>
                 <td class="underlined" style="font-size: 5pt;"><i>(Amount in Words)</i></td>
+                <td class="underlined"></td>
+
             </tr>
             <tr>
 
@@ -426,9 +438,17 @@
                         <tr>
                             <td style="font-size: 8pt;">
                                 @foreach ($assistance_options as $options)
+                                @php
+                               
+                                    $pos = strpos($options, $assistance_type);
+                                    $checked=false;
+                                    if ($pos === false) 
+                                    $checked=false;
+                                    else $checked=true;                          
+
+                                @endphp
                                     <div style="width:30%; display:inline-block;">
-                                        <input type="checkbox" name="" id=""
-                                            @if (strtolower($options) == strtolower($assistance_type)) checked @endif>{{ $options }}
+                                        <input type="checkbox" name="" id="" @if($checked) checked @endif >{{$options }}
                                     </div>
                                 @endforeach
                             </td>
@@ -452,12 +472,12 @@
                     <td style="text-align: left; font-size:8pt; "><b>Sinaksihan ni:</b><br></td>
                 </tr>
                 <tr>
-                    <td style="padding-top:10px; ">
+                    <td class="bold" style="padding-top:10px; ">
                         <div class="sig" style="font-size:8pt;">
                             {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
                         </div>
                     </td>
-                    <td style="font-size:8pt; padding-top:10px; ">
+                    <td class="bold" style="font-size:8pt; padding-top:10px; ">
                         {{ $SDO }}
                     </td>
                     <td style="font-size:8pt; padding-top:10px; ">

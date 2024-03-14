@@ -9,7 +9,7 @@
 
               <v-row>
                 <v-col cols="12" sm="3">
-                  <v-text-field v-model="formData.title" label="Title (Optional)" outlined flat dense tile
+                  <v-text-field v-model="formData.title" label="Title" outlined flat dense tile
                     :error-messages="validationErrors && validationErrors.title ? validationErrors.title[0] : ''"></v-text-field>
                 </v-col>
 
@@ -21,8 +21,8 @@
                 </v-col>
                 <v-col cols="12" sm="3">
                   <div>
-                    <v-select v-model="formData.aics_type_subcategory_id" :items="subtypes" :loading="!subtypes" outlined
-                      flat dense label="Subtype" item-text="name" item-value="id"  
+                    <v-select v-model="formData.aics_type_subcategory_id" :items="subtypes" :loading="!subtypes"
+                      outlined flat dense label="Subtype" item-text="name" item-value="id"
                       :error-messages="validationErrors && validationErrors.aics_type_subcategory_id ? validationErrors.aics_type_subcategory_id[0] : ''"></v-select>
 
                   </div>
@@ -47,9 +47,9 @@
                 </div>
 
                 <div class="col-md-3">
-                  <v-autocomplete v-model="province_name" :loading="psgc_loading" :items="provinces" @change="getCities()"
-                    cache-items hide-no-data hide-details label="Province" outlined item-text="province_name"
-                    item-value="id" dense></v-autocomplete>
+                  <v-autocomplete v-model="province_name" :loading="psgc_loading" :items="provinces"
+                    @change="getCities()" cache-items hide-no-data hide-details label="Province" outlined
+                    item-text="province_name" item-value="id" dense></v-autocomplete>
                 </div>
 
                 <div class="col-md-3">
@@ -266,9 +266,14 @@ export default {
     },
 
     /*"formData.assistance_type"(newVal, oldVal) {
+      console.log("newVal");
+      console.log(newVal);
+      console.log("oldVal");
+      console.log(oldVal);
+      if(newVal != oldVal )
       if (newVal && newVal.subtype && newVal.subtype.length > 0) {
         this.formData.aics_type_subcategory_id = newVal.subtype[0].id;
-        this.formData.title = newVal.name;
+       // this.formData.title = newVal.name;
       }
     }*/
 
@@ -459,7 +464,10 @@ export default {
 
     },
     getSubtypes() {
-       this.loading = true;
+      this.loading = true;
+      this.formData.aics_type_subcategory_id = null;
+      this.formData.aics_subtype = {};
+      
       axios.get(route("assistances.subtypes.show", { id: this.formData.assistance_type.id })).then(response => {
         this.subtypes = response.data.subtype;
       }).catch(error => { console.log(error); this.loading = false; })

@@ -194,8 +194,8 @@
                     item-text="city_name" item-value="id" dense></v-autocomplete>
                 </div>
                 <div class="col-md-3">
-                  <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
-                    hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
+                  <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys"
+                    hide-no-data hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
                     :error-messages="validationErrors.psgc_id" required></v-autocomplete>
                 </div>
               </v-row>
@@ -275,17 +275,19 @@
                     </small>
                   </label>
 
-                  <input id="mobile_number" v-model="form.mobile_number" type="text" class="form-control" />
-
-                  <div v-if="validationErrors && validationErrors.mobile_number" style="color: red">
-                    {{ validationErrors.mobile_number[0] }}
-                  </div>
+                  <v-text-field v-model="form.mobile_number" :error-messages="validationErrors.mobile_number" outlined
+                    dense>
+                  </v-text-field>
                 </div>
 
                 <div class="col-md-3">
-                  <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
-                  <input id="birth_date" @input="calculateAge" v-model="form.birth_date" type="date"
-                    class="form-control" />
+                  <label for="birth_date">Kapanganakan <small>(Birthdate)</small><span
+                      style="color:red">*</span></label>
+
+                  <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
+                    :error-messages="validationErrors.birth_date" outlined dense>
+                  </v-text-field>
+
                 </div>
 
                 <div class="col-md-3">
@@ -293,23 +295,18 @@
                     <span color="red"></span>
                   </label>
 
-                  <input id="age" type="text" class="form-control" :value="form.age" readonly />
-                  <div v-if="validationErrors && validationErrors.age" style="color: red">
-                    {{ validationErrors.age[0] }}
-                  </div>
+                  <v-text-field v-model="form.age" required :error-messages="validationErrors.age" outlined dense
+                    readonly>
+                  </v-text-field>
+
                 </div>
 
                 <div class="col-md-3">
-                  <label for="gender">Kasarian <small>(gender)</small> <span color="red">*</span></label>
-                  <select name="" id="" class="form-control" v-model="form.gender">
-                    <option :value="gender" v-for="gender in ['Babae', 'Lalake']" :key="gender">
-                      {{ gender }}
-                    </option>
-                  </select>
+                  <label for="birth_date">Kasarian<small>(Gender)</small> <span style="color:red">*</span> </label>
+                  <v-select v-model="form.gender" :items="['Babae', 'Lalake']" required
+                    :error-messages="validationErrors.gender" outlined dense>
+                  </v-select>
 
-                  <div v-if="validationErrors && validationErrors.gender" style="color: red">
-                    {{ validationErrors.gender[0] }}
-                  </div>
                 </div>
               </div>
 
@@ -363,24 +360,24 @@
 
               <div class="row mt-2">
                 <div class="col-md-3">
-                  <label>Valid ID Presented</label>
+                  <label>Valid ID Presented<span style="color:red;">*</span></label>
                   <v-combobox v-model="form.valid_id_presented" clearable outlined dense
                     :error-messages="validationErrors && validationErrors.valid_id_presented ? validationErrors.valid_id_presented[0] : ''"
                     :items="['National ID',
-                      'Driver\'s License',
-                      'Senior Citizen ID',
-                      'Voter\'s ID/Certificate',
-                      'Person\'s With Disability (PWD) ID',
-                      '4Ps ID',
-                      'Phil-health ID',
-                      'NBI Clearance',
-                      'BIR (TIN)',
-                      'Pag-ibig ID',
-                      'School ID',
-                      'Passport',
-                      'SSS ID/UMID Card',
-                      'PRC ID'
-                    ].sort()"></v-combobox>
+      'Driver\'s License',
+      'Senior Citizen ID',
+      'Voter\'s ID/Certificate',
+      'Person\'s With Disability (PWD) ID',
+      '4Ps ID',
+      'Phil-health ID',
+      'NBI Clearance',
+      'BIR (TIN)',
+      'Pag-ibig ID',
+      'School ID',
+      'Passport',
+      'SSS ID/UMID Card',
+      'PRC ID'
+    ].sort()"></v-combobox>
 
 
 
@@ -406,6 +403,11 @@
                   </option>
                 </select>
 
+                <div v-if="validationErrors && validationErrors.category_id" style="color: red">
+                  {{ validationErrors.category_id[0] }}
+                </div>
+
+
                 Specific Subcategory
 
                 <select v-model="form.subcategory_id" class="form-control">
@@ -415,9 +417,19 @@
                   </option>
                 </select>
 
+                <div v-if="validationErrors && validationErrors.subcategory_id" style="color: red">
+                  {{ validationErrors.subcategory_id[0] }}
+                </div>
+
                 <div class="" v-if="form.subcategory_id == 8">
                   Others
                   <input type="text" v-model="form.subcategory_others" class="form-control" />
+
+
+                  <div v-if="validationErrors && validationErrors.subcategory_others" style="color: red">
+                    {{ validationErrors.subcategory_others[0] }}
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -439,6 +451,15 @@
         <div class="card">
           <div class="card-title"> Records on File </div>
           <div class="card-body">
+            <v-row>
+              <v-alert v-if="validationErrors && validationErrors.records" dense type="error" outlined
+                class="error--text">
+                <ul>
+                  <li v-for="error in validationErrors.records" :key="error">{{ error }}</li>
+                </ul>
+              </v-alert>
+            </v-row>
+
             <v-row no-gutters dense>
               <v-col dense v-for="(record, index) in record_opts" :key="index" cols="12" sm="6" md="4" lg="3">
                 <v-checkbox v-model="form.records" :label="record" :value="record" dense
@@ -465,7 +486,7 @@
               <div v-if="dialog_data.payroll_client.new_payroll_client">
                 Client No: {{ dialog_data.payroll_client.new_payroll_client.sequence }} <br>
                 <span v-if="dialog_data.payroll_client.new_payroll_client.payroll.status"> Status:{{
-                  dialog_data.payroll_client.new_payroll_client.payroll.status }}</span> <br>
+      dialog_data.payroll_client.new_payroll_client.payroll.status }}</span> <br>
                 In Payroll:{{ dialog_data.payroll_client.new_payroll_client.payroll.title }} |
                 Schedule: {{ dialog_data.payroll_client.new_payroll_client.payroll.schedule }} |
                 Amount:{{ dialog_data.payroll_client.new_payroll_client.payroll.amount }}
@@ -513,19 +534,18 @@
             </div>
           </div>
         </div>
-        <div class=" row justify-center " style="padding: 10px 0px">
-          <v-col>
-            <v-btn color="red" dark large @click="isVerified(form.id, 'grievance', form)">
+        <v-row justify="center">
+          <v-col cols="6">
+            <v-btn block color="red" class="xs2" dark large @click="isVerified(form.id, 'grievance', form)">
               GRIEVANCE
-            </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn color="blue" dark large type="submit" :disabled="submit">
+            </v-btn></v-col>
+          <v-col cols="6">
+            <v-btn block color="blue" class="xs2" dark large type="submit" :disabled="submit">
               SUBMIT
             </v-btn>
           </v-col>
+        </v-row>
 
-        </div>
       </div>
     </form>
   </v-app>
@@ -612,7 +632,6 @@ export default {
         this.form.records_others = "";
       }
     },
-
   },
 
   methods: {
@@ -636,6 +655,16 @@ export default {
           .catch((error) => {
             this.submit = false;
             //  console.log(error);
+
+            this.$nextTick(() => {
+              const el = this.$el.querySelector(".error--text:first-of-type");
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+
+            });
+
+
             if (error.response && error.response.status == 422) {
               alert("Kumpletohin ang form. \nPlease complete the form.");
               this.validationErrors = error.response.data.errors;
@@ -656,6 +685,7 @@ export default {
       };
       this.province_name = "";
       this.city_name = "";
+      this.validationErrors = {};
     },
     calculateAge: function () {
       if (!this.form.birth_date) {
@@ -749,7 +779,7 @@ export default {
       this.form.mode_of_admission = "Referral";
       this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       this.form.interviewed_by = this.userData ? this.userData.name : "";
-      this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : [];
+      this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : ["General Intake Sheet", "Valid ID Presented"];
 
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }
       this.calculateAge();
@@ -777,5 +807,3 @@ export default {
 </script>
 
 <style></style>
-
-

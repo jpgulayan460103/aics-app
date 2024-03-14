@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        //\App\Models\User::factory(10)->create();
         $this->call(PsgcSeeder::class);
         //$this->call(AicsTypeSeeder::class);
         $this->call(AicsTypeV2Seeder::class);
@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesSeeder::class);
         $this->call(SubcategoriesSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(CategoriesV2Seeder::class);
+        $this->call(SubSubcategoriesV2Seeder::class);
+       
     }
 }

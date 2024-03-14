@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AicsClient;
 use App\Models\AicsType;
+use App\Models\Category;
 use App\Models\Payroll;
 use App\Models\PayrollClient;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -94,9 +96,12 @@ class PayrollClientController extends Controller
     {
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
+        $categories  = Category::all()->pluck("category");
+        $subcategories  = Subcategory::all()->pluck("subcategory");
+        $assistance_options = AicsType::all()->pluck("name")->map(function($e){ $x = explode(" ",$e); return $x[0]; });
 
-        // dd($aics_client_ids);
-
+      
 
         $clients =  AicsClient::with([
             "psgc",
@@ -113,9 +118,31 @@ class PayrollClientController extends Controller
             })
             ->get();
         if ($clients) {
-            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
-                return $client->payroll_client;
-            })->toArray()]);
+
+            $pdf = Pdf::loadView(
+                'pdf.gis_many',
+                [
+                    "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+                        return $client->payroll_client;
+                    })->toArray(),
+                    "assistance_type" => $payroll->aics_type? $payroll->aics_type->name : $payroll->title,
+                    "approved_by" => $payroll->approved_by,
+                    "categories" =>  $categories,
+                    "subcategories" =>  $subcategories,
+                    "assistance_options" => $assistance_options,
+                    ]
+            );
+
+            /*return view('pdf.gis_many',  [
+                "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+                    return $client->payroll_client;
+                })->toArray(),
+                "assistance_type" => $payroll->aics_type->name,
+                "approved_by" => $payroll->approved_by,
+                "categories" =>  $categories,
+                "subcategories" =>  $subcategories,
+            ]);*/
+
             return $pdf->stream('gis.pdf');
         }
         return $clients;
@@ -180,11 +207,12 @@ class PayrollClientController extends Controller
             "Transportation Assistance",
             "Food Assistance",
             "Funeral Assistance",
-            "Education Assistance",
-            "Cash Assistance for Support Services"
+            "Educational Assistance",
+            "Cash Relief Assistance",
+            "Emergency Cash Transfer"
         ];
 
-       # $assistance_options =  AicsType::all()->pluck("name");
+        # $assistance_options =  AicsType::all()->pluck("name");
 
         if ($client) {
             $pdf = Pdf::loadView(
