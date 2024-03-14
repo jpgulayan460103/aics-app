@@ -480,8 +480,8 @@
                     <td class="bold" style="font-size:8pt; padding-top:10px; ">
                         {{ $SDO }}
                     </td>
-                    <td style="font-size:8pt; padding-top:10px; ">
-
+                    <td class="bold" style="font-size:8pt; padding-top:10px; ">
+                        {{ $approved_by }}
                     </td>
                 </tr>
                 <tr style="line-height: 1em; font-size:8pt ">
