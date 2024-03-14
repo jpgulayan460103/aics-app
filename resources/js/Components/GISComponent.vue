@@ -275,13 +275,14 @@
                     </small>
                   </label>
 
-                  <v-text-field v-model="form.mobile_number"
-                    :error-messages="validationErrors.mobile_number" outlined dense>
+                  <v-text-field v-model="form.mobile_number" :error-messages="validationErrors.mobile_number" outlined
+                    dense>
                   </v-text-field>
                 </div>
 
                 <div class="col-md-3">
-                  <label for="birth_date">Kapanganakan <small>(Birthdate)</small><span style="color:red">*</span></label>
+                  <label for="birth_date">Kapanganakan <small>(Birthdate)</small><span
+                      style="color:red">*</span></label>
 
                   <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
                     :error-messages="validationErrors.birth_date" outlined dense>
@@ -403,9 +404,9 @@
                 </select>
 
                 <div v-if="validationErrors && validationErrors.category_id" style="color: red">
-                    {{ validationErrors.category_id[0] }}
-                  </div>
-                
+                  {{ validationErrors.category_id[0] }}
+                </div>
+
 
                 Specific Subcategory
 
@@ -417,12 +418,18 @@
                 </select>
 
                 <div v-if="validationErrors && validationErrors.subcategory_id" style="color: red">
-                    {{ validationErrors.subcategory_id[0] }}
-                  </div>
+                  {{ validationErrors.subcategory_id[0] }}
+                </div>
 
                 <div class="" v-if="form.subcategory_id == 8">
                   Others
                   <input type="text" v-model="form.subcategory_others" class="form-control" />
+
+
+                  <div v-if="validationErrors && validationErrors.subcategory_others" style="color: red">
+                    {{ validationErrors.subcategory_others[0] }}
+                  </div>
+
                 </div>
               </div>
             </div>

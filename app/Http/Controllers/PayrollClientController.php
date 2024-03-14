@@ -207,8 +207,9 @@ class PayrollClientController extends Controller
             "Transportation Assistance",
             "Food Assistance",
             "Funeral Assistance",
-            "Education Assistance",
-            "Cash Assistance for Support Services"
+            "Educational Assistance",
+            "Cash Relief Assistance",
+            "Emergency Cash Transfer"
         ];
 
         # $assistance_options =  AicsType::all()->pluck("name");

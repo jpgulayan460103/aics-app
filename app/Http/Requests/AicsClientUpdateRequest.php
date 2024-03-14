@@ -24,8 +24,8 @@ class AicsClientUpdateRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
+    {   
+        $rules =  [
             'aics_type_id' => ['required', 'exists:aics_types,id'],
             'last_name' => ['required', 'string', 'max:200', new AllowedStringName],
             'first_name' => ['required', 'string', 'max:200', new AllowedStringName],
@@ -42,6 +42,13 @@ class AicsClientUpdateRequest extends FormRequest
             'category_id' => 'required',
             'subcategory_id'=> 'required'
         ];
+
+        if($this->input('subcategory_id') == 8)
+        {
+            $rules['subcategory_others'] = 'required';
+        }
+        return  $rules;
+
     }
 
     public function messages()

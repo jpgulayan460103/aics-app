@@ -8,8 +8,8 @@
     <title>GIS</title>
     <style>
         body {
-            font-family: 'DejaVu Sans', 'sans-serif';
             color: #000000;
+            font-weight: bold;
         }
 
         @page {
@@ -24,10 +24,11 @@
 
         .data-textbox {
             position: absolute;
-            font-weight: normal;
-
+            font-weight: bold;
             line-height: 0.8;
-            color: rgb(102, 102, 105);
+            color: black;
+            text-transform: uppercase;
+            /*border: solid red 1px;*/
 
         }
 
@@ -37,8 +38,7 @@
         }
 
         td {
-            word-wrap: break-word;
-            /* border: solid 1px;*/
+            word-wrap: break-word;           
         }
 
         ul {
@@ -123,8 +123,8 @@
 
         <table class="data-textbox " style="top:250px; left:50px ; width:88%; text-align:center">
             <tr>
-                <td style="width:14%"> {{ $aics_beneficiary['mobile_number'] }} </td>
-                <td style="width:14%"> {{ date('m-d-Y', strtotime($aics_beneficiary['birth_date'])) }} </td>
+                <td style="width:16%"> {{ $aics_beneficiary['mobile_number'] }} </td>
+                <td style="width:16%"> {{ date('m-d-Y', strtotime($aics_beneficiary['birth_date'])) }} </td>
                 <td style="width:5%">{{ $aics_beneficiary['age'] }}</td>
                 <td style="width:14%"> {{ $aics_beneficiary['gender'] }} </td>
                 <td style="width:14%">{{ $aics_beneficiary['civil_status'] }} </td>
@@ -135,7 +135,7 @@
         </table>
 
 
-        <div class="data-textbox" style=" top:422pt; left:39pt;  text-align:left; height:80pt;  ">
+        <div class="data-textbox" style=" top:422pt; left:39pt;  text-align:left; height:80pt; font-size:7pt; font-weight:normal; text-transform:none;  ">
             @foreach ($categories as $category)
                 <div style="display:block; margin-top:-2pt;">
                     <input type="checkbox" name="" id="" class="custom-checkbox"
@@ -146,7 +146,7 @@
         </div>
 
 
-        <div class="data-textbox" style=" top:422pt; left:85pt;  text-align:left; height:80pt;  font-size:7pt;">
+        <div class="data-textbox" style=" top:422pt; left:85pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none;">
             @foreach ($subcategories as $subcategory)
                 <div style="display:block; margin-top:-2pt;">
                     <input type="checkbox" name="" id="" class="custom-checkbox"
@@ -164,7 +164,7 @@
         </div>
 
 
-        <div class="data-textbox" style=" top:420pt; left:270pt; width: 280pt; text-align:left; height:80pt; ">
+        <div class="data-textbox" style="line-height:1em; top:420pt; left:270pt; width: 280pt; text-align:left; height:80pt; ">
             {{ $aics_beneficiary['assessment'] }}
         </div>
 
@@ -228,24 +228,6 @@
             </div>
         @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <table class="data-textbox " style="top:790px; left:50px ; width:88%; text-align:center">
             <tr>
                 <td style="width: 60%">{{ $assistance_type }}</td>
@@ -257,13 +239,13 @@
 
         <table class="data-textbox " style="top:930px; left:50px ; width:88%; text-align:center">
             <tr>
-                <td style="width: 40%">
+                <td style="width:35%">
                     {{ strtoupper($aics_beneficiary['first_name']) }}
                     {{ strtoupper($aics_beneficiary['middle_name']) }}
                     {{ strtoupper($aics_beneficiary['last_name']) }}
                     {{ strtoupper($aics_beneficiary['ext_name']) }}
                 </td>
-                <td style="width: 7%"></td>
+                <td style="width: 12%"></td>
                 <td style="width: 20%"></td>
                 <td style="width: 20%"> {{ $approved_by }} </td>
             </tr>
