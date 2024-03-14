@@ -31,7 +31,7 @@ class AicsRequirementSeeder extends Seeder
             
             $insert_data['name'] = $aics_requirement[0];
             $parent_name = $aics_requirement[2];
-            $insert_data['is_required'] = strtolower($aics_requirement[3]) == "true";
+            $insert_data['is_required'] = $aics_requirement[3];
             $parent = AicsType::whereName($parent_name)->first();
             $insert_data['aics_type_id'] = $parent->id;
             $assistance_requirement = AicsRequrement::create($insert_data);

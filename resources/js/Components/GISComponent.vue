@@ -546,6 +546,9 @@ export default {
   props: ["dialog_data", "getList", "userData", "setDialogCreate", "provinces"],
 
   data() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
     return {
       form: {
         mode_of_admission: "Referral",

@@ -17,7 +17,7 @@ class CreateAicsRequrementsTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->unsignedBigInteger('aics_type_id')->nullable();
-            $table->boolean('is_required')->nullable();
+            $table->integer('is_required')->nullable();
             $table->timestamps();
         });
     }
