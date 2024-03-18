@@ -170,8 +170,19 @@
 
         <div class="data-textbox" style=" top:513pt; left:35pt; width: 280pt; text-align:left; height:80pt; ">
             <input type="checkbox" name="" id="" checked class="custom-checkbox">
-            <!-- FINANCIAL ASSISTANCE-->
+            <!-- FINANCIAL ASSISTANCE CHECKBOX-->
         </div>
+
+        <div class="data-textbox" style=" top:513pt; left:342pt; width: 280pt; text-align:left; height:80pt; ">
+            <input type="checkbox" name="" id="" checked class="custom-checkbox">
+            <!-- PSYCHOSOCIAL SUPPORT CHECKBOX-->
+        </div>
+
+        <div class="data-textbox" style="  top:532pt; left:348pt; text-align:left;  font-size:7pt;  ">
+            <input type="checkbox" name="" id="" checked class="custom-checkbox">
+            <!-- PSYCHOSOCIAL SUPPORT CHECKBOX-->
+        </div>
+
 
         @php
             $pos = strpos($assistance_type, 'Medical');
@@ -230,7 +241,7 @@
 
         <table class="data-textbox " style="top:790px; left:50px ; width:88%; text-align:center">
             <tr>
-                <td style="width: 60%">{{ $assistance_type }}</td>
+                <td style="width: 60%">{{ $assistance_type_subcategory }}</td>
                 <td style="width: 25%">
                     {{ number_format($aics_beneficiary['payroll_client']['payroll']['amount'], 2) }}</td>
                 <td style="width: 15%"> {{ $aics_beneficiary['payroll_client']['payroll']['source_of_fund'] }}</td>

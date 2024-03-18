@@ -100,9 +100,7 @@ class PayrollClientController extends Controller
         $categories  = Category::all()->pluck("category");
         $subcategories  = Subcategory::all()->pluck("subcategory");
         $assistance_options = AicsType::all()->pluck("name")->map(function($e){ $x = explode(" ",$e); return $x[0]; });
-
       
-
         $clients =  AicsClient::with([
             "psgc",
             "aics_type",
@@ -130,6 +128,7 @@ class PayrollClientController extends Controller
                     "categories" =>  $categories,
                     "subcategories" =>  $subcategories,
                     "assistance_options" => $assistance_options,
+                    "assistance_type_subcategory" => $payroll->aics_subtype ? $payroll->aics_subtype->name : "Daily Consumption and Other Needs",
                     ]
             );
 
