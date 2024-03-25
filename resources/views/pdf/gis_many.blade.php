@@ -147,8 +147,9 @@
 
 
         <div class="data-textbox" style=" top:422pt; left:85pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none;">
+         
             @foreach ($subcategories as $subcategory)
-                <div style="display:block; margin-top:-2pt;">
+                <div style="display:block; margin-top:-3pt;">
                     <input type="checkbox" name="" id="" class="custom-checkbox"
                         @if (isset($aics_beneficiary['subcategory'])) @if ($subcategory == $aics_beneficiary['subcategory']['subcategory'])
                      checked @endif
