@@ -18,5 +18,9 @@ class SubSubcategoriesV2Seeder extends Seeder
        $s->subcategory = "KIA/WIA";
        $s->save();
 
+       $s = New Subcategory;
+       $s->subcategory = "None of the above";
+       $s->save();
+
     }
 }

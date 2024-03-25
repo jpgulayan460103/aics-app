@@ -93,7 +93,7 @@ class PayrollClientController extends Controller
     }
 
     public function printv2(Request $request, $id)
-    {
+    { 
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
         $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
@@ -115,6 +115,7 @@ class PayrollClientController extends Controller
                 $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
             })
             ->get();
+           
         if ($clients) {
 
             $pdf = Pdf::loadView(

@@ -280,6 +280,8 @@ class AicsClientController extends Controller
                 "categories" =>  $categories,
                 "subcategories" =>  $subcategories,
                 "assistance_options" => $assistance_options,
+                "assistance_type_subcategory" => $payroll->aics_subtype ? $payroll->aics_subtype->name : "Daily Consumption and Other Needs",
+                  
             ]);
             return $pdf->stream('gis.pdf');
         }
