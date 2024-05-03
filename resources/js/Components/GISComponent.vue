@@ -535,10 +535,10 @@
           </div>
         </div>
         <v-row justify="center">
-          <v-col cols="6">
+          <!--<v-col cols="6">
             <v-btn block color="red" class="xs2" dark large @click="isVerified(form.id, 'grievance', form)">
               GRIEVANCE
-            </v-btn></v-col>
+            </v-btn></v-col>-->
           <v-col cols="6">
             <v-btn block color="blue" class="xs2" dark large type="submit" :disabled="submit">
               SUBMIT

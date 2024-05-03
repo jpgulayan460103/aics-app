@@ -34,6 +34,7 @@ class AicsClientController extends Controller
      */
     public function index(Request $request)
     {
+       
         $clients = AicsClient::with("psgc", "payroll_client.payroll", "payroll_client.new_payroll_client", "payroll_client.new_payroll_client.payroll:id,title,schedule,amount", "user:id,name");
         if ($request->search) {
             $search = $request->search;
