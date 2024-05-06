@@ -40,7 +40,9 @@ class AicsClientUpdateRequest extends FormRequest
             'valid_id_presented' => ['required'],
             'records' => 'required|array|min:1',
             'category_id' => 'required',
-            'subcategory_id'=> 'required'
+            'subcategory_id'=> 'required',
+            'occupation'=> 'required',
+            'monthly_salary'=> ['required', 'numeric']
         ];
 
         if($this->input('subcategory_id') == 8)

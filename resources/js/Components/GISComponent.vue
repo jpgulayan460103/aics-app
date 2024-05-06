@@ -312,7 +312,7 @@
 
               <div class="row mt-2">
                 <div class="col-md-3">
-                  <label for="occupation">Trabaho <small> (Occupation)</small> <span color="red"></span></label>
+                  <label for="occupation">Trabaho <small> (Occupation)</small> <span style="color:red;">*</span></label>
                   <input id="occupation" v-model="form.occupation" type="text" class="form-control" />
 
                   <div v-if="validationErrors && validationErrors.occupation" style="color: red">
@@ -321,7 +321,7 @@
                 </div>
                 <div class="col-md-3">
                   <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
-                    <span color="red"></span></label>
+                    <span style="color:red;">*</span></label>
                   <input id="monthly_salary" v-model="form.monthly_salary" type="text" class="form-control" />
 
                   <div v-if="validationErrors && validationErrors.monthly_salary" style="color: red">
