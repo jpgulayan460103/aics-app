@@ -91,7 +91,10 @@ export default {
           to: "/grievance",
           text: "Grievance",
         },
-
+        /*{
+          to: "/assistance-types",
+          text: "Assistance Types",
+        },*/
       ],
       default_menu: [
 
@@ -122,6 +125,7 @@ export default {
           to: "/grievance",
           text: "Grievance",
         },
+       
 
       ]
     };

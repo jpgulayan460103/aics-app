@@ -30,6 +30,7 @@ import PayrollClientList from "./Components/PayrollClientList"
 import Users from "./Components/Users"
 import ActivityLog from "./Components/ActivityLog"
 import Grievance from "./Components/Grievance"
+import AssistanceTypes from "./Components/AssistanceTypes.vue"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -128,6 +129,18 @@ const router = new VueRouter({
             }
 
         },
+        {
+            path: "/assistance-types",
+            name: "assistance-types",
+            component: AssistanceTypes,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "Admin"]
+            }
+
+        },
+
+        
         
     ],
 });
