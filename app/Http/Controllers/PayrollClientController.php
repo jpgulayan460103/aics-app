@@ -93,14 +93,31 @@ class PayrollClientController extends Controller
     }
 
     public function printv2(Request $request, $id)
-    { 
+    {
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
         $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
         $categories  = Category::all()->pluck("category");
-        $subcategories  = Subcategory::all()->pluck("subcategory");
-        $assistance_options = AicsType::all()->pluck("name")->map(function($e){ $x = explode(" ",$e); return $x[0]; });
-      
+        $subcategories  = Subcategory::orderByRaw("
+        CASE 
+        WHEN subcategory = 'others' THEN 2 
+        WHEN subcategory = 'none of the above' THEN 1 
+        ELSE 0 
+    END ASC,
+    LENGTH(subcategory) ASC
+    ")->pluck("subcategory");
+
+        // Split the subcategories into short and long groups
+        $midPoint = ceil($subcategories->count() / 2);
+        $shortSubcategories = $subcategories->slice(0, $midPoint);
+        $longSubcategories = $subcategories->slice($midPoint);
+
+
+        $assistance_options = AicsType::all()->pluck("name")->map(function ($e) {
+            $x = explode(" ", $e);
+            return $x[0];
+        });
+
         $clients =  AicsClient::with([
             "psgc",
             "aics_type",
@@ -115,7 +132,7 @@ class PayrollClientController extends Controller
                 $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
             })
             ->get();
-           
+
         if ($clients) {
 
             $pdf = Pdf::loadView(
@@ -124,13 +141,14 @@ class PayrollClientController extends Controller
                     "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
                         return $client->payroll_client;
                     })->toArray(),
-                    "assistance_type" => $payroll->aics_type? $payroll->aics_type->name : $payroll->title,
+                    "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
                     "approved_by" => $payroll->approved_by,
                     "categories" =>  $categories,
-                    "subcategories" =>  $subcategories,
+                    #  "subcategories" =>  $subcategories,
+                    "subcategories" =>  compact('shortSubcategories', 'longSubcategories'),
                     "assistance_options" => $assistance_options,
                     "assistance_type_subcategory" => $payroll->aics_subtype ? $payroll->aics_subtype->name : "Daily Consumption and Other Needs",
-                    ]
+                ]
             );
 
             /*return view('pdf.gis_many',  [
