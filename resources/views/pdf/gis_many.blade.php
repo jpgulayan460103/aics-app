@@ -158,7 +158,7 @@
         <div class="data-textbox"
             style=" width:300pt; top:380pt; left:120pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none;">
 
-            <div style="display:inline-block;  width:75pt; ">
+            <div style="  display:inline-block;  width:75pt; ">
                 @foreach ($subcategories['shortSubcategories'] as $subcategory)
                     <div style="display:inline-block; margin-top:-3pt; width:100%;">
                         <input type="checkbox" name="" id="" class="custom-checkbox"

@@ -269,13 +269,13 @@ class AicsClientController extends Controller
         $categories  = Category::all()->pluck("category");
         $subcategories  = Subcategory::orderByRaw("
         CASE 
-        WHEN subcategory = 'others' THEN 2 
-        WHEN subcategory = 'none of the above' THEN 1 
+        WHEN subcategory = 'Minimum Wage Earner' THEN 1 
+        WHEN subcategory = 'others' THEN 3
         ELSE 0 
     END ASC,
     LENGTH(subcategory) ASC
-    ")->pluck("subcategory");
-
+    ")->where("subcategory", "!=","None of the above")->pluck("subcategory");
+    
         // Split the subcategories into short and long groups
         $midPoint = ceil($subcategories->count() / 2);
         $shortSubcategories = $subcategories->slice(0, $midPoint);

@@ -14,13 +14,20 @@ class SubSubcategoriesV2Seeder extends Seeder
      */
     public function run()
     {
-       $s = New Subcategory;
+        /* $s = New Subcategory;
        $s->subcategory = "KIA/WIA";
        $s->save();
 
        $s = New Subcategory;
        $s->subcategory = "None of the above";
-       $s->save();
+       $s->save();*/
 
+        $subs = ["KIA/WIA", "None of the above", "Minimum Wage Earner"];
+
+        foreach ($subs as $key => $sub) {
+            Subcategory::firstOrCreate([
+                'subcategory' => $sub
+            ]);
+        }
     }
 }
