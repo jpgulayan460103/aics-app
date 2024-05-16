@@ -270,8 +270,9 @@
                     <td style="width:5%; font-size:8pt;"></td>
                     <td style="width:15%; font-size:8pt;"> {{ number_format($amount, 2) }}</td>
                     <td style="width:10%; font-size:8pt;"></td>
-                    <td>PSP Fund:
-                        {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('Y') }}
+                    <td>
+                        {{$aics_beneficiary['payroll_client']['payroll']['source_of_fund']}}
+                        
                     </td>
                 </tr>
             </table>

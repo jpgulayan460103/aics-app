@@ -80,8 +80,15 @@
                 </v-col>
 
                 <v-col cols="12" md="3" sm="12" xs="12">
-                  <v-text-field v-model="formData.source_of_fund" label="Fund Source" outlined dense flat tile
-                    :error-messages="validationErrors && validationErrors.source_of_fund ? validationErrors.source_of_fund[0] : ''"></v-text-field>
+                  <!--<v-text-field v-model="formData.source_of_fund" label="Fund Source" outlined dense flat tile
+                    :error-messages="validationErrors && validationErrors.source_of_fund ? validationErrors.source_of_fund[0] : ''"></v-text-field>-->
+
+
+                  <v-combobox v-model="formData.source_of_fund" clearable outlined dense label="Fund Source"
+                    :error-messages="validationErrors && validationErrors.source_of_fund ? validationErrors.source_of_fund[0] : ''"
+                    :items="['AKAP','AICS FUND',].sort()"></v-combobox>
+
+
                 </v-col>
 
                 <v-col cols="12" md="3" sm="12" xs="12">
@@ -467,7 +474,7 @@ export default {
       this.loading = true;
       this.formData.aics_type_subcategory_id = null;
       this.formData.aics_subtype = {};
-      
+
       axios.get(route("assistances.subtypes.show", { id: this.formData.assistance_type.id })).then(response => {
         this.subtypes = response.data.subtype;
       }).catch(error => { console.log(error); this.loading = false; })

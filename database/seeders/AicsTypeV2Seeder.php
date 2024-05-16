@@ -26,7 +26,7 @@ class AicsTypeV2Seeder extends Seeder
             ),
             array(
                 "Type" => "Food Assistance",
-                "Subtype" => array("Daily Consumption and Other Needs")
+                "Subtype" => array("Daily Consumption and Other Needs", "Food and Other Nutritional Requirements for Sustenance.")
             ),
             array(
                 "Type" => "Transportation Assistance",
@@ -53,7 +53,8 @@ class AicsTypeV2Seeder extends Seeder
             if ($type) {
                 foreach ($data['Subtype'] as $subtypeName) {
                     if (isset($data['Subtype'])) {
-                        AicsTypeSubcategory::create([
+                        
+                        AicsTypeSubcategory::firstOrCreate([
                             'aics_type_id' => $type->id,
                             'name' => $subtypeName
                         ]);

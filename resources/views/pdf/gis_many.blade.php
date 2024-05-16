@@ -295,6 +295,7 @@
         <table class="data-textbox " style="top:755px; left:30px ; width:90%; text-align:center">
             <tr>
                 <td style="width: 60%">
+                    FOR
                     @php
                         $pos = strpos($assistance_type, 'Other');
                     @endphp

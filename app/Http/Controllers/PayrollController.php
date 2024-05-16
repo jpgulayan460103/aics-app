@@ -141,7 +141,7 @@ class PayrollController extends Controller
             'charging' => 'required',
             'status' => 'required',
             'schedule' => 'required|date',
-            'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
+           'aics_type_subcategory_id' => "required|exists:aics_type_subcategories,id"
         ],[
             'aics_type_subcategory_id.required' => "Subtype is required"
 
