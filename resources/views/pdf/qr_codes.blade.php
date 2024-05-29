@@ -85,16 +85,16 @@
                 $sulod = $aics_beneficiary['id'] . '/';
                 $sulod .= $aics_beneficiary['payroll_client']['sequence'] . '/';
                 $sulod .= $aics_beneficiary['full_name'] . '/';
-
                 $sulod .= $aics_beneficiary['birth_date'] . '/';
-                $sulod .= $aics_beneficiary['payroll_client']['payroll']['amount'] . '/';
+                $sulod .= $aics_beneficiary['payroll_client']['payroll_id'] . '';
+               
             @endphp
 
             <tr>
                 <td style="padding:5px;">
                     {!! QrCode::size(60)->generate($sulod) !!} <br>
                     <small>
-                        {{ $aics_beneficiary['id'] }}</small>
+                     {{$aics_beneficiary['payroll_client']['payroll_id']}} - {{ $aics_beneficiary['id'] }}</small>
                 </td>
                 <td>
                     <img src='{{ asset('images/new_logo.png') }}' />
