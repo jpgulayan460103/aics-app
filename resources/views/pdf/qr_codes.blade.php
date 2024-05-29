@@ -111,7 +111,7 @@
 
                     <b> VALIDATED ON :
                         {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}
-                        <br>VENUE: {{ $venue }}
+                        <br>VALIDATED IN: {{ $venue }}
                     </b> <br> 
 
                     <span>Present this QR code for verification. Please secure this QR code for the day of payout.<br>
