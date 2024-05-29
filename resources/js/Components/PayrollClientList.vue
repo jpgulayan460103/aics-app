@@ -15,6 +15,12 @@
             </v-btn>
           </template>
           <v-list>
+            <v-list-item @click="PrintQR()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> All QR <v-chip label small>CTLR + Q</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+
             <v-list-item @click="PrintGISMany()">
               <v-list-item-title>
                 <v-icon> mdi-printer </v-icon> Selected GIS <v-chip label small>CTLR + SPACE</v-chip>
@@ -246,6 +252,9 @@
     <span v-shortkey="['ctrl', 'e']" @shortkey="print_coe_batch()"></span>
     <span v-shortkey="['ctrl', 'shift','e']" @shortkey="print_coe_page()"></span>
     <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="print_gis_page()"></span>
+    <span v-shortkey="['ctrl',  'q']" @shortkey="PrintQR()"></span>
+
+    
     <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
     <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span>
     <span v-shortkey="['ctrl', 'space']" @shortkey="PrintGISMany()"></span>
@@ -308,6 +317,16 @@ export default {
         route("pdf.payroll_client.printv2", { id: this.id, page: this.page }),
         "_blank"
       );
+    },
+    PrintQR()
+    {
+    
+      window.open(
+        route("pdf.qr_codes", { id: this.id, page: this.page }),
+        "_blank"
+      );
+
+
     },
     print_coe_page()
     {

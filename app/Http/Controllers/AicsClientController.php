@@ -474,4 +474,7 @@ class AicsClientController extends Controller
             "file" => url(Storage::url("public/$export_file_name")),
         ];
     }
+
+   
+
 }

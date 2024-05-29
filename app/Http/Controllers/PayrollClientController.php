@@ -13,6 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use \NumberFormatter;
 
+
 class PayrollClientController extends Controller
 {
     /**
@@ -280,4 +281,131 @@ class PayrollClientController extends Controller
         }
         return $clients;*/
     }
+
+    public function qr_codes(Request $request, $id)
+    {
+        //\QRcode::png("1323", "samok.png");
+        
+       
+        $page = $request->page ? $request->page : 1;
+        $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
+
+        $client =  AicsClient::with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id",  $aics_client_ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->join('payroll_clients', function ($join) use ($id) {
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
+            })
+            ->get();
+
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
+        $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
+        $record_options = [
+            "General Intake Sheet",
+            "Medical Certificate/Abstract",
+            "Laboratory Request",
+            "Social Case Study Report",
+            "Justification",
+            "Prescriptions",
+            "Promisory Note",
+            "Contract of Employment",
+            "Valid ID Presented",
+            "Statement of Account",
+            "Funeral Contract",
+            "Certificate of Employment",
+            "______________________",
+            "Treatment Protocol",
+            "Death Certificate",
+            "Income Tax Return",
+            "",
+            "Quotation/Chargeslip",
+            "Death Summary",
+            "Others",
+            "",
+            "Discharge Summary",
+            "Referral Letter",
+             
+            
+        ];
+
+        $assistance_options = [
+            "Medical Assistance",
+            "Transportation Assistance",
+            "Food Assistance",
+            "Funeral Assistance",
+            "Educational Assistance",
+            "Cash Relief Assistance",
+            "Emergency Cash Transfer"
+        ];
+
+        # $assistance_options =  AicsType::all()->pluck("name");
+
+    $clients =  $client->toArray();
+        
+        
+
+        if ($client) {
+            /*$pdf = Pdf::loadView(
+                'pdf.qr_codes',
+                [
+                    "aics_beneficiaries" =>  $clients,
+                    "SDO" => $payroll->sdo,
+                    "amount_in_words" => $f->format($payroll->amount),
+                    "approved_by" => $payroll->approved_by,
+                    "amount" => $payroll->amount,
+                    "record_options" => $record_options,
+                    # "cav_assistance_options" => $cav_assistance_options,
+                    "assistance_options" => $assistance_options,
+                    "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
+                    "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
+                ]
+            );*/
+           // return $pdf->stream('coe.pdf');
+
+           return view('pdf.qr_codes',[
+            "aics_beneficiaries" =>  $clients,
+            "SDO" => $payroll->sdo,
+            "amount_in_words" => $f->format($payroll->amount),
+            "approved_by" => $payroll->approved_by,
+            "amount" => $payroll->amount,
+            "record_options" => $record_options,
+            # "cav_assistance_options" => $cav_assistance_options,
+            "assistance_options" => $assistance_options,
+            "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
+            "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
+        ]);
+        }
+
+        /*$clients =  AicsClient::with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $aics_client_ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->join('payroll_clients', function ($join) use ($id) {
+                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $id);
+            })
+            ->get();
+        if ($clients) {
+            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+                return $client->payroll_client;
+            })->toArray()]);
+            return $pdf->stream('gis.pdf');
+
+        }
+        return $clients;*/
+    }
+    
 }

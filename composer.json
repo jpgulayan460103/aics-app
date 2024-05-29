@@ -17,6 +17,8 @@
         "laravel/ui": "^3.4",
         "league/csv": "^9.8",
         "maatwebsite/excel": "^3.1",
+        "milon/barcode": "^11.0",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-activitylog": "^3.17",
         "spatie/laravel-permission": "^5.9",
         "tightenco/ziggy": "^1.5"
@@ -31,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
+            "App\\": "app/",           
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

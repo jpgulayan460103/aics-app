@@ -47,6 +47,14 @@ Route::group(['prefix' => '/pdf'], function () {
         Route::get('print_coe/{id}', [\App\Http\Controllers\PayrollController::class, 'print_coe'])->name("pdf.payroll.print_coe");
     });
 
+    Route::group(['prefix' => '/qr'], function () {
+     
+        Route::get('page/{id}', [\App\Http\Controllers\PayrollClientController::class, 'qr_codes'])->name("pdf.qr_codes");
+
+        
+    });
+
+
     Route::group(['prefix' => '/gis'], function () {
         Route::get('printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("pdf.payroll_client.printv2");
         Route::get('batch/{id}', [\App\Http\Controllers\AicsClientController::class, 'batchGis'])->name("pdf.batch-gis");
