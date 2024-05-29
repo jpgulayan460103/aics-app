@@ -98,7 +98,7 @@
                 </td>
                 <td>
                     <img src='{{ asset('images/new_logo.png') }}' />
-
+<h2 style="padding: 0; margin:0;">CLAIM STUB    QN:{{ $aics_beneficiary['payroll_client']['sequence'] }} </h2>
                 </td>
                 <td>
 
