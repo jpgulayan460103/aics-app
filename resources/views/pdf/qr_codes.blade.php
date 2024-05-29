@@ -77,7 +77,7 @@
 
 
 
-    <table cellpadding=0 cellspacing=0>
+    <table cellpadding=0 cellspacing=0 style="max-width: 800px; ">
 
         @foreach ($aics_beneficiaries as $aics_beneficiary)
             @php
@@ -98,18 +98,22 @@
                 </td>
                 <td>
                     <img src='{{ asset('images/new_logo.png') }}' />
-<h2 style="padding: 0; margin:0;">CLAIM STUB    QN:{{ $aics_beneficiary['payroll_client']['sequence'] }} </h2>
+                    <h2 style="padding: 0; margin:0;">CLAIM STUB QN:{{ $aics_beneficiary['payroll_client']['sequence'] }}
+                    </h2>
                 </td>
-                <td>
+                <td style="padding: 5px">
 
 
-                    <h2 style="padding-bottom:0px; margin-bottom:0px;">
+                    <h2 style="padding:0px; margin:0px;">
                         QN:{{ $aics_beneficiary['payroll_client']['sequence'] }} {{ $aics_beneficiary['full_name'] }}
-                        <BR />
 
-                        <small> VALIDATED ON :
-                            {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</small>
                     </H2>
+
+                    <b> VALIDATED ON :
+                        {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}
+                        <br>VENUE: {{ $venue }}
+                    </b> <br> 
+
                     <span>Present this QR code for verification. Please secure this QR code for the day of payout.<br>
                         It is
                         only valid for one person. Please bring your valid ID.</span>

@@ -305,7 +305,7 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
+        $payroll = Payroll::with("aics_type", "aics_subtype","psgc")->findOrFail($id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
         $record_options = [
@@ -381,6 +381,7 @@ class PayrollClientController extends Controller
             "assistance_options" => $assistance_options,
             "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
             "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
+        "venue"=> isset($payroll->psgc) ? $payroll->psgc->brgy_name.", ".$payroll->psgc->city_name.", ".$payroll->psgc->province_name : "" ,
         ]);
         }
 
