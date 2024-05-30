@@ -19,21 +19,43 @@
         <v-card>
           <v-card-title>Result</v-card-title>
           <v-card-text>
-            <v-alert v-if="decodedText" type="info">
+            <!--<v-alert v-if="decodedText" type="info">
               Decoded Text: {{ decodedText }}
             </v-alert>
             <v-alert v-if="error" type="error">
               Error: {{ error }}
+            </v-alert>-->
+
+            <div v-if="isValidFormat">
+
+              <v-alert v-if="elements" type="info">
+                Decoded Text: <div v-for="(element, index) in elements" :key="index">
+                  <p>Element {{ index + 1 }}: {{ element }}</p>
+                </div>
+              </v-alert>
+
+
+            </div>
+            <div v-else>
+             
+              <v-alert v-if="error" type="error">
+              Error: {{ error }}
             </v-alert>
+
+            </div>
+
+
           </v-card-text>
         </v-card>
 
 
 
 
+
+
       </v-col>
     </v-row>
-    
+
   </v-container>
 </template>
 
@@ -48,7 +70,7 @@ export default {
       decodedText: null,
       error: null,
       valid: false,
-     
+      isValidFormat: false,
       showCamera: false
     };
   },
@@ -58,17 +80,17 @@ export default {
       scannerElement,
       browserMultiFormatReader
     }) {
-      console.log(controls)
+      //console.log(controls)
       // ---- BrowserMultiFormatReader Controls API ----
       // {
       //   stop: f() // Stops the video stream (Basically turns off the camera)
       // }
 
-      console.log(scannerElement)
+      //console.log(scannerElement)
       // ---- The ref to the video native element that streams the video-camera output ----
       // <video data-v-73df36b4="" poster="data:image/gif,AAAA" autoplay="true" muted="true" // playsinline="true"></video>
 
-      console.log(browserMultiFormatReader)
+      //console.log(browserMultiFormatReader)
       // ---- A reference to the BrowserMultiFormatReader object. ----
       // hints: Map(0)
       // options: {
@@ -82,13 +104,20 @@ export default {
 
     },
     onScan({ result, raw }) {
-      console.log(result)
-      this.decodedText = result;
+
+      const sanitizedString = this.sanitizeString(result);
+      this.isValidFormat = this.validateFormat(sanitizedString);
+
+      if (this.isValidFormat) {
+        this.elements = sanitizedString.split('/');
+      }else
+      {
+        this.error = "Invalid Format"
+      }
 
       // ---- Scan result ----
       // "http://en.m.wikipedia.org"
-
-      console.log(raw)
+      //console.log(raw)
       // ---- Raw BrowserMultiFormatReader.decodeFromVideoDevice result ----
       // format: 11
       // numBits: 272
@@ -97,6 +126,13 @@ export default {
       // resultPoints: (4) [FinderPattern, FinderPattern, FinderPattern, AlignmentPattern]
       // text: "http://en.m.wikipedia.org"
       // timestamp: 1654535879486
+    },
+    sanitizeString(str) {
+      return str.trim().replace(/[^\w\s\/\-\.]/g, '');
+    },
+    validateFormat(str) {
+      const pattern = /^\d+\/\d+\/[a-zA-Z\s]+\/\d{4}-\d{2}-\d{2}\/\d+$/;
+      return pattern.test(str);
     }
   }
 };
