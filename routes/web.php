@@ -3,6 +3,7 @@
 use App\Http\Controllers\AicsBeneficiaryController;
 use App\Http\Controllers\AicsClientController;
 use App\Http\Controllers\AicsDocumentController;
+use App\Http\Controllers\QRCodesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,7 +51,8 @@ Route::group(['prefix' => '/pdf'], function () {
     Route::group(['prefix' => '/qr'], function () {
      
         Route::get('page/{id}', [\App\Http\Controllers\PayrollClientController::class, 'qr_codes'])->name("pdf.qr_codes");
-
+        Route::post('/decode', [\App\Http\Controllers\QRCodesController::class, 'decode'])->name("qr_code.decode");
+        Route::resource('qr', QRCodesController::class);
         
     });
 

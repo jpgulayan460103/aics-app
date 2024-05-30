@@ -31,7 +31,7 @@ import Users from "./Components/Users"
 import ActivityLog from "./Components/ActivityLog"
 import Grievance from "./Components/Grievance"
 import AssistanceTypes from "./Components/AssistanceTypes.vue"
-
+import QRScanner from "./Components/QRScanner.vue"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -139,7 +139,17 @@ const router = new VueRouter({
             }
 
         },
+        {
+            path: "/qr",
+            name: "qr",
+            component: QRScanner,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["Super-Admin", "Admin"]
+            }
 
+        },
+        
         
         
     ],

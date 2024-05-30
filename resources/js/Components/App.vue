@@ -91,6 +91,10 @@ export default {
           to: "/grievance",
           text: "Grievance",
         },
+        {
+          to: "/qr",
+          text: "QRScanner",
+        },
         /*{
           to: "/assistance-types",
           text: "Assistance Types",

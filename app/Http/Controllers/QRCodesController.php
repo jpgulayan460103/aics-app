@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-require_once app_path('libraries/phpqrcode');
-
+use Zxing\QrReader;
 
 class QRCodesController extends Controller
 {
@@ -83,5 +82,20 @@ class QRCodesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+     public function decode(Request $request)
+    {
+        $request->validate([
+            'qr_code_image' => 'required|image'
+        ]);
+
+        $file = $request->file('qr_code_image');
+        $path = $file->getRealPath();
+
+        $qrcode = new QrReader($path);
+        $text = $qrcode->text(); 
+
+        return response()->json(['decoded_text' => $text]);
     }
 }
