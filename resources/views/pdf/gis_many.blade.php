@@ -112,7 +112,7 @@
                 <td style="width:10%"> {{ $aics_beneficiary['ext_name'] }} </td>
             </tr>
         </table>
-
+     
         <table class="data-textbox " style="top:200px; left:30px ; width:88%; text-align:center">
             <tr>
                 <td style="width:20%; font-size: 6pt;"> {{ $aics_beneficiary['street_number'] }} </td>

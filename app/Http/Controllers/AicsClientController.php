@@ -250,7 +250,7 @@ class AicsClientController extends Controller
 
     public function batchGis(Request $request, $payroll_id)
     {
-        $client =  AicsClient::with([
+        $client =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
             "payroll_client.payroll",
@@ -304,7 +304,7 @@ class AicsClientController extends Controller
     public function batchCoe(Request $request, $payroll_id)
     {
 
-        $client =  AicsClient::with([
+        $client =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
             "payroll_client.payroll",

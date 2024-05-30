@@ -119,7 +119,7 @@ class PayrollClientController extends Controller
             return $x[0];
         });
 
-        $clients =  AicsClient::with([
+        $clients =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
             "payroll_client.payroll",
@@ -181,7 +181,7 @@ class PayrollClientController extends Controller
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
 
-        $client =  AicsClient::with([
+        $client =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
             "payroll_client.payroll",
@@ -258,28 +258,7 @@ class PayrollClientController extends Controller
             return $pdf->stream('coe.pdf');
         }
 
-        /*$clients =  AicsClient::with([
-            "psgc",
-            "aics_type",
-            "payroll_client.payroll",
-            "category",
-            "subcategory"
-        ])
-            ->whereIn("aics_clients.id", $aics_client_ids)
-            ->select("aics_clients.*")
-            ->orderBy('payroll_clients.sequence')
-            ->join('payroll_clients', function ($join) use ($id) {
-                $join->on("aics_clients.id", "=","payroll_clients.aics_client_id")->where('payroll_id', $id);
-            })
-            ->get();
-        if ($clients) {
-            $pdf = Pdf::loadView('pdf.gis_many', ["aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
-                return $client->payroll_client;
-            })->toArray()]);
-            return $pdf->stream('gis.pdf');
-
-        }
-        return $clients;*/
+        
     }
 
     public function qr_codes(Request $request, $id)
@@ -290,7 +269,7 @@ class PayrollClientController extends Controller
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
 
-        $client =  AicsClient::with([
+        $client =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
             "payroll_client.payroll",
