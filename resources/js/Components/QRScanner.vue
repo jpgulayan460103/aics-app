@@ -19,10 +19,28 @@
 
         <v-card class="mb-2">
           <v-card-title>
-            Search <v-spacer></v-spacer>
-            <v-text-field outlined dense v-model="form.payroll_id" :error-messages="formErrors.payroll_id"></v-text-field> -
-            <v-text-field outlined dense v-model="form.aics_client_id" :error-messages="formErrors.aics_client_id"></v-text-field> 
-            <v-btn @click="Search()" dark color="primary">Search</v-btn>
+
+            <v-row>
+              <v-col>Search</v-col>
+              <v-col cols="2" class="pr-0 mr-0">
+                <v-text-field outlined dense v-model="form.payroll_id"
+                  :error-messages="formErrors.payroll_id"></v-text-field>
+              </v-col>
+              <v-col class=" ml-0">
+                <v-text-field @keyup="Search()" outlined dense v-model="form.aics_client_id"
+                  :error-messages="formErrors.aics_client_id">
+                  <v-icon slot="prepend">
+                    mdi-minus
+                  </v-icon>
+                </v-text-field>
+              </v-col>
+            </v-row>
+
+
+
+
+
+
           </v-card-title>
         </v-card>
 
@@ -43,15 +61,27 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in clientData" :key="index">
+
                     <th>{{ item.title }}</th>
-                    <td>{{ item.value }}</td>
+                    <td>
+                      <div v-if="item.title == 'Check In Status'">
+                        <v-select small v-model="formData2.checkin_status" outlined dense :items="['', 'Checked In']"
+                          @change="UpdateCheckInStatus()"> </v-select>
+                      </div>
+                      <div v-else>
+                        {{ item.value }}
+                      </div>
+
+                    </td>
+
                   </tr>
-                  <tr><th>Check In Status</th>
-                  <td>Wala pa 
-                    <v-select outlined dense :items="['','Checked In']"> </v-select>
-                    
-                  </td>
-                  </tr>
+                  <!--<tr>
+                    <th>Check In Status</th>
+                    <td> {{client.checkin_status}}
+                      <v-select v-model="formData2.checkin_status" outlined dense :items="['', 'Checked In']"  @change="UpdateCheckInStatus()"> </v-select>
+
+                    </td>
+                  </tr>-->
                 </tbody>
               </v-simple-table>
 
@@ -96,7 +126,7 @@
 import axios from "axios";
 import { CameraCodeScanner } from "vue-barcode-qrcode-scanner";
 import { debounce, cloneDeep, isEmpty } from 'lodash';
-
+import moment from 'moment';
 export default {
   components: { CameraCodeScanner },
   data() {
@@ -109,6 +139,7 @@ export default {
       isLoading: false,
       form: { payroll_id: null, aics_client_id: null },
       formErrors: {},
+      formData2: { checkin_status: null }
     };
   },
 
@@ -125,9 +156,13 @@ export default {
 
             { title: 'Payroll Title', value: newValue.payroll.title },
             { title: 'Validated In', value: `${newValue.payroll.psgc.brgy_name} ${newValue.payroll.psgc.city_name} ${newValue.payroll.psgc.province_name}` },
-            { title: 'Schedule', value: newValue.payroll.schedule },
+            { title: 'Validated On ', value: moment(String(newValue.created_at )).format("MM-DD-YYYY HH:mm:ss")},
             { title: 'Date Claimed', value: newValue.date_claimed },
             { title: 'Claim Status', value: newValue.status },
+            { title: 'Check In Status', value: newValue.checkin_status },
+            { title: 'Check In Date ', value: newValue.date_checkin },
+
+
           ];
         }
       },
@@ -199,32 +234,51 @@ export default {
       const pattern = /^\d+\/\d+\/[a-zA-Z\s]+\/\d{4}-\d{2}-\d{2}\/\d+$/;
       return pattern.test(str);
     },
-    Search() {
+    Search: debounce(async function () {
       this.error = null;
+      this.formErrors = {};
+      this.formData2 = { checkin_status: null };
+
       axios.post(route("qr_code.search"), this.form).then(res => {
-       
-        this.client =  cloneDeep(res.data);
+
+        this.client = cloneDeep(res.data);
         this.isLoading = false;
+
       }).catch(e => {
 
         if (e.response.status === 404) {
           this.error = 'No client found. Note: Use the same server where the client was validated. ';
         } else {
-         
-          this.error = e.response.data.message ? e.response.data.message: e;
+
+          this.error = e.response.data.message ? e.response.data.message : e;
           this.formErrors = e.response.data.errors;
         }
-        
+
         this.isLoading = false;
         this.client = [];
       });
-    },
+    }, 250),
     ResetData() {
       this.error = null;
-      this.formErrors = {},
-        this.client = [];
+      this.formErrors = {};
+      this.client = [];
+      this.isLoading = false;
+      this.form = { payroll_id: null, aics_client_id: null };
+      this.formData2 = { checkin_status: null };
+    },
+    async UpdateCheckInStatus() {
+      await axios.put(route("api.payroll-clients.update", this.client.id), this.formData2).then((res) => {
+
+        if (res.data.message == "saved") {
+          alert("Success Checked in:" + this.client.sequence + " " + this.client.aics_client.full_name);
+          this.Search();
+        }
+      
+
+      }).catch(er => console.log(e => {
+        this.error = e.response.data.message ? e.response.data.message : e;
         this.isLoading = false;
-        this.form = { payroll_id: null, aics_client_id: null };
+      }));
     }
 
 

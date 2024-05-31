@@ -78,8 +78,18 @@ class PayrollClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $payroll_client = PayrollClient::findOrFail($id);
-        $payroll_client->update($request->all());
+        \DB::beginTransaction();
+        try {
+            $payroll_client = PayrollClient::findOrFail($id);
+            if ($payroll_client->update($request->all())) {
+                \DB::commit();
+              
+                return ["message" => "saved"];
+            };
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -106,7 +116,7 @@ class PayrollClientController extends Controller
         ELSE 0 
     END ASC,
     LENGTH(subcategory) ASC
-    ")->where("subcategory", "!=","None of the above")->pluck("subcategory");
+    ")->where("subcategory", "!=", "None of the above")->pluck("subcategory");
 
         // Split the subcategories into short and long groups
         $midPoint = ceil($subcategories->count() / 2);
@@ -223,8 +233,8 @@ class PayrollClientController extends Controller
             "",
             "Discharge Summary",
             "Referral Letter",
-             
-            
+
+
         ];
 
         $assistance_options = [
@@ -257,15 +267,13 @@ class PayrollClientController extends Controller
             );
             return $pdf->stream('coe.pdf');
         }
-
-        
     }
 
     public function qr_codes(Request $request, $id)
     {
         //\QRcode::png("1323", "samok.png");
-        
-       
+
+
         $page = $request->page ? $request->page : 1;
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
 
@@ -284,7 +292,7 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-        $payroll = Payroll::with("aics_type", "aics_subtype","psgc")->findOrFail($id);
+        $payroll = Payroll::with("aics_type", "aics_subtype", "psgc")->findOrFail($id);
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
         $record_options = [
@@ -311,8 +319,8 @@ class PayrollClientController extends Controller
             "",
             "Discharge Summary",
             "Referral Letter",
-             
-            
+
+
         ];
 
         $assistance_options = [
@@ -327,9 +335,9 @@ class PayrollClientController extends Controller
 
         # $assistance_options =  AicsType::all()->pluck("name");
 
-    $clients =  $client->toArray();
-        
-        
+        $clients =  $client->toArray();
+
+
 
         if ($client) {
             /*$pdf = Pdf::loadView(
@@ -347,21 +355,21 @@ class PayrollClientController extends Controller
                     "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
                 ]
             );*/
-           // return $pdf->stream('coe.pdf');
+            // return $pdf->stream('coe.pdf');
 
-           return view('pdf.qr_codes',[
-            "aics_beneficiaries" =>  $clients,
-            "SDO" => $payroll->sdo,
-            "amount_in_words" => $f->format($payroll->amount),
-            "approved_by" => $payroll->approved_by,
-            "amount" => $payroll->amount,
-            "record_options" => $record_options,
-            # "cav_assistance_options" => $cav_assistance_options,
-            "assistance_options" => $assistance_options,
-            "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
-            "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
-        "venue"=> isset($payroll->psgc) ? $payroll->psgc->brgy_name.", ".$payroll->psgc->city_name.", ".$payroll->psgc->province_name : "" ,
-        ]);
+            return view('pdf.qr_codes', [
+                "aics_beneficiaries" =>  $clients,
+                "SDO" => $payroll->sdo,
+                "amount_in_words" => $f->format($payroll->amount),
+                "approved_by" => $payroll->approved_by,
+                "amount" => $payroll->amount,
+                "record_options" => $record_options,
+                # "cav_assistance_options" => $cav_assistance_options,
+                "assistance_options" => $assistance_options,
+                "assistance_type" => isset($payroll->aics_type) ?  $payroll->aics_type->name : "",
+                "assistance_type_subcategory" => isset($payroll->aics_subtype) ?  $payroll->aics_subtype->name : "",
+                "venue" => isset($payroll->psgc) ? $payroll->psgc->brgy_name . ", " . $payroll->psgc->city_name . ", " . $payroll->psgc->province_name : "",
+            ]);
         }
 
         /*$clients =  AicsClient::with([
@@ -387,5 +395,4 @@ class PayrollClientController extends Controller
         }
         return $clients;*/
     }
-    
 }

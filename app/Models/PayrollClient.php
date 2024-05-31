@@ -18,7 +18,8 @@ class PayrollClient extends Model
         'new_payroll_client_id',
         'status',
         'date_claimed',
-        
+        'checkin_status',
+        'date_checkin',
     ];
     
 
@@ -35,6 +36,15 @@ class PayrollClient extends Model
             }else{
                 $model->date_claimed = null;
             }
+
+            if($model->checkin_status == "Checked In"){
+               
+                $model->date_checkin = Carbon::now();
+              //  dd("samoka " .$model->date_checkin );
+            }else{
+                $model->date_checkin = null;
+            }
+            
         });
     }
 
