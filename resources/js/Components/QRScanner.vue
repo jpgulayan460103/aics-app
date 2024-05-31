@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <v-container fluid>
 
     <v-row>
-      <v-col cols="6">
+      <v-col cols="4">
         <v-card>
           <v-card-title>
             Scanner <v-spacer></v-spacer> <v-btn @click="showCamera = !showCamera" dark color="primary">
@@ -15,34 +15,61 @@
         </v-card>
 
       </v-col>
-      <v-col cols="6">
-        <v-card>
-          <v-card-title>Result</v-card-title>
+      <v-col cols="8">
+
+        <v-card class="mb-2">
+          <v-card-title>
+            Search <v-spacer></v-spacer>
+            <v-text-field outlined dense v-model="form.payroll_id" :error-messages="formErrors.payroll_id"></v-text-field> -
+            <v-text-field outlined dense v-model="form.aics_client_id" :error-messages="formErrors.aics_client_id"></v-text-field> 
+            <v-btn @click="Search()" dark color="primary">Search</v-btn>
+          </v-card-title>
+        </v-card>
+
+        <v-card :loading="isLoading">
+          <v-card-title>Result <v-spacer></v-spacer>
+          </v-card-title>
           <v-card-text>
-            <!--<v-alert v-if="decodedText" type="info">
-              Decoded Text: {{ decodedText }}
-            </v-alert>
             <v-alert v-if="error" type="error">
-              Error: {{ error }}
-            </v-alert>-->
-
-            <div v-if="isValidFormat">
-
-              <v-alert v-if="elements" type="info">
-                Decoded Text: <div v-for="(element, index) in elements" :key="index">
-                  <p>Element {{ index + 1 }}: {{ element }}</p>
-                </div>
-              </v-alert>
-
-
-            </div>
-            <div v-else>
-             
-              <v-alert v-if="error" type="error">
-              Error: {{ error }}
+              {{ error }}
             </v-alert>
+            <div v-if="client && client.aics_client">
+              <v-simple-table v-if="client.aics_client" dense>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in clientData" :key="index">
+                    <th>{{ item.title }}</th>
+                    <td>{{ item.value }}</td>
+                  </tr>
+                  <tr><th>Check In Status</th>
+                  <td>Wala pa 
+                    <v-select outlined dense :items="['','Checked In']"> </v-select>
+                    
+                  </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+
+
+              <!---<v-list>
+                <v-list-item v-for="(item, index) in clientData" :key="index">
+                  <v-list-item-content>
+                  
+                    <v-list-item-subtitle>{{ item.title }}</v-list-item-subtitle>
+                    <v-list-item-title>{{ item.value }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>-->
+
+
 
             </div>
+
 
 
           </v-card-text>
@@ -58,21 +85,54 @@
 
   </v-container>
 </template>
-
+<style>
+.rotated-header {
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+</style>
 <script>
+import axios from "axios";
 import { CameraCodeScanner } from "vue-barcode-qrcode-scanner";
+import { debounce, cloneDeep, isEmpty } from 'lodash';
 
 export default {
   components: { CameraCodeScanner },
   data() {
     return {
       showScanner: false,
-      decodedText: null,
       error: null,
-      valid: false,
       isValidFormat: false,
-      showCamera: false
+      showCamera: false,
+      client: [],
+      isLoading: false,
+      form: { payroll_id: null, aics_client_id: null },
+      formErrors: {},
     };
+  },
+
+  watch: {
+    client: {
+      handler(newValue) {
+        if (newValue.aics_client) {
+          this.clientData = [
+            { title: 'QN', value: newValue.sequence },
+            { title: 'Client', value: newValue.aics_client.full_name },
+            { title: 'Birth Date', value: newValue.aics_client.birth_date },
+            { title: 'Valid ID Presented', value: newValue.aics_client.valid_id_presented },
+            { title: 'Address', value: `${newValue.aics_client.psgc.brgy_name} ${newValue.aics_client.psgc.city_name} ${newValue.aics_client.psgc.province_name}` },
+
+            { title: 'Payroll Title', value: newValue.payroll.title },
+            { title: 'Validated In', value: `${newValue.payroll.psgc.brgy_name} ${newValue.payroll.psgc.city_name} ${newValue.payroll.psgc.province_name}` },
+            { title: 'Schedule', value: newValue.payroll.schedule },
+            { title: 'Date Claimed', value: newValue.date_claimed },
+            { title: 'Claim Status', value: newValue.status },
+          ];
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     onLoad({
@@ -105,14 +165,19 @@ export default {
     },
     onScan({ result, raw }) {
 
+      this.ResetData()
+      this.isLoading = true;
       const sanitizedString = this.sanitizeString(result);
       this.isValidFormat = this.validateFormat(sanitizedString);
 
       if (this.isValidFormat) {
         this.elements = sanitizedString.split('/');
-      }else
-      {
-        this.error = "Invalid Format"
+        this.form.payroll_id = this.elements[4];
+        this.form.aics_client_id = this.elements[0];
+        this.Search();
+      } else {
+        this.isLoading = false;
+        this.error = "Error: Sorry, the scanned QR Code is not for DSWD AICS App."
       }
 
       // ---- Scan result ----
@@ -133,7 +198,36 @@ export default {
     validateFormat(str) {
       const pattern = /^\d+\/\d+\/[a-zA-Z\s]+\/\d{4}-\d{2}-\d{2}\/\d+$/;
       return pattern.test(str);
+    },
+    Search() {
+      this.error = null;
+      axios.post(route("qr_code.search"), this.form).then(res => {
+       
+        this.client =  cloneDeep(res.data);
+        this.isLoading = false;
+      }).catch(e => {
+
+        if (e.response.status === 404) {
+          this.error = 'No client found. Note: Use the same server where the client was validated. ';
+        } else {
+         
+          this.error = e.response.data.message ? e.response.data.message: e;
+          this.formErrors = e.response.data.errors;
+        }
+        
+        this.isLoading = false;
+        this.client = [];
+      });
+    },
+    ResetData() {
+      this.error = null;
+      this.formErrors = {},
+        this.client = [];
+        this.isLoading = false;
+        this.form = { payroll_id: null, aics_client_id: null };
     }
+
+
   }
 };
 </script>
