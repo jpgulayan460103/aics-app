@@ -65,6 +65,7 @@
                     <th>{{ item.title }}</th>
                     <td>
                       <div v-if="item.title == 'Check In Status'">
+                       <span v-if="item.value">( {{ item.value }})</span>
                         <v-select small v-model="formData2.checkin_status" outlined dense :items="['', 'Checked In']"
                           @change="UpdateCheckInStatus()"> </v-select>
                       </div>

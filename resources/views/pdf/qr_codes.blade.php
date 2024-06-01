@@ -110,7 +110,7 @@
                     </H2>
 
                     <b> VALIDATED ON :
-                        {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}
+                        {{ date('m-d-Y H:i:s', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}
                         <br>VALIDATED IN: {{ $venue }}
                     </b> <br> 
 
