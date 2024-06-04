@@ -27,7 +27,7 @@
           <template v-slot:item.status="{ item }">
 
             <v-chip v-if="item.is_verified == 'grievance'" small color="red" outlined>{{
-              item.is_verified }}
+      item.is_verified }}
             </v-chip>
 
             <div v-if="item.payroll_client && item.is_verified != 'grievance'">
@@ -41,7 +41,7 @@
                 </v-chip>
 
                 <v-chip small> Date Accomplished: {{
-                  item.payroll_client.updated_at | FormatDateAccomplished }}
+      item.payroll_client.updated_at | FormatDateAccomplished }}
                 </v-chip>
 
               </div>
@@ -50,20 +50,24 @@
               <div v-else>
                 <v-chip color="primary" outlined small :hidden="item.payroll_client.status == 'cancelled-revalidate'">
                   Client No: {{ item.payroll_client.sequence }}</v-chip>
-                <span v-if="item.payroll_client.status">
-                  <v-chip small :color="item.payroll_client.status != 'cancelled-revalidate' ? 'success' : 'error'"
-                    outlined>{{ item.payroll_client.status }}</v-chip>
-                </span>
+
+                <v-chip v-if="item.payroll_client && item.payroll_client.checkin_status" color="green" small dark
+                  clas="white--text">{{ item.payroll_client.checkin_status }}</v-chip>
+
+                <v-chip v-if="item.payroll_client.status" small
+                  :color="item.payroll_client.status != 'cancelled-revalidate' ? 'success' : 'error'" outlined>
+                  {{ item.payroll_client.status }}</v-chip>
+
 
                 <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"
                   v-if="item.payroll_client.payroll.schedule"> In Payroll schedule: ({{
-                    item.payroll_client.payroll.schedule }}) | amount: {{
-    item.payroll_client.payroll.amount }} </v-chip>
+      item.payroll_client.payroll.schedule }}) | amount: {{
+      item.payroll_client.payroll.amount }} </v-chip>
 
 
                 <div class="my-2" v-if="item.payroll_client">
                   <v-chip small :hidden="item.payroll_client.status == 'cancelled-revalidate'"> Date Accomplished: {{
-                    item.payroll_client.updated_at | FormatDateAccomplished }}
+      item.payroll_client.updated_at | FormatDateAccomplished }}
                   </v-chip>
                 </div>
               </div>
@@ -76,7 +80,7 @@
 
           <template v-slot:item.barangay="{ item }">
             <span v-if="item.psgc"> <small>{{ item.psgc.brgy_name }}, <br> {{ item.psgc.city_name }},<br> {{
-              item.psgc.province_name }}</small> </span>
+      item.psgc.province_name }}</small> </span>
           </template>
 
 
@@ -128,7 +132,7 @@
     </v-card>
   </div>
 </template>
- 
+
 <script>
 import GISComponent from "./GISComponent.vue";
 import userMixin from './../Mixin/userMixin.js'
@@ -234,11 +238,11 @@ export default {
           })
 
 
-        }).catch(err =>{ console.log(err); this.verifying = false;})
+        }).catch(err => { console.log(err); this.verifying = false; })
 
 
 
-      }else{ this.verifying = false; }
+      } else { this.verifying = false; }
 
     }, 500),
     getProvinces() {

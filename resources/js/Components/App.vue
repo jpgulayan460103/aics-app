@@ -136,7 +136,8 @@ export default {
   },
   methods: {
     logout() {
-      axios.post("/logout").then(response => {
+      console.log(window.location.host+"/logout");
+      axios.post(route("logout")).then(response => {
        
         location.reload();
       })

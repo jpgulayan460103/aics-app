@@ -11,7 +11,7 @@
     <title>AICS Onsite Payroll Generation and Encoding App</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ url(mix('js/app.js')) }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,7 +21,7 @@
     <style>
         @import url('node_modules/material-design-icons-iconfont/dist/material-design-icons.css');
       </style> -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
     <!--<link href="https://cdn.jsdelivr.net/npm/mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">-->
 
     @routes()
