@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AicsClient;
 use App\Models\AicsType;
 use App\Models\Category;
+use App\Models\Disabilites;
 use App\Models\Payroll;
 use App\Models\PayrollClient;
 use App\Models\Subcategory;
@@ -109,6 +110,8 @@ class PayrollClientController extends Controller
         $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
         $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
         $categories  = Category::all()->pluck("category");
+        $disabilities = Disabilites::all()->pluck("disability");
+    
         $subcategories  = Subcategory::orderByRaw("
         CASE 
         WHEN subcategory = 'Minimum Wage Earner' THEN 1 
@@ -129,6 +132,7 @@ class PayrollClientController extends Controller
             return $x[0];
         });
 
+       
         $clients =  AicsClient::withTrashed()->with([
             "psgc",
             "aics_type",
@@ -143,6 +147,8 @@ class PayrollClientController extends Controller
                 $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
             })
             ->get();
+
+       
 
         if ($clients) {
 
@@ -159,6 +165,8 @@ class PayrollClientController extends Controller
                     "subcategories" =>  compact('shortSubcategories', 'longSubcategories'),
                     "assistance_options" => $assistance_options,
                     "assistance_type_subcategory" => $payroll->aics_subtype ? $payroll->aics_subtype->name : "Daily Consumption and Other Needs",
+                    "disabilities"=>  $disabilities,
+    
                 ]
             );
 

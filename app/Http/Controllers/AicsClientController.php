@@ -19,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\DirtyList;
+use App\Models\Disabilites;
 use App\Models\Subcategory;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -286,6 +287,9 @@ class AicsClientController extends Controller
             return $x[0];
         });
 
+        $disabilities = Disabilites::all()->pluck("disability");
+    
+
         if ($client) {
             $pdf = Pdf::loadView('pdf.gis_many', [
                 "aics_beneficiaries" =>  $client->toArray(),
@@ -295,7 +299,8 @@ class AicsClientController extends Controller
                 "subcategories" =>  compact('shortSubcategories', 'longSubcategories'),
                 "assistance_options" => $assistance_options,
                 "assistance_type_subcategory" => $payroll->aics_subtype ? $payroll->aics_subtype->name : "Daily Consumption and Other Needs",
-
+                "disabilities"=>  $disabilities,
+    
             ]);
             return $pdf->stream('gis.pdf');
         }

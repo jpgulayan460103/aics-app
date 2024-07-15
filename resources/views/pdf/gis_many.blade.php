@@ -29,7 +29,7 @@
             line-height: 0.8;
             color: black;
             text-transform: uppercase;
-            /* border: solid red 1px;*/
+        
         }
 
 
@@ -194,20 +194,20 @@
 
 
             </div>
-            <!--foreach ($subcategories as $index_sub => $subcategory)
-                <div style="display:inline-block; margin-top:-3pt; width:75pt; ">
-                    <input type="checkbox" name="" id="" class="custom-checkbox"
-                        if (isset($aics_beneficiary['subcategory'])) if ($subcategory == $aics_beneficiary['subcategory']['subcategory'])
-                     checked endif
-                        endif>
-                     $subcategory }}
-                    if ($subcategory == 'Others')
-                        if ($aics_beneficiary['subcategory_others'])
-                            :  $aics_beneficiary['subcategory_others'] }}
-                        endif
-                    endif
-                </div>
-            endforeach-->
+            
+        </div>
+
+        <div class="data-textbox"  style=" width:200pt; top:370pt; left:360pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none; ">
+           
+            @foreach ($disabilities as $disability)
+            <div style="display:inline-block; margin-top:-2pt; width:120px;">
+                <input type="checkbox" name="" id="" class="custom-checkbox"
+                    @if (isset($aics_beneficiary['disabilities'])) @if (in_array($disability, json_decode($aics_beneficiary["disabilities"]) )) checked @endif @endif>
+                {{ $disability }}
+            </div>
+        @endforeach
+
+
         </div>
 
 
