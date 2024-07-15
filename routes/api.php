@@ -66,9 +66,14 @@ Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController:
 Route::post('payrolls/{id}/claimed', [\App\Http\Controllers\PayrollClientController::class, 'setAllClaimed'])->name("api.payroll.set_claimed");
 
 Route::get('clients', [\App\Http\Controllers\ServedClientController::class, 'index'])->name("api.served-clients.index");
+Route::get('clients/{uuid}', [\App\Http\Controllers\ServedClientController::class, 'show'])->name("api.served-clients.show");
 Route::post('clients', [\App\Http\Controllers\ServedClientController::class, 'store'])->name("api.served-clients.store");
 
 Route::get('logs', [\App\Http\Controllers\AicsClientController::class, 'logs'])->name("clients.logs");
 
 Route::post('grievance/update/{id}', [\App\Http\Controllers\AicsClientController::class, 'grievance_update'])->name("api.grievance.update");
 Route::post('grievance/export', [\App\Http\Controllers\AicsClientController::class, 'export_grievance'])->name("api.grievance.export");
+
+
+
+Route::post('served-clients', [\App\Http\Controllers\ServedClientController::class, 'upload'])->name("api.served-client.upload");

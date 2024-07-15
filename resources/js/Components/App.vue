@@ -98,6 +98,11 @@ export default {
         /*{
           to: "/assistance-types",
           text: "Assistance Types",
+        },
+        {
+          to: "/import-served",
+          text: "Import Served",
+
         },*/
       ],
       default_menu: [

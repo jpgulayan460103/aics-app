@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class ServedClient extends Model
 {
@@ -48,29 +49,42 @@ class ServedClient extends Model
     public static function boot()
     {
         parent::boot();
-        self::creating(function($model) {
+        Log::info('inside booot');
+
+        static::creating(function ($model) {
             $psgc = Psgc::where('brgy_psgc', $model->psgc)->first();
             $model->psgc_id = $psgc->id;
             $model->meta_last_name = metaphone($model->last_name);
             $model->meta_first_name = metaphone($model->first_name);
             $model->meta_middle_name = metaphone($model->middle_name);
-            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
-            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " " . $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name) . metaphone($model->middle_name) . metaphone($model->last_name);
+            Log::info('Creating end');
         });
-        self::updating(function($model) {
+        self::updating(function ($model) {
             $psgc = Psgc::where('brgy_psgc', $model->psgc)->first();
             $model->psgc_id = $psgc->id;
             $model->meta_last_name = metaphone($model->last_name);
             $model->meta_first_name = metaphone($model->first_name);
             $model->meta_middle_name = metaphone($model->middle_name);
-            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " ". $model->ext_name;
-            $model->meta_full_name = metaphone($model->first_name).metaphone($model->middle_name).metaphone($model->last_name);
+            $model->full_name = $model->first_name . " " . $model->middle_name . " " . $model->last_name . " " . $model->ext_name;
+            $model->meta_full_name = metaphone($model->first_name) . metaphone($model->middle_name) . metaphone($model->last_name);
         });
     }
 
     public function psgc()
     {
         return $this->belongsTo(Psgc::class);
+    }
+
+    public function getEnteredDateTimeAttribute($date)
+    {
+        return $this->attributes['entered_datetime'] = Carbon::parse($date)->format('m-d-Y');
+    }
+
+      public function getAccomplishedDateAttribute($date)
+    {
+        return $this->attributes['accomplished_datetime'] = Carbon::parse($date)->format('m-d-Y');
     }
 
 
@@ -87,4 +101,8 @@ class ServedClient extends Model
         return $this->attributes['amount'] = number_format($amount, 2);
     }
 
+    public function served_client_metas()
+    {
+        return $this->hasMany(ServedClientsMeta::class);
+    }
 }
