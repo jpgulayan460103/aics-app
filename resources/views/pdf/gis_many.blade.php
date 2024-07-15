@@ -29,7 +29,7 @@
             line-height: 0.8;
             color: black;
             text-transform: uppercase;
-        
+
         }
 
 
@@ -89,6 +89,29 @@
             <img src="{{ public_path('images/gis-akap-2024-b.jpg') }}" style="width: 95%;">
         </div>
 
+        @php
+            $pos_aics = strpos($aics_beneficiary['payroll_client']['payroll']['source_of_fund'], 'AICS');
+        @endphp
+        @if ($pos_aics === false)
+        @else
+            <div class="data-textbox" style=" font-weight:bold; text-align:center;top:92pt;left:20pt; ">
+
+                <input type="checkbox" checked name="" id="">
+            </div>
+        @endif
+
+        @php
+            $pos_aics = strpos($aics_beneficiary['payroll_client']['payroll']['source_of_fund'], 'AKAP');
+        @endphp
+        @if ($pos_aics === false)
+        @else
+            <div class="data-textbox" style=" font-weight:bold; text-align:center;top:91pt;left:55pt; ">
+
+                <input type="checkbox" checked name="" id="">
+            </div>
+        @endif
+
+
         <!--<div class="data-textbox" style=" font-weight:bold; text-align:center;top:92pt;right:200pt; ">
           OFFSITE<input type="radio" checked name="" id="">
         </div>-->
@@ -112,7 +135,7 @@
                 <td style="width:10%"> {{ $aics_beneficiary['ext_name'] }} </td>
             </tr>
         </table>
-     
+
         <table class="data-textbox " style="top:200px; left:30px ; width:88%; text-align:center">
             <tr>
                 <td style="width:20%; font-size: 6pt;"> {{ $aics_beneficiary['street_number'] }} </td>
@@ -194,18 +217,20 @@
 
 
             </div>
-            
+
         </div>
 
-        <div class="data-textbox"  style=" width:200pt; top:370pt; left:360pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none; ">
-           
+        <div class="data-textbox"
+            style=" width:200pt; top:370pt; left:360pt;  text-align:left; height:80pt;  font-size:7pt; font-weight:normal; text-transform:none; ">
+
             @foreach ($disabilities as $disability)
-            <div style="display:inline-block; margin-top:-2pt; width:120px;">
-                <input type="checkbox" name="" id="" class="custom-checkbox"
-                    @if (isset($aics_beneficiary['disabilities'])) @if (in_array($disability, json_decode($aics_beneficiary["disabilities"]) )) checked @endif @endif>
-                {{ $disability }}
-            </div>
-        @endforeach
+                <div style="display:inline-block; margin-top:-2pt; width:120px;">
+                    <input type="checkbox" name="" id="" class="custom-checkbox"
+                        @if (isset($aics_beneficiary['disabilities'])) @if (in_array($disability, json_decode($aics_beneficiary['disabilities']))) checked @endif
+                        @endif>
+                    {{ $disability }}
+                </div>
+            @endforeach
 
 
         </div>
@@ -300,9 +325,9 @@
                         $pos = strpos($assistance_type, 'Other');
                     @endphp
                     @if ($pos === false)
-                    {{ $assistance_type_subcategory }}
+                        {{ $assistance_type_subcategory }}
                     @else
-                    {{ $assistance_type }} for {{ $assistance_type_subcategory }}
+                        {{ $assistance_type }} for {{ $assistance_type_subcategory }}
                     @endif
                 </td>
                 <td style="width: 25%">

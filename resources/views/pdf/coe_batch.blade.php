@@ -24,12 +24,12 @@
             line-height: 0.8;
             color: black;
             text-transform: uppercase;
-            /*border: solid red 1px;*/
+           /* border: solid red 1px;*/
             text-align: center;
         }
 
         .data-textbox td {
-          /*   border: solid red 1px;*/
+            /*   border: solid red 1px;*/
         }
 
         input[type="checkbox"] {
@@ -42,6 +42,13 @@
             top: 83pt;
             left: 25pt;
             width: 95%;
+        }
+
+        #ce-0-belowQN
+        {
+            top: 96pt;
+            left: 25pt;
+            width: 80px;
         }
 
         #ce-0-bene {
@@ -90,6 +97,13 @@
             top: 463pt;
             left: 25pt;
             width: 95%;
+        }
+
+        #ce-1-belowQN
+        {
+            top: 475pt;
+            left: 25pt;
+            width: 80px;
         }
 
         #ce-1-bene {
@@ -153,6 +167,8 @@
     @php
         $my_records = [];
         $my_records = json_decode($aics_beneficiary['records']);
+        $pos_aics = strpos($aics_beneficiary['payroll_client']['payroll']['source_of_fund'], 'AICS');
+  
 
     @endphp
 
@@ -172,6 +188,26 @@
                     <td style="width:25%">
                         {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td>
                     </td>
+                </tr>
+            </table>
+
+            <table  id="ce-{{ $i }}-belowQN"  class="data-textbox">
+                <tr>
+                    <td> @if ($pos_aics === false)
+                         <!--AKAP-->
+                        <input type="checkbox" name="" checked id="" style="margin-left:39px ">
+                     
+                        @else
+                        <!--AICS-->
+                        <input type="checkbox" name="" checked id=""  style="margin-left:-50px " >
+                        @endif
+                    </td>
+                   <!-- <td> 
+                       
+                       if ($pos_aics === false)
+                        <input type="checkbox" name="" checked id="" style="margin-left:30px ">
+                        endif
+                    </td>-->
                 </tr>
             </table>
 
@@ -271,8 +307,8 @@
                     <td style="width:15%; font-size:8pt;"> {{ number_format($amount, 2) }}</td>
                     <td style="width:10%; font-size:8pt;"></td>
                     <td>
-                        {{$aics_beneficiary['payroll_client']['payroll']['source_of_fund']}}
-                        
+                        {{ $aics_beneficiary['payroll_client']['payroll']['source_of_fund'] }}
+
                     </td>
                 </tr>
             </table>
@@ -294,7 +330,7 @@
             </table>
         @endfor
 
-        <table id="ce-rcpt-qn" class="data-textbox"  style="top:788pt; left: 20pt; width:95%">
+        <table id="ce-rcpt-qn" class="data-textbox" style="top:788pt; left: 20pt; width:95%">
             <tr>
                 <td style="width:15%; text-align:left;">QN: {{ $aics_beneficiary['payroll_client']['sequence'] }}</td>
                 <td></td>
@@ -318,7 +354,7 @@
             </tr>
         </table>
 
-        <table id="ce-sig2" class="data-textbox"  style="top:860pt; left: 20pt; width:95%">
+        <table id="ce-sig2" class="data-textbox" style="top:860pt; left: 20pt; width:95%">
             <tr>
                 <td style="width:33%">
                     {{ $aics_beneficiary['first_name'] . ' ' . $aics_beneficiary['middle_name'] . ' ' . $aics_beneficiary['last_name'] . ' ' . $aics_beneficiary['ext_name'] }}
