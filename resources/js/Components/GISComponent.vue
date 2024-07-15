@@ -431,6 +431,19 @@
                   </div>
 
                 </div>
+
+                <div>
+
+                  <label for="">Type of Disability</label>
+                  <v-select outlined dense multiple :items="disabilities" v-model="form.disabilities"
+                    item-text="disability" clearable></v-select>
+
+                  <div v-if="validationErrors && validationErrors.disabilities" style="color: red">
+                    {{ validationErrors.disabilities[0] }}
+                  </div>
+
+                </div>
+
               </div>
             </div>
           </div>
@@ -592,24 +605,24 @@ export default {
       submit: false,
       selectedAssistances: [],
       record_opts: ["General Intake Sheet",
-            "Medical Certificate/Abstract",
-            "Laboratory Request",
-            "Social Case Study Report",
-            "Justification",
-            "Prescriptions",
-            "Promisory Note",
-            "Contract of Employment",
-            "Statement of Account",
-            "Funeral Contract",
-            "Certificate of Employment",
-            "Treatment Protocol",
-            "Death Certificate",
-            "Income Tax Return",
-            "Quotation/Chargeslip",
-            "Death Summary",
-            "Others",
-            "Discharge Summary",
-            "Referral Letter"
+        "Medical Certificate/Abstract",
+        "Laboratory Request",
+        "Social Case Study Report",
+        "Justification",
+        "Prescriptions",
+        "Promisory Note",
+        "Contract of Employment",
+        "Statement of Account",
+        "Funeral Contract",
+        "Certificate of Employment",
+        "Treatment Protocol",
+        "Death Certificate",
+        "Income Tax Return",
+        "Quotation/Chargeslip",
+        "Death Summary",
+        "Others",
+        "Discharge Summary",
+        "Referral Letter"
       ],
       region: "XI",
       loading: false,
@@ -617,7 +630,8 @@ export default {
       city_name: "",
       cities: [],
       brgys: [],
-      
+      disabilities: [],
+
 
     };
   },
@@ -634,7 +648,7 @@ export default {
     "form.records": function (newVal, oldVal) {
       if (!newVal.includes("Others")) {
         this.form.records_others = "";
-       
+
       }
     },
   },
@@ -775,7 +789,10 @@ export default {
     },
     populateForm(e) {
       this.form = cloneDeep(e);
-
+     
+      if (typeof this.form.disabilities === 'string') {
+        this.form.disabilities = JSON.parse(this.form.disabilities);
+      }
 
       if (this.form.payroll_client) {
         this.form.payroll_id = this.form.payroll_client.payroll_id;
@@ -784,7 +801,7 @@ export default {
       this.form.mode_of_admission = "Referral";
       this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       this.form.interviewed_by = this.userData ? this.userData.name : "";
-      this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : ["General Intake Sheet", "Valid ID Presented","Others"];
+      this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : ["General Intake Sheet", "Valid ID Presented", "Others"];
       this.form.records_others = this.form.records_others ? this.form.records_others : "Brgy. Certificate/Certificate of Indigency";
 
 
@@ -798,6 +815,11 @@ export default {
         this.getBrgys();
       }
 
+    },
+    getDisabilities() {
+      axios.get(route("disabilities.index")).then(res => {
+        this.disabilities = res.data;
+      }).catch(e => console.log(e));
     }
 
   },
@@ -807,7 +829,7 @@ export default {
     this.calculateAge();
     this.getCategories();
     this.getPayrolls();
-
+    this.getDisabilities();
 
   },
 };

@@ -49,6 +49,11 @@ class AicsClientUpdateRequest extends FormRequest
         {
             $rules['subcategory_others'] = 'required';
         }
+
+        if($this->input('category_id') == 4)
+        {
+            $rules['disabilities'] = 'required';
+        }
         return  $rules;
 
     }

@@ -77,3 +77,4 @@ Route::post('grievance/export', [\App\Http\Controllers\AicsClientController::cla
 
 
 Route::post('served-clients', [\App\Http\Controllers\ServedClientController::class, 'upload'])->name("api.served-client.upload");
+Route::resource('disabilities', \App\Http\Controllers\DisabilitiesController::class);
