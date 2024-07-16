@@ -432,7 +432,7 @@
 
                 </div>
 
-                <div>
+                <div v-if="form.category_id == 4 ">
 
                   <label for="">Type of Disability</label>
                   <v-select outlined dense multiple :items="disabilities" v-model="form.disabilities"
