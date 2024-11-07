@@ -285,7 +285,7 @@
                       style="color:red">*</span></label>
 
                   <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
-                    :error-messages="validationErrors.birth_date" outlined dense>
+                    :error-messages="validationErrors.birth_date" outlined dense :readonly="userData.role != 'Super-Admin'">
                   </v-text-field>
 
                 </div>
@@ -574,6 +574,7 @@
 
 <script>
 import { debounce, cloneDeep } from 'lodash'
+import { readonly } from 'vue';
 
 export default {
   props: ["dialog_data", "getList", "userData", "setDialogCreate", "provinces"],
