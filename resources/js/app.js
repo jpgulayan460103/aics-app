@@ -47,6 +47,10 @@ const router = new VueRouter({
     routes: [
         // { path: "/404", component: NotFound },
         {
+            path: "/register",
+            redirect: { name: "home" },
+        },
+        {
             path: "/",
             redirect: { name: "home" },
         },
@@ -62,7 +66,7 @@ const router = new VueRouter({
             component: ImportFile,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
         },
         {
@@ -77,7 +81,7 @@ const router = new VueRouter({
             component: MasterList,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin","encoder","Encoder"]
+                requiresRoles: ["Super-Admin", "admin","encoder","Encoder"]
             }
 
         },
@@ -87,7 +91,7 @@ const router = new VueRouter({
             component: Payroll,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
 
         },
@@ -98,7 +102,7 @@ const router = new VueRouter({
             props: true,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
         },
         {
@@ -108,7 +112,7 @@ const router = new VueRouter({
             props: true,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
         },
         {
@@ -117,7 +121,7 @@ const router = new VueRouter({
             component: ActivityLog,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin","grievance-officer"]
+                requiresRoles: ["Super-Admin", "admin","grievance-officer"]
             }
 
         },
@@ -127,7 +131,7 @@ const router = new VueRouter({
             component: Grievance,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin", "grievance-officer"]
+                requiresRoles: ["Super-Admin", "admin", "grievance-officer"]
             }
 
         },
@@ -137,7 +141,7 @@ const router = new VueRouter({
             component: AssistanceTypes,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
 
         },
@@ -147,7 +151,7 @@ const router = new VueRouter({
             component: QRScanner,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"]
+                requiresRoles: ["Super-Admin", "admin"]
             }
 
         },
@@ -155,7 +159,7 @@ const router = new VueRouter({
             path: "/served-clients",
             name: "served-clients",
             component: ServedClient,
-            requiresRoles: ["Super-Admin", "Admin"]
+            requiresRoles: ["Super-Admin", "admin"]
         },
         {
             path: "/import-served",
@@ -163,7 +167,7 @@ const router = new VueRouter({
             component: ImportServedFile,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["Super-Admin", "Admin"],
+                requiresRoles: ["Super-Admin", "admin"],
             }
         },
         

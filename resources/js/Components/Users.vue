@@ -85,7 +85,7 @@ export default {
         },
         {
           role: "Encoder",
-          value: "Encoder",
+          value: "encoder",
         },
         {
           role: "grievance-officer",

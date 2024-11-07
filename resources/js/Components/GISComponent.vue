@@ -283,10 +283,16 @@
                 <div class="col-md-3">
                   <label for="birth_date">Kapanganakan <small>(Birthdate)</small><span
                       style="color:red">*</span></label>
-
-                  <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
-                    :error-messages="validationErrors.birth_date" outlined dense>
-                  </v-text-field>
+                  <div v-if="userData.role != 'Super-Admin'">
+                    <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
+                      :error-messages="validationErrors.birth_date" outlined dense readonly>
+                    </v-text-field>
+                  </div>
+                  <div v-else>
+                    <v-text-field type="date" @input="calculateAge" v-model="form.birth_date" required
+                      :error-messages="validationErrors.birth_date" outlined dense>
+                    </v-text-field>
+                  </div>
 
                 </div>
 
