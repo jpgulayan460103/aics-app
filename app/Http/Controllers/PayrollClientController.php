@@ -104,6 +104,78 @@ class PayrollClientController extends Controller
         //
     }
 
+    public function print_attestation_multiple(Request $request, $id)
+    {
+        $page = $request->page ? $request->page : 1;
+        $aics_client_ids = PayrollClient::where('payroll_id', $id)->withTrashed()->offset(($page - 1) * 10)->limit(10)->pluck('aics_client_id');
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
+               
+        $clients =  AicsClient::withTrashed()->with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $aics_client_ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->join('payroll_clients', function ($join) use ($id) {
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
+            })
+            ->get();
+
+            
+        if ($clients) {
+            
+            $pdf = Pdf::loadView(
+                'pdf.attestation',
+                [
+                    "clients" => $clients->toArray(),
+                    "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
+                ]
+            );
+            return $pdf->setPaper('a4', 'portrait')->stream('attestation.pdf');
+        }
+    }
+
+    public function print_attestation_single(Request $request, $id)
+    {
+        $clients =  AicsClient::withTrashed()->with([
+            "psgc",
+            "aics_type",
+            "payroll_client.payroll",
+            "category",
+            "subcategory"
+        ])
+            ->whereIn("aics_clients.id", $request->ids)
+            ->select("aics_clients.*")
+            ->orderBy('payroll_clients.sequence')
+            ->join('payroll_clients', function ($join) use ($id) {
+                $join->on("aics_clients.id", "=", "payroll_clients.aics_client_id")->where('payroll_id', $id);
+            })
+            ->get();
+
+        $payroll = Payroll::with("aics_type", "aics_subtype")->findOrFail($id);
+        
+        // Split the subcategories into short and long groups
+            
+        if ($clients) {
+            
+            $pdf = Pdf::loadView(
+                'pdf.attestation',
+                [
+                    "clients" => $clients->toArray(),
+                    "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+                        return $client->payroll_client;
+                    })->toArray(),
+                    "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
+                ]
+            );
+            return $pdf->setPaper('a4', 'portrait')->stream('attestation.pdf');
+        }
+    }
+
     public function printv2(Request $request, $id)
     {
         $page = $request->page ? $request->page : 1;
@@ -148,6 +220,13 @@ class PayrollClientController extends Controller
             })
             ->get();
 
+            // return [
+            //     "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
+            //         return $client->payroll_client;
+            //     })->toArray(),
+            //     "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
+                
+            // ];
        
 
         if ($clients) {

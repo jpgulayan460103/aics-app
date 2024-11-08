@@ -480,6 +480,4 @@ class AicsClientController extends Controller
         ];
     }
 
-   
-
 }
