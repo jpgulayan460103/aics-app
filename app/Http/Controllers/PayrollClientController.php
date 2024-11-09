@@ -220,15 +220,6 @@ class PayrollClientController extends Controller
             })
             ->get();
 
-            // return [
-            //     "aics_beneficiaries" =>  $clients->filter(function ($client, $key) {
-            //         return $client->payroll_client;
-            //     })->toArray(),
-            //     "assistance_type" => $payroll->aics_type ? $payroll->aics_type->name : $payroll->title,
-                
-            // ];
-       
-
         if ($clients) {
 
             $pdf = Pdf::loadView(
