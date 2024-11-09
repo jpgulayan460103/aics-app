@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesV2Seeder::class);
         $this->call(SubSubcategoriesV2Seeder::class);
         $this->call(DisabilitiesSeeder::class);
+        $this->call(EncoderRoleSeed::class);
         
     }
 }

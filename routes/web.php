@@ -55,6 +55,10 @@ Route::group(['prefix' => '/pdf'], function () {
          
     });
 
+    Route::group(['prefix' => '/payrolls'], function () {
+        Route::get('page/{id}', [\App\Http\Controllers\PayrollClientController::class, 'print_attestation_single'])->name("pdf.attestation");
+        Route::get('batch/{id}', [\App\Http\Controllers\PayrollClientController::class, 'print_attestation_multiple'])->name("pdf.attestation.batch");
+    });
 
     Route::group(['prefix' => '/gis'], function () {
         Route::get('printv2/{id}', [\App\Http\Controllers\PayrollClientController::class, 'printv2'])->name("pdf.payroll_client.printv2");
