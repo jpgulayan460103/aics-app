@@ -186,7 +186,6 @@
                     <td style="width:15%"> {{ $aics_beneficiary['payroll_client']['sequence'] }}</td>
                     <td></td>
                     <td style="width:25%">
-                        <!-- {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td> -->
                     </td>
                 </tr>
             </table>
@@ -335,7 +334,6 @@
                 <td style="width:15%; text-align:left;">QN: {{ $aics_beneficiary['payroll_client']['sequence'] }}</td>
                 <td></td>
                 <td style="width:25%">
-                    <!-- {{ date('m-d-Y', strtotime($aics_beneficiary['payroll_client']['created_at'])) }}</td> -->
                 </td>
             </tr>
         </table>

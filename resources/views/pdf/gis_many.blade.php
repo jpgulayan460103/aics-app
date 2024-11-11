@@ -124,7 +124,6 @@
             {{ $aics_beneficiary['payroll_client']['sequence'] }}
         </div>
         <div class="data-textbox" style="top:80pt;right:75pt;">
-            <!-- {{ \Carbon\Carbon::parse($aics_beneficiary['payroll_client']['created_at'])->timeZone('Asia/Manila')->format('m-d-Y') }} -->
         </div>
 
         <table class="data-textbox " style="top:175px; left:30px ; width:90%; text-align:center">
