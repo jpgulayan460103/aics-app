@@ -586,8 +586,8 @@ export default {
     return {
       form: {
         mode_of_admission: "Referral",
-        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
-        records_others: "Brgy. Certificate/Certificate of Indigency",
+        assessment: "The family is identified as low income earner. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
+        records_others: "Certificate of Low Income/ Attestation",
       },
       assistance_types: {},
       psgc: {},
@@ -700,8 +700,8 @@ export default {
     resetForm() {
       this.form = {
         mode_of_admission: "Referral",
-        assessment: "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
-        records_others: "Brgy. Certificate/Certificate of Indigency",
+        assessment: "The family is identified as low income earner. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.",
+        records_others: "Certificate of Low Income/ Attestation",
       };
       this.province_name = "";
       this.city_name = "";
@@ -800,10 +800,10 @@ export default {
       }
 
       this.form.mode_of_admission = "Referral";
-      this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as indigent member of the barangay. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
+      this.form.assessment = this.form.assessment ? this.form.assessment : "The family is identified as low income earner. Family's Income is below poverty threshold. Thus, this prompted client to seek government intervention.";
       this.form.interviewed_by = this.userData ? this.userData.name : "";
       this.form.records = this.form.records && this.form.records.length > 0 ? JSON.parse(this.form.records) : ["General Intake Sheet", "Valid ID Presented", "Others"];
-      this.form.records_others = this.form.records_others ? this.form.records_others : "Brgy. Certificate/Certificate of Indigency";
+      this.form.records_others = this.form.records_others ? this.form.records_others : "Certificate of Low Income/ Attestation";
 
 
       if (this.form.payroll_client) { this.form.payroll_id = this.form.payroll_client.payroll_id; }

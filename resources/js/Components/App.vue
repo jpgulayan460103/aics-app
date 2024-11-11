@@ -60,7 +60,7 @@ export default {
       selectedItem: 1,
       links: [],
 
-      admin_menu: [
+      superadmin_menu: [
 
       {
         to: "/",
@@ -90,6 +90,43 @@ export default {
       {
         to: "/grievance",
         text: "Grievance",
+      },
+      {
+        to: "/qr",
+        text: "QRScanner",
+      },
+      /*{
+        to: "/assistance-types",
+        text: "Assistance Types",
+      },
+      {
+        to: "/import-served",
+        text: "Import Served",
+
+      },*/
+      ],
+      admin_menu: [
+
+      {
+        to: "/",
+        text: "Home",
+      },
+      {
+        to: "/import",
+        text: "Import",
+
+      },
+      {
+        to: "/master_list",
+        text: "Master List",
+      },
+      {
+        to: "/payroll",
+        text: "Payroll",
+      },
+      {
+        to: "/users",
+        text: "Users",
       },
       {
         to: "/qr",
@@ -154,8 +191,11 @@ export default {
   mounted() {
 
     switch (this.userData.role.toLowerCase()) {
-      case "admin":
       case "super-admin":
+        this.links = this.superadmin_menu
+
+        break;
+      case "admin":
         this.links = this.admin_menu
 
         break;

@@ -67,7 +67,7 @@
                     </div>
                 </form>
                 <div>
-                    <a href="Register">Register</a>
+                    <!-- <a href="Register">Register</a> -->
                 </div>
                 <!--<v-card outlined>
                     <v-card-title class="headline text-center">

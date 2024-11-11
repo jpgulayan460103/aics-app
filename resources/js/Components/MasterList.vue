@@ -124,7 +124,7 @@
           <v-pagination v-model="currentPage" :length="lastPage" @input="getList"></v-pagination>
         </v-col>
 
-        <div v-if="userData.role == 'Super-Admin'">
+        <div v-if="userData.role == 'Super-Admin' || userData.role == 'admin'">
           <v-btn color="primary" :loading="isExporting" @click="downloadClient()">Download</v-btn>
         </div>
 
