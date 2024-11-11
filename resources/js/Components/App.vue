@@ -132,18 +132,8 @@ export default {
         to: "/qr",
         text: "QRScanner",
       },
-      /*{
-        to: "/assistance-types",
-        text: "Assistance Types",
-      },
-      {
-        to: "/import-served",
-        text: "Import Served",
-
-      },*/
       ],
       default_menu: [
-
         {
           to: "/",
           text: "Home",
@@ -153,8 +143,6 @@ export default {
           to: "/master_list",
           text: "Master List",
         },
-
-
       ],
       grievance_menu: [
 
