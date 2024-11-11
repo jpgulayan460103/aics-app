@@ -96,7 +96,7 @@ tr:nth-child(even) {
             </div>
             <div style="margin-left: 6%; margin-right: 6%; font-size: 16px;">
                 <div style="margin-top: 50px; text-align: justify; text-indent: 40px;">
-                    This is to certify that Mr./Mrs. {{ $client['first_name'] }}@if(!empty($client['middle_name'])) {{ $client['middle_name'][0] }}.@endif {{ $client['last_name'] }}@if(!empty($client['ext_name'])) {{ $client['ext_name'] }}@endif, {{ $client['age'] }} years old
+                    This is to certify that Mr./Mrs. {{ $client['first_name'] }} {{ $client['middle_name']?$client['middle_name'][0].". ":"" }}{{ $client['last_name'] }}{{ $client['ext_name']?" ".$client['ext_name']:"" }}, {{ $client['age'] }} years old
                     residing at {{ $client['street_number'] }}, {{ $client['psgc']['brgy_name'] }}, {{ $client['psgc']['city_name'] }}, {{ $client['psgc']['province_name'] }} is currently working or has employment
                     history as {{ $client['occupation'] }} in {{ $client['psgc']['city_name'] }} earning Php {{ number_format($client['monthly_salary'], 2) }} per month.
                 </div>
@@ -107,7 +107,7 @@ tr:nth-child(even) {
                     inflation.
                 </div>
                 <div style="margin-top: 30px; text-align: justify; text-indent: 40px;">
-                    Issued this {{ date('jS') }} day of {{ date('F Y') }} at DSWD Field Office.
+                    Issued this _______ day of ________________ {{ date('Y') }} at DSWD Field Office XI.
                 </div>
             </div>
             <div style="margin-right: 10%; font-size: 16px;">

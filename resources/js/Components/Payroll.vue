@@ -160,7 +160,7 @@
               <template v-slot:activator="{ on, attrs }">
 
                 <v-icon small v-bind="attrs" v-on="on"
-                  v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">mdi-download</v-icon>
+                  v-if="userData.role == 'Super-Admin' || userData.role == 'admin'">mdi-download</v-icon>
 
               </template>
 
