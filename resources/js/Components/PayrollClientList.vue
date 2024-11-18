@@ -2,7 +2,7 @@
   <v-card flat outlined>
 
 
-    <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+    <v-card-title v-if="userData.role == 'admin' || userData.role == 'Super-Admin'">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
 
@@ -38,10 +38,20 @@
             </v-list-item>
             <v-list-item @click="print_coe_page()">
               <v-list-item-title>
-                <v-icon> mdi-printer </v-icon> All COE of {{ page }} <v-chip label small>CTLR + SHIFT + E </v-chip>
+                <v-icon> mdi-printer </v-icon> All COE of page {{ page }} <v-chip label small>CTLR + SHIFT + E </v-chip>
               </v-list-item-title>
             </v-list-item>
-            <v-list-item @click="print_payroll()">
+            <v-list-item @click="print_attestation()"  v-if="data.source_of_fund == 'AKAP'">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Selected Attestation <v-chip label small>CTLR + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="print_attestation_batch()"  v-if="data.source_of_fund == 'AKAP'">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Attestation of page {{ page }} <v-chip label small>CTLR + ALT + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <!-- <v-list-item @click="print_payroll()">
               <v-list-item-title>
                 <v-icon> mdi-printer </v-icon> Payroll of page {{ page }} <v-chip label small>CTLR + P</v-chip>
               </v-list-item-title>
@@ -51,7 +61,7 @@
                 <v-icon> mdi-printer </v-icon> Last Page w/ Footer & Grand Total <v-chip label small>CTLR + ALT +
                   P</v-chip>
               </v-list-item-title>
-            </v-list-item>
+            </v-list-item> -->
             
 
             <!--<v-list-item @click="print_payroll_footer()">
@@ -178,7 +188,7 @@
         <template v-slot:item.status="{ item }">
           <span v-if="item.deleted_at == null">
             <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)"
-              v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+              v-if="userData.role == 'admin' || userData.role == 'Super-Admin'">
               <div>{{ item.status }}</div>
               <template v-slot:input>
                 <div class="mt-4 text-h6">Claim Status</div>
@@ -254,9 +264,11 @@
     <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="print_gis_page()"></span>
     <span v-shortkey="['ctrl',  'q']" @shortkey="PrintQR()"></span>
 
+    <span v-shortkey="['ctrl', 'p']" @shortkey="print_attestation()"></span>
+    <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_attestation_batch()"></span>
     
-    <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
-    <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span>
+    <!-- <span v-shortkey="['ctrl', 'p']" @shortkey="print_payroll()"></span>
+    <span v-shortkey="['ctrl', 'alt', 'p']" @shortkey="print_payroll_w_gt()"></span> -->
     <span v-shortkey="['ctrl', 'space']" @shortkey="PrintGISMany()"></span>
     <span v-shortkey="['alt', 'c']" @shortkey="MarkAsClaimed()"></span>
     <span v-shortkey="['alt', 'z']" @shortkey="MarkAsUnClaimed()"></span>
@@ -352,6 +364,28 @@ export default {
         );
       }
 
+    },
+
+    print_attestation() {
+      if (!isEmpty(this.selected)) {
+        let ids = this.selected.map(item => item.aics_client_id);
+        window.open(
+
+          route(`pdf.attestation`, {
+            id: this.id,
+            _query: {
+              ids
+            }
+          }),
+          "_blank"
+        );
+      }
+    },
+    print_attestation_batch() {
+      window.open(
+        route("pdf.attestation.batch", { id: this.id, page: this.page }),
+        "_blank"
+      );
     },
 
     print_payroll() {

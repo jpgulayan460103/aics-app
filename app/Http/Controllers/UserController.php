@@ -86,8 +86,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->update($request->all());
-        $user->assignRole($request->role);
-
+        $user->syncRoles($request->role);
+        
         return $user;
     }
 

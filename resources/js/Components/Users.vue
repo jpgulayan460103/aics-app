@@ -23,7 +23,7 @@
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
             <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="userData.role == 'Super-Admin'">
+              v-if="userData.role == 'Super-Admin' || userData.role == 'admin'">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -48,10 +48,10 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'Super-Admin'">
+              <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'Super-Admin' || userData.role == 'admin'">
                 mdi-pencil
               </v-icon>
-              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'Super-Admin'">
+              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'Super-Admin' || userData.role == 'admin'">
                 mdi-delete
               </v-icon>
             </template>
@@ -85,7 +85,7 @@ export default {
         },
         {
           role: "Encoder",
-          value: "Encoder",
+          value: "encoder",
         },
         {
           role: "grievance-officer",
